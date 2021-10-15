@@ -13,9 +13,8 @@ verbose=False
 if __name__ == "__main__":
     ai = aitextgen(model_folder=folder_path, to_gpu=False,
                    gradient_checkpointing=True)
-
+    ai.train()
     print("loaded model - ", datetime.now())
-
     stay_in_chat = True
     p_list = []
     while stay_in_chat:
@@ -48,7 +47,7 @@ if __name__ == "__main__":
             res_out = [str(ele).strip() for ele in this_result]
             p_out = [str(ele).strip() for ele in p_list]
             diff_list = list(set(res_out).difference(p_out))  # remove prior prompts for the response
-            this_result = [str(msg) for msg in diff_list if ":" not in str(msg)]  # remove all names
+            this_result = [str(msg) for msg in diff_list if (":" not in str(msg)) and "szemr" not in str(msg)]  # remove all names
 
             # TODO: if the first element in the list is short (say <10 chars) and a second element exists, join them
 
