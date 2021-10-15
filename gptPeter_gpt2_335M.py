@@ -7,7 +7,7 @@ from os.path import join
 
 from aitextgen import aitextgen
 
-folder_path = join(os.getcwd(), "gpt2_23k_checkpoint")
+folder_path = join(os.getcwd(), "gpt2_43k_checkpoint")
 verbose = False
 
 if __name__ == "__main__":
@@ -25,19 +25,18 @@ if __name__ == "__main__":
             stay_in_chat = False
             break
         st = time.time()
-        p_list = []
         p_list.append(user_query + "\n")
         p_list.append("\n")
         p_list.append("peter szemraj:" + "\n")
-        this_prompt = "".join(p_list)
+        this_prompt = " ".join(p_list)
         print("\n... generating... \n")
         this_result = ai.generate(
             n=1,
-            top_k=20,
-            batch_size=20,
-            max_length=64,
+            top_k=10,
+            batch_size=512,
+            max_length=128,
             min_length=16,
-            prompt=this_prompt,
+            prompt=this_prompt,  # TODO add way to truncate input prompt
             temperature=0.75,
             top_p=0.9, do_sample=True, return_as_list=True,
         )
@@ -54,6 +53,8 @@ if __name__ == "__main__":
 
             if not isinstance(this_result, list): list(this_result)
             output = str(this_result[0]).strip()
+
+            if len(output) < 15 and len(this_result) > 1:  output = output + str(this_result[1]).strip()
         except:
             print("... model response is too short or something. try continuing the conv")
             output = "what?"
@@ -69,4 +70,5 @@ if __name__ == "__main__":
 
     print("finished - ", datetime.now())
     print("A transcript of your chat is as follows: \n")
+    p_list = [item.strip() for item in p_list]
     pp.pprint(p_list)
