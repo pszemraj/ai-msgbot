@@ -13,7 +13,6 @@ verbose=False
 if __name__ == "__main__":
     ai = aitextgen(model_folder=folder_path, to_gpu=False,
                    gradient_checkpointing=True)
-    ai.train()
     print("loaded model - ", datetime.now())
     stay_in_chat = True
     p_list = []
@@ -31,10 +30,10 @@ if __name__ == "__main__":
         print("\n... generating... \n")
         this_result = ai.generate(
             n=1,
-            top_k=10,
+            top_k=30,
             batch_size=64,
-            max_length=128,
-            min_length=16,
+            max_length=64,
+            min_length=12,
             prompt=this_prompt,  # TODO add way to truncate input prompt
             temperature=0.75,
             top_p=0.9, do_sample=True, return_as_list=True,

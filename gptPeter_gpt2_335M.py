@@ -7,7 +7,7 @@ from os.path import join
 
 from aitextgen import aitextgen
 
-folder_path = join(os.getcwd(), "gpt2_135k_checkpoint")
+folder_path = join(os.getcwd(), "gpt2_275k_checkpoint")
 verbose = False
 
 if __name__ == "__main__":
@@ -32,12 +32,12 @@ if __name__ == "__main__":
         print("\n... generating... \n")
         this_result = ai.generate(
             n=1,
-            top_k=10,
+            top_k=50,
             batch_size=512,
             max_length=128,
             min_length=16,
             prompt=this_prompt,  # TODO add way to truncate input prompt
-            temperature=0.75,
+            temperature=0.8,
             top_p=0.9, do_sample=True, return_as_list=True,
         )
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
             res_out = [str(ele).strip() for ele in this_result]
             p_out = [str(ele).strip() for ele in p_list]
             diff_list = list(set(res_out).difference(p_out))  # remove prior prompts for the response
-            this_result = [str(msg) for msg in diff_list if (":" not in str(msg)) and "szemr" not in str(msg)]  # remove all names
+            this_result = [str(msg) for msg in diff_list if (":" not in str(msg)) and ("szemr" not in str(msg)) and ("peter" not in str(msg))]  # remove all names
             # TODO: if the first element in the list is short (say <10 chars) and a second element exists, join them
 
             if not isinstance(this_result, list): list(this_result)
