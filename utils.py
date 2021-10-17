@@ -26,12 +26,12 @@ def create_folder(directory):
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
-        yield lst[i: i + n]
+        yield lst[i : i + n]
 
 
 def chunky_pandas(my_df, num_chunks=4):
     n = int(len(my_df) // num_chunks)
-    list_df = [my_df[i: i + n] for i in range(0, my_df.shape[0], n)]
+    list_df = [my_df[i : i + n] for i in range(0, my_df.shape[0], n)]
 
     return list_df
 
@@ -93,7 +93,7 @@ def getFilename_fromCd(cd):
 
 
 def get_zip_URL(
-        URLtoget, extract_loc=None, file_header="dropboxexport_", verbose=False
+    URLtoget, extract_loc=None, file_header="dropboxexport_", verbose=False
 ):
     r = requests.get(URLtoget, allow_redirects=True)
     names = getFilename_fromCd(r.headers.get("content-disposition"))
