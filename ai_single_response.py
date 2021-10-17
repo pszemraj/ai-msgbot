@@ -17,67 +17,16 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
 
-folder_path = join(os.getcwd(), "gpt2_325k_checkpoint")
-verbose = False
-# Set up the parsing of command-line arguments
-parser = argparse.ArgumentParser(
-    description="submit a message and have the 335M parameter GPT-Peter model respond"
-)
-parser.add_argument(
-    "--prompt",
-    required=True,
-    help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder."
-)
-parser.add_argument(
-    "--speaker",
-    required=False,
-    default=None,
-    help="who the prompt is from (to the bot). Note this does not help if you do not text me often",
-)
-parser.add_argument(
-    "--responder",
-    required=False,
-    default="peter szemraj",
-    help="who the responder is. default = peter szemraj",
-)
+model_loc = join(os.getcwd(), "gpt2_325k_checkpoint")
 
-parser.add_argument(
-    "--topk",
-    required=False,
-    type=int,
-    default=70,
-    help="how many responses to sample. lower = more random responses",
-)
 
-parser.add_argument(
-    "--verbose",
-    default=False,
-    action="store_true",
-    help="pass this argument if you want all the printouts",
-)
-parser.add_argument(
-    "--time",
-    default=False,
-    action="store_true",
-    help="pass this argument if you want to know runtime",
-)
-
-if __name__ == "__main__":
-    args = parser.parse_args()
-    prompt_msg = args.prompt
-    speaker = args.speaker
-    responder = args.responder
-    kparam = args.topk
-    verbose = args.verbose
-    want_rt = args.time
-
+def query_gpt_peter(folder_path, prompt_msg: str, speaker=None, responder="peter szemraj", kparam=70,
+                    verbose=False, use_gpu=False):
     ai = aitextgen(
         model_folder=folder_path,
-        to_gpu=False,
+        to_gpu=use_gpu,
     )
-
     p_list = []
-    st = time.time()
     if speaker is not None:
         p_list.append(speaker.lower() + ":" + "\n")  # write prompt as the speaker
     p_list.append(prompt_msg.lower() + "\n")
@@ -124,9 +73,77 @@ if __name__ == "__main__":
     except:
         output = "bro, there was an error. try again"
 
-    pp.pprint(output, indent=4)
     p_list.append(output + "\n")
     p_list.append("\n")
+
+    model_responses = {
+        "out_text": output,
+        "full_conv": p_list
+    }
+
+    return model_responses
+
+
+# Set up the parsing of command-line arguments
+parser = argparse.ArgumentParser(
+    description="submit a message and have the 335M parameter GPT-Peter model respond"
+)
+parser.add_argument(
+    "--prompt",
+    required=True,
+    help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder."
+)
+parser.add_argument(
+    "--speaker",
+    required=False,
+    default=None,
+    help="who the prompt is from (to the bot). Note this does not help if you do not text me often",
+)
+parser.add_argument(
+    "--responder",
+    required=False,
+    default="peter szemraj",
+    help="who the responder is. default = peter szemraj",
+)
+
+parser.add_argument(
+    "--topk",
+    required=False,
+    type=int,
+    default=70,
+    help="how many responses to sample. lower = more random responses",
+)
+
+parser.add_argument(
+    "--verbose",
+    default=False,
+    action="store_true",
+    help="pass this argument if you want all the printouts",
+)
+parser.add_argument(
+    "--time",
+    default=False,
+    action="store_true",
+    help="pass this argument if you want to know runtime",
+)
+
+if __name__ == "__main__":
+    args = parser.parse_args()
+    query = args.prompt
+    spkr = args.speaker
+    rspndr = args.responder
+    k_results = args.topk
+    want_verbose = args.verbose
+    want_rt = args.time
+
+    st = time.time()
+
+    resp = query_gpt_peter(folder_path=model_loc, prompt_msg=query, speaker=spkr, responder=rspndr, kparam=k_results,
+                    verbose=False, use_gpu=False)
+
+    output = resp["out_text"]
+    pp.pprint(output, indent=4)
+
     # pp.pprint(this_result[3].strip(), indent=4)
     rt = round(time.time() - st, 1)
     gc.collect()
@@ -134,9 +151,10 @@ if __name__ == "__main__":
     if want_rt:
         print("took {runtime} seconds to generate. \n".format(runtime=rt))
 
-    if verbose:
+    if want_verbose:
         print("finished - ", datetime.now())
-    if verbose:
+    if want_verbose:
+        p_list = resp["full_conv"]
         print("A transcript of your chat is as follows: \n")
         p_list = [item.strip() for item in p_list]
         pp.pprint(p_list)
