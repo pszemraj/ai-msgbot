@@ -9,9 +9,9 @@ import gc
 import os
 import pprint as pp
 import time
+import warnings
 from datetime import datetime
 from os.path import join
-import warnings
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
@@ -21,10 +21,12 @@ folder_path = join(os.getcwd(), "gpt2_325k_checkpoint")
 verbose = False
 # Set up the parsing of command-line arguments
 parser = argparse.ArgumentParser(
-    description="submit a message and have the 335M parameter peter szemraj model respond"
+    description="submit a message and have the 335M parameter GPT-Peter model respond"
 )
 parser.add_argument(
-    "--prompt", required=True, help="the message the bot is supposed to respond to"
+    "--prompt",
+    required=True,
+    help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder."
 )
 parser.add_argument(
     "--speaker",
@@ -38,6 +40,15 @@ parser.add_argument(
     default="peter szemraj",
     help="who the responder is. default = peter szemraj",
 )
+
+parser.add_argument(
+    "--topk",
+    required=False,
+    type=int,
+    default=70,
+    help="how many responses to sample. lower = more random responses",
+)
+
 parser.add_argument(
     "--verbose",
     default=False,
@@ -56,6 +67,7 @@ if __name__ == "__main__":
     prompt_msg = args.prompt
     speaker = args.speaker
     responder = args.responder
+    kparam = args.topk
     verbose = args.verbose
     want_rt = args.time
 
@@ -78,7 +90,7 @@ if __name__ == "__main__":
     print("\n... generating... \n")
     this_result = ai.generate(
         n=1,
-        top_k=50,
+        top_k=kparam,
         batch_size=512,
         max_length=128,
         min_length=16,
