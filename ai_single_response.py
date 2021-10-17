@@ -64,7 +64,7 @@ if __name__ == "__main__":
         p_list.append(speaker.lower() + ":" + "\n")  # write prompt as the speaker
     p_list.append(prompt_msg.lower() + "\n")
     p_list.append("\n")
-    p_list.append(responder.lower() + "\n")
+    p_list.append(responder.lower() + ":" + "\n")
     this_prompt = "".join(p_list)
     if verbose:
         print("overall prompt:\n")
