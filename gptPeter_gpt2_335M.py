@@ -26,7 +26,7 @@ if __name__ == "__main__":
             stay_in_chat = False
             break
         st = time.time()
-        p_list.append(user_query + "\n")
+        p_list.append(user_query.lower() + "\n")
         p_list.append("\n")
         p_list.append("peter szemraj:" + "\n")
         this_prompt = "".join(p_list)
