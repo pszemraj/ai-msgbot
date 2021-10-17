@@ -83,8 +83,8 @@ if __name__ == "__main__":
         max_length=128,
         min_length=16,
         prompt=this_prompt,
-        temperature=0.7,
-        top_p=0.9,
+        temperature=0.8,
+        top_p=0.8,
         do_sample=True,
         return_as_list=True,
     )
@@ -108,7 +108,7 @@ if __name__ == "__main__":
         output = str(this_result[0]).strip()
         # add second line of output if first is too short (subjective)
         if len(output) < 15 and len(this_result) > 1:
-            output = output + str(this_result[1]).strip()
+            output = output + " " + str(this_result[1]).strip()
     except:
         output = "bro, there was an error. try again"
 
