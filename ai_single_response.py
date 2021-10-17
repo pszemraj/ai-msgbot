@@ -5,6 +5,8 @@ import pprint as pp
 import time
 from datetime import datetime
 from os.path import join
+import warnings
+warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
 
@@ -33,8 +35,7 @@ if __name__ == "__main__":
     verbose = args.verbose
     want_rt = args.time
 
-    ai = aitextgen(model_folder=folder_path, to_gpu=False,
-                   gradient_checkpointing=True)
+    ai = aitextgen(model_folder=folder_path, to_gpu=False, )
 
     p_list = []
     st = time.time()
