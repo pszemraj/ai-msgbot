@@ -55,7 +55,7 @@ if __name__ == "__main__":
         max_length=128,
         min_length=16,
         prompt=this_prompt,
-        temperature=0.9,
+        temperature=0.7,
         top_p=0.9, do_sample=True, return_as_list=True,
     )
 
