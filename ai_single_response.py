@@ -1,3 +1,9 @@
+"""
+
+An executable way to call the model. example:
+*\gpt2_chatbot> python .\ai_single_response.py --prompt "do you love me?" --speaker "luz"
+
+"""
 import argparse
 import gc
 import os
@@ -11,7 +17,7 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
 
-folder_path = join(os.getcwd(), "gpt2_275k_checkpoint")
+folder_path = join(os.getcwd(), "gpt2_325k_checkpoint")
 verbose = False
 # Set up the parsing of command-line arguments
 parser = argparse.ArgumentParser(
@@ -94,8 +100,8 @@ if __name__ == "__main__":
             str(msg)
             for msg in diff_list
             if (":" not in str(msg))
-            and ("szemr" not in str(msg))
-            and ("peter" not in str(msg))
+               and ("szemr" not in str(msg))
+               and ("peter" not in str(msg))
         ]  # remove all names
         if not isinstance(this_result, list):
             list(this_result)
