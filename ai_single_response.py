@@ -17,7 +17,7 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
 
-model_loc = join(os.getcwd(), "gpt2_385k_checkpoint")
+model_loc = join(os.getcwd(), "gpt2_std_gpu_774M_60ksteps")
 
 
 def query_gpt_peter(

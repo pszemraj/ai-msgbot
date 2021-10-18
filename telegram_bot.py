@@ -16,7 +16,7 @@ from telegram.ext import Updater
 from ai_single_response import query_gpt_peter
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-model_loc = os.path.join(os.getcwd(), "gpt2_385k_checkpoint")
+model_loc = os.path.join(os.getcwd(), "gpt2_std_gpu_774M_60ksteps")
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)

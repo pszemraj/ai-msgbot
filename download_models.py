@@ -5,6 +5,7 @@ model_links = {
     "gpt335M_275ks_checkpoint": "https://www.dropbox.com/sh/7kyoo9462lykfhp/AACbtz0FpwEvD24J04n53LGca?dl=1",
     "gpt335M_325ks_checkpoint": "https://www.dropbox.com/sh/5qhujccnpr9b8ba/AABTU9V3N87iYy7qwWEDVfnsa?dl=1",
     "gpt-neo-125M_150ks_checkpoint": "https://www.dropbox.com/sh/e2hbxkzu1e4vtte/AACdUHz-J735F5Cn-KV4udlka?dl=1",
+    "gpt2_std_gpu_774M_60ksteps":"https://www.dropbox.com/sh/2wu7nbckqo5ghga/AABMg6SUaaP103WcL2lnF2b7a?dl=1",
 }
 if __name__ == "__main__":
     folder_names = [dir for dir in os.listdir(os.getcwd()) if os.path.isdir(dir)]
@@ -17,3 +18,9 @@ if __name__ == "__main__":
         utils.get_zip_URL(
             model_links["gpt-neo-125M_150ks_checkpoint"], extract_loc=os.getcwd()
         )
+
+    if "gpt2_std_gpu_774M_60ksteps" not in folder_names:
+        utils.get_zip_URL(
+            model_links["gpt2_std_gpu_774M_60ksteps"], extract_loc=os.getcwd()
+        )
+
