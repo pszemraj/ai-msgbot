@@ -12,7 +12,7 @@ from telegram.ext import CommandHandler
 from telegram.ext import Filters, MessageHandler
 from telegram.ext import Updater
 
-# TODO: figure out how to get this to import correctly when it is inside /telegram-bot
+# TODO: figure out how to get this to import correctly when it is inside ./telegram-bot
 from ai_single_response import query_gpt_peter
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="send me texts and I answer")
+                             text="send me texts and I answer.. after like 30 seconds")
 
 
 def help(update, context):
@@ -41,7 +41,10 @@ def echo(update, context):
 def ask_gpt(update, context):
     prompt = clean(update.message.text) # clean user input
     prompt = prompt.strip() # get rid of any extra whitespace
-    if len(prompt) > 100: prompt = prompt[:100]  # truncate
+    if len(prompt) > 100:
+        prompt = prompt[:100]  # truncate
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="ur prompt is quite long, truncating to first 100 characters")
     try:
         firstname = clean(update.message.chat.first_name)
         lastname = clean(update.message.chat.last_name)
@@ -49,7 +52,8 @@ def ask_gpt(update, context):
     except:
         # there was some issue getting that info, whatever
         prompt_speaker = None
-
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text="... pondering (pls wait) ...")
     resp = query_gpt_peter(folder_path=model_loc, prompt_msg=prompt,
                            speaker=prompt_speaker, )
     bot_resp = resp["out_text"]

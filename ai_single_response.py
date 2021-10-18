@@ -51,7 +51,7 @@ def query_gpt_peter(
         max_length=128,
         min_length=16,
         prompt=this_prompt,
-        temperature=0.8,
+        temperature=0.7,
         top_p=0.8,
         do_sample=True,
         return_as_list=True,
