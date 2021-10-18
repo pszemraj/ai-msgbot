@@ -17,11 +17,18 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
 
-model_loc = join(os.getcwd(), "gpt2_325k_checkpoint")
+model_loc = join(os.getcwd(), "gpt2_385k_checkpoint")
 
 
-def query_gpt_peter(folder_path, prompt_msg: str, speaker=None, responder="peter szemraj", kparam=70,
-                    verbose=False, use_gpu=False):
+def query_gpt_peter(
+    folder_path,
+    prompt_msg: str,
+    speaker=None,
+    responder="peter szemraj",
+    kparam=70,
+    verbose=False,
+    use_gpu=False,
+):
     ai = aitextgen(
         model_folder=folder_path,
         to_gpu=use_gpu,
@@ -61,8 +68,8 @@ def query_gpt_peter(folder_path, prompt_msg: str, speaker=None, responder="peter
             str(msg)
             for msg in diff_list
             if (":" not in str(msg))
-               and ("szemr" not in str(msg))
-               and ("peter" not in str(msg))
+            and ("szemr" not in str(msg))
+            and ("peter" not in str(msg))
         ]  # remove all names
         if not isinstance(this_result, list):
             list(this_result)
@@ -76,10 +83,7 @@ def query_gpt_peter(folder_path, prompt_msg: str, speaker=None, responder="peter
     p_list.append(output + "\n")
     p_list.append("\n")
 
-    model_responses = {
-        "out_text": output,
-        "full_conv": p_list
-    }
+    model_responses = {"out_text": output, "full_conv": p_list}
 
     return model_responses
 
@@ -91,7 +95,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     "--prompt",
     required=True,
-    help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder."
+    help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder.",
 )
 parser.add_argument(
     "--speaker",
@@ -138,8 +142,15 @@ if __name__ == "__main__":
 
     st = time.time()
 
-    resp = query_gpt_peter(folder_path=model_loc, prompt_msg=query, speaker=spkr, responder=rspndr, kparam=k_results,
-                    verbose=False, use_gpu=False)
+    resp = query_gpt_peter(
+        folder_path=model_loc,
+        prompt_msg=query,
+        speaker=spkr,
+        responder=rspndr,
+        kparam=k_results,
+        verbose=False,
+        use_gpu=False,
+    )
 
     output = resp["out_text"]
     pp.pprint(output, indent=4)
