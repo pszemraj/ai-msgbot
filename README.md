@@ -21,3 +21,12 @@ A little example / guide for building a chatbot that sounds like you (or some da
 the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) are work-in-progress attempts to have longer conversations with the model.
 
 ---
+
+## TODO and idea list
+
+- try generating 5-10 responses at once instead of n=1, and return the one with the highest harmonic mean sentence score.
+  - **Rationale**: based on _UNVALIDATED AND UNQUANTIFIED_ trends in the grid search data (see [gridsearch v1](https://www.dropbox.com/s/uanhf2kuyoybo4x/GPT-Peter%20Hyperparam%20Analysis%20w%20Metrics%20-%20Oct-20-2021_15-49.xlsx?dl=0) and [gridsearch v2](https://www.dropbox.com/s/r2xv66wdfyalwyi/GPT-Peter%20Hyperparam%20Analysis%20w%20Metrics%20-%20Oct-21-2021_02-01.xlsx?dl=0)), the responses that rank high on the harmonic mean score also seem the most coherent and responsive to the question at hand *this is anecdotal
+  - jury is still out as to what the intuition / reason behind that is. The _product score_ results being useful makes sense, but these are even better
+  - therefore, generating 5-10 reponses at once, scoring them all at once (_check docs for function_) and returning the corresponding highest-scoring prompt should have the bot behaving more realistically. 
+  -
+---
