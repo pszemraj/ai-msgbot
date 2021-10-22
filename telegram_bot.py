@@ -18,33 +18,39 @@ from ai_single_response import query_gpt_peter
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 model_loc = os.path.join(os.getcwd(), "gpt2_std_gpu_774M_120ksteps")
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
 logger = logging.getLogger(__name__)
 
 
 def start(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="send me texts and I answer.. after like 30 seconds")
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="send me texts and I answer.. after like 30 seconds",
+    )
 
 
 def help(update, context):
     """Send a message when the command /help is issued."""
-    update.message.reply_text('idk - there are not any options rn, just send normal texts')
+    update.message.reply_text(
+        "idk - there are not any options rn, just send normal texts"
+    )
 
 
 def echo(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id,
-                             text=update.message.text)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
 
 
 def ask_gpt(update, context):
-    prompt = clean(update.message.text) # clean user input
-    prompt = prompt.strip() # get rid of any extra whitespace
+    prompt = clean(update.message.text)  # clean user input
+    prompt = prompt.strip()  # get rid of any extra whitespace
     if len(prompt) > 100:
         prompt = prompt[:100]  # truncate
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text="ur prompt is quite long, truncating to first 100 characters")
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="ur prompt is quite long, truncating to first 100 characters",
+        )
     try:
         firstname = clean(update.message.chat.first_name)
         lastname = clean(update.message.chat.last_name)
@@ -52,15 +58,19 @@ def ask_gpt(update, context):
     except:
         # there was some issue getting that info, whatever
         prompt_speaker = None
-    context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="... neurons are working ...")
-    resp = query_gpt_peter(folder_path=model_loc, prompt_msg=prompt,
-                           speaker=prompt_speaker, kparam=125,
-                           temp=0.75, top_p=0.65, # latest hyperparam search results 21-oct
-                           )
+    context.bot.send_message(
+        chat_id=update.effective_chat.id, text="... neurons are working ..."
+    )
+    resp = query_gpt_peter(
+        folder_path=model_loc,
+        prompt_msg=prompt,
+        speaker=prompt_speaker,
+        kparam=125,
+        temp=0.75,
+        top_p=0.65,  # latest hyperparam search results 21-oct
+    )
     bot_resp = resp["out_text"]
-    context.bot.send_message(chat_id=update.effective_chat.id,
-                             text=bot_resp)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=bot_resp)
 
 
 def error(update, context):
@@ -69,8 +79,9 @@ def error(update, context):
 
 
 def unknown(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="m8, I didn't understand that command.")
+    context.bot.send_message(
+        chat_id=update.effective_chat.id, text="m8, I didn't understand that command."
+    )
 
 
 if __name__ == "__main__":
@@ -81,10 +92,10 @@ if __name__ == "__main__":
     updater = Updater(token=my_token, use_context=True)
 
     dispatcher = updater.dispatcher
-    start_handler = CommandHandler('start', start)
+    start_handler = CommandHandler("start", start)
     dispatcher.add_handler(start_handler)
 
-    help_handler = CommandHandler('help', help)
+    help_handler = CommandHandler("help", help)
     dispatcher.add_handler(help_handler)
 
     gpt_handler = MessageHandler(Filters.text & (~Filters.command), ask_gpt)
