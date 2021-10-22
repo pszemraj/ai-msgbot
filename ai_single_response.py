@@ -172,7 +172,7 @@ if __name__ == "__main__":
     want_rt = args.time
 
     # force-update the speaker+responder params for the generic model case
-    if model_dir == "gpt2_dailydialogue_355M_75Ksteps":
+    if "dailydialogue" in model_dir.lower():
         spkr = "john smith"
         rspndr = "nancy sellers"
         # ^ fake people I made up when parsing Daily Dialogue dataset
