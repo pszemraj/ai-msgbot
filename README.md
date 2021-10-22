@@ -18,6 +18,7 @@ finished!
 -   you can message the bot by clicking [this link](https://t.me/GPTPeter_bot)
 
 * * *
+**Table of Contents**
 
 <!-- TOC -->
 
