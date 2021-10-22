@@ -21,9 +21,10 @@ finished!
 - example data (from the _Daily Dialogues_ dataset) is in `conversation-data`
 - model files need to be downloaded from my dropbox (run `download_models.py`) and it will be done "automatically". They will then show up in folders in your cwd
 
+
 **A friend's screenshot: an example bot response on Telegram**
 
-<img src="https://www.dropbox.com/s/10apns0d69hj8fn/are%20we%20human.jpg?dl=1" width="600" height="200">
+<img src="https://user-images.githubusercontent.com/74869040/138378871-d3508ce8-8dd0-45b8-92e2-92bc5ae1d530.jpg" width="600" height="200">
 
 ## quickstart
 
@@ -53,6 +54,6 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 
 _An example of end-of-pipeline capabilities (further tuning to come)_
 
-<img src="https://www.dropbox.com/s/2fqi6wwkr1jnix3/github%20-%20xiang%20response.jpg?dl=1" width="320" height="960">
+<img src="https://user-images.githubusercontent.com/74869040/138378926-03c57fa5-d3e9-4a9b-a463-df4b7f66a6af.jpg" width="420" height="960">
 
 - **Aside: the submitter of this image is also in the analytics club @ ETH Zurich, which the bot knew to reference.**
