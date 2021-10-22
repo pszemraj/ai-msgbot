@@ -16,7 +16,7 @@ from telegram.ext import Updater
 from ai_single_response import query_gpt_peter
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-model_loc = os.path.join(os.getcwd(), "gpt2_std_gpu_774M_60ksteps")
+model_loc = os.path.join(os.getcwd(), "gpt2_std_gpu_774M_120ksteps")
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -53,9 +53,11 @@ def ask_gpt(update, context):
         # there was some issue getting that info, whatever
         prompt_speaker = None
     context.bot.send_message(chat_id=update.effective_chat.id,
-                             text="... pondering (pls wait) ...")
+                             text="... neurons are working ...")
     resp = query_gpt_peter(folder_path=model_loc, prompt_msg=prompt,
-                           speaker=prompt_speaker, )
+                           speaker=prompt_speaker, kparam=125,
+                           temp=0.75, top_p=0.65, # latest hyperparam search results 21-oct
+                           )
     bot_resp = resp["out_text"]
     context.bot.send_message(chat_id=update.effective_chat.id,
                              text=bot_resp)

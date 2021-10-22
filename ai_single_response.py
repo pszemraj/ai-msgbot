@@ -17,17 +17,17 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
 
-model_loc = join(os.getcwd(), "gpt2_std_gpu_774M_60ksteps")
-
 
 def query_gpt_peter(
-    folder_path,
-    prompt_msg: str,
-    speaker=None,
-    responder="peter szemraj",
-    kparam=70,
-    verbose=False,
-    use_gpu=False,
+        folder_path,
+        prompt_msg: str,
+        speaker=None,
+        responder="peter szemraj",
+        kparam=125,
+        temp=0.75,
+        top_p=0.65,
+        verbose=False,
+        use_gpu=False,
 ):
     ai = aitextgen(
         model_folder=folder_path,
@@ -51,8 +51,8 @@ def query_gpt_peter(
         max_length=128,
         min_length=16,
         prompt=this_prompt,
-        temperature=0.7,
-        top_p=0.8,
+        temperature=temp,
+        top_p=top_p,
         do_sample=True,
         return_as_list=True,
     )
@@ -68,8 +68,8 @@ def query_gpt_peter(
             str(msg)
             for msg in diff_list
             if (":" not in str(msg))
-            and ("szemr" not in str(msg))
-            and ("peter" not in str(msg))
+               and ("szemr" not in str(msg))
+               and ("peter" not in str(msg))
         ]  # remove all names
         if not isinstance(this_result, list):
             list(this_result)
@@ -84,19 +84,30 @@ def query_gpt_peter(
     p_list.append("\n")
 
     model_responses = {"out_text": output, "full_conv": p_list}
+    print("finished!\n")
 
     return model_responses
 
 
 # Set up the parsing of command-line arguments
 parser = argparse.ArgumentParser(
-    description="submit a message and have the 335M parameter GPT-Peter model respond"
+    description="submit a message and have a 335M parameter GPT model respond"
 )
 parser.add_argument(
     "--prompt",
-    required=True,
+    required=True,  # MUST HAVE A PROMPT
+    type=str,
     help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder.",
 )
+parser.add_argument(
+    "--model",
+    required=False,
+    type=str,
+    default="gpt2_std_gpu_774M_120ksteps",
+    help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
+         "config.json)",
+)
+
 parser.add_argument(
     "--speaker",
     required=False,
@@ -114,8 +125,24 @@ parser.add_argument(
     "--topk",
     required=False,
     type=int,
-    default=70,
+    default=125,
     help="how many responses to sample. lower = more random responses",
+)
+
+parser.add_argument(
+    "--temp",
+    required=False,
+    type=float,
+    default=0.75,
+    help="roughly considered as 'model creativity'",
+)
+
+parser.add_argument(
+    "--topp",
+    required=False,
+    type=float,
+    default=0.65,
+    help="nucleus sampling frac - aka: what fraction of possible options are considered?",
 )
 
 parser.add_argument(
@@ -134,11 +161,21 @@ parser.add_argument(
 if __name__ == "__main__":
     args = parser.parse_args()
     query = args.prompt
+    model_dir = args.model
+    model_loc = join(os.getcwd(), model_dir)
     spkr = args.speaker
     rspndr = args.responder
     k_results = args.topk
+    my_temp = args.temp
+    my_top_p = args.topp
     want_verbose = args.verbose
     want_rt = args.time
+
+    # force-update the speaker+responder params for the generic model case
+    if model_dir == "gpt2_dailydialogue_355M_75Ksteps":
+        spkr = "john smith"
+        rspndr = "nancy sellers"
+        # ^ fake people I made up when parsing Daily Dialogue dataset
 
     st = time.time()
 
@@ -148,6 +185,8 @@ if __name__ == "__main__":
         speaker=spkr,
         responder=rspndr,
         kparam=k_results,
+        temp=my_temp,
+        top_p=my_top_p,
         verbose=False,
         use_gpu=False,
     )

@@ -4,3 +4,7 @@
 /gpt2_275k_checkpoint/
 /gpt2_325k_checkpoint/
 /gpt2_385k_checkpoint/
+/gpt2_std_gpu_774M_120ksteps/
+/gpt2_std_gpu_774M_60ksteps/
+/gpt2_dailydialogue_355M_75Ksteps/
+

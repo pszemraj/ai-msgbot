@@ -2,6 +2,7 @@
 
 - Deploy the bot to telegram using the `python-telegram-bot` package
 - Test it by messaging @GPTPeter_bot on [telegram](https://telegram.org/)
+
 ## Resources / Links
 
 - python-telegram-bot [quickstart](https://github.com/python-telegram-bot/python-telegram-bot/wiki/Extensions-%E2%80%93-Your-first-Bot)
