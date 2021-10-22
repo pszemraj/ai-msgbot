@@ -1,6 +1,8 @@
 # AI Chatbots based on GPT Architecture
 
-A little example / guide for building a chatbot that sounds like you (or some dataset / persona you choose) by training a GPT-based model (either GPT2 or GPT-neo). Primarily relies on the `aitextgen` and `python-telegram-bot` libraries. Note that the training was done on Colab to leverage the GPU. 
+A little example / guide for building a chatbot that sounds like you (or some dataset / persona you choose) by training a GPT-based model (either GPT2 or GPT-neo). Primarily relies on the `aitextgen` and `python-telegram-bot` libraries.
+
+> Note that the training was done on Colab to leverage the GPU. 
 
 ```bazaar
 C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --model gpt2_dailydialogue_355M_75Ksteps --prompt "what are you doing?" --temp 0.8 --topp
@@ -62,10 +64,11 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 -   therefore, generating 5-10 reponses at once, scoring them all at once (_check docs for function_) and returning the corresponding highest-scoring prompt should have the bot behaving more realistically.
 
 2.  continue with hyperparamter optimization on 774M model GPT-Peter. Status of hyperparameter "search" is kept (_and will be updated_) [here](https://gpt-peter-eda.netlify.app/)
+  - > examine if any basic ML approaches can model the harmonic mean with [Pycaret](http://www.pycaret.org/tutorials/html/REG102.html)
 3.  investigate whatsapp bot potential and utility
 4.  evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint
 
--   in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`
+  - > in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`
 
 5.  evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot
     -   this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot

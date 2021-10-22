@@ -1,3 +1,4 @@
+# local model folders for testing / running bots / deploy
 /gpt2_43k_checkpoint/
 /gpt2_135k_checkpoint/
 /gpt2_200k_checkpoint/
@@ -7,4 +8,5 @@
 /gpt2_std_gpu_774M_120ksteps/
 /gpt2_std_gpu_774M_60ksteps/
 /gpt2_dailydialogue_355M_75Ksteps/
-
+/GPT2_dailydialogue_355M_150Ksteps/
+# the above can be downloaded through `download_models.py`
