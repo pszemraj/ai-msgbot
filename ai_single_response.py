@@ -6,12 +6,13 @@ An executable way to call the model. example:
 """
 import argparse
 import gc
-import os
+import os, re
 import pprint as pp
 import time
 import warnings
 from datetime import datetime
 from os.path import join
+from cleantext import clean
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
@@ -56,27 +57,54 @@ def query_gpt_peter(
         do_sample=True,
         return_as_list=True,
     )
-
+    if verbose:
+        pp.pprint(this_result) # to see what is going on
+        # print("the length is {} and the type of result is {} \n".format(len(this_result), type(this_result)))
     try:
         this_result = str(this_result[0]).split("\n")
-        res_out = [str(ele).strip() for ele in this_result]
-        p_out = [str(ele).strip() for ele in p_list]
-        diff_list = list(
-            set(res_out).difference(p_out)
-        )  # remove prior prompts for the response
-        this_result = [
-            str(msg)
-            for msg in diff_list
-            if (":" not in str(msg))
-            and ("szemr" not in str(msg))
-            and ("peter" not in str(msg))
-        ]  # remove all names
-        if not isinstance(this_result, list):
-            list(this_result)
-        output = str(this_result[0]).strip()
-        # add second line of output if first is too short (subjective)
-        if len(output) < 15 and len(this_result) > 1:
-            output = output + " " + str(this_result[1]).strip()
+        # this_result = ["".join(ele) for ele in this_result]
+        # p_list = ["".join(ele) for ele in p_list]
+        res_out = [clean(ele) for ele in this_result]
+        p_out = [clean(ele) for ele in p_list]
+        # this_result = [ele.replace("\r","") for ele in this_result]
+        # p_list = [ele.replace("\r", "") for ele in p_list]
+        # res_out = [ele.replace("\n","") for ele in this_result]
+        # p_out = [ele.replace("\n","") for ele in p_list]
+        if verbose:
+            pp.pprint(res_out)  # to see what is going on
+            pp.pprint(p_out)  # to see what is going on
+
+        diff_list = []
+        name_counter = 0
+        break_safe = False
+        #TODO: clean up this code
+        for resline in res_out:
+
+            if "peter szemraj:" in resline:
+                name_counter += 1
+                break_safe = True # next line a response from bot
+                continue
+            if ":" in resline and name_counter > 0:
+                if break_safe:
+                    diff_list.append(resline)
+                    break_safe = False
+                else:
+                    break
+            if resline in p_out:
+                break_safe = False
+                continue
+
+            else:
+                diff_list.append(resline)
+                break_safe = False
+
+        if verbose:
+            print("------------------------diff list: ")
+            pp.pprint(diff_list)  # to see what is going on
+            print("---------------------------------")
+
+        output = ", ".join(diff_list)
+
     except:
         output = "bro, there was an error. try again"
 
@@ -191,7 +219,7 @@ if __name__ == "__main__":
         kparam=k_results,
         temp=my_temp,
         top_p=my_top_p,
-        verbose=False,
+        verbose=want_verbose,
         use_gpu=False,
     )
 
@@ -200,7 +228,6 @@ if __name__ == "__main__":
 
     # pp.pprint(this_result[3].strip(), indent=4)
     rt = round(time.time() - st, 1)
-    gc.collect()
 
     if want_rt:
         print("took {runtime} seconds to generate. \n".format(runtime=rt))
