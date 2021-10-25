@@ -7,7 +7,29 @@ from os.path import basename
 from os.path import getsize, join
 
 import requests
+from cleantext import clean
 from natsort import natsorted
+from symspellpy import SymSpell
+
+
+def correct_phrase_load(my_string):
+    sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
+
+    dictionary_path = r'symspell_rsc/frequency_dictionary_en_82_765.txt'  # from repo root
+    bigram_path = r'symspell_rsc/frequency_bigramdictionary_en_243_342.txt'  # from repo root
+    # term_index is the column of the term and count_index is the
+    # column of the term frequency
+    sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
+    sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
+
+    # max edit distance per lookup (per single word, not per whole input string)
+    suggestions = sym_spell.lookup_compound(clean(my_string), max_edit_distance=2,
+                                            ignore_non_words=True)
+    if len(suggestions) < 1:
+        return my_string
+    else:
+        first_result = suggestions[0]
+        return first_result._term
 
 
 def fast_scandir(dirname):
@@ -26,12 +48,12 @@ def create_folder(directory):
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
-        yield lst[i : i + n]
+        yield lst[i: i + n]
 
 
 def chunky_pandas(my_df, num_chunks=4):
     n = int(len(my_df) // num_chunks)
-    list_df = [my_df[i : i + n] for i in range(0, my_df.shape[0], n)]
+    list_df = [my_df[i: i + n] for i in range(0, my_df.shape[0], n)]
 
     return list_df
 
@@ -93,7 +115,7 @@ def getFilename_fromCd(cd):
 
 
 def get_zip_URL(
-    URLtoget, extract_loc=None, file_header="dropboxexport_", verbose=False
+        URLtoget, extract_loc=None, file_header="dropboxexport_", verbose=False
 ):
     r = requests.get(URLtoget, allow_redirects=True)
     names = getFilename_fromCd(r.headers.get("content-disposition"))

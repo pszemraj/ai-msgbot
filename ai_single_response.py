@@ -103,7 +103,7 @@ parser.add_argument(
     "--model",
     required=False,
     type=str,
-    default="gpt2_std_gpu_774M_120ksteps",
+    default="gp2_DDandPeterTexts_41kPeter-774M",
     help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
     "config.json)",
 )

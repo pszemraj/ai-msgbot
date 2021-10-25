@@ -4,10 +4,11 @@ you need to have your own token to create and run one - here it is in my env var
 """
 
 import logging
-import os
+import os, time
 import warnings
 
 from cleantext import clean
+from symspellpy import SymSpell
 from telegram.ext import CommandHandler
 from telegram.ext import Filters, MessageHandler
 from telegram.ext import Updater
@@ -16,12 +17,22 @@ from telegram.ext import Updater
 from ai_single_response import query_gpt_peter
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-model_loc = os.path.join(os.getcwd(), "gpt2_std_gpu_774M_120ksteps")
+model_loc = os.path.join(os.getcwd(), "gp2_DDandPeterTexts_41kPeter-774M")
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+
+
+def correct_phrase(speller, qphrase: str):
+    suggestions = speller.lookup_compound(clean(qphrase), max_edit_distance=2,
+                                          ignore_non_words=True)
+    if len(suggestions) < 1:
+        return qphrase
+    else:
+        first_result = suggestions[0]
+        return first_result._term
 
 
 def start(update, context):
@@ -43,6 +54,7 @@ def echo(update, context):
 
 
 def ask_gpt(update, context):
+    st = time.time()
     prompt = clean(update.message.text)  # clean user input
     prompt = prompt.strip()  # get rid of any extra whitespace
     if len(prompt) > 100:
@@ -69,7 +81,9 @@ def ask_gpt(update, context):
         temp=0.75,
         top_p=0.65,  # latest hyperparam search results 21-oct
     )
-    bot_resp = resp["out_text"]
+    bot_resp = correct_phrase(sym_spell, resp["out_text"])
+    rt = round(time.time() - st, 2)
+    print(f"took {rt} sec to respond")
     context.bot.send_message(chat_id=update.effective_chat.id, text=bot_resp)
 
 
@@ -84,11 +98,20 @@ def unknown(update, context):
     )
 
 
+dictionary_path = r'symspell_rsc/frequency_dictionary_en_82_765.txt'  # from repo root
+bigram_path = r'symspell_rsc/frequency_bigramdictionary_en_243_342.txt'  # from repo root
+
 if __name__ == "__main__":
     # get token
     env_var = os.environ
     my_vars = dict(env_var)
     my_token = my_vars["GPTPETER_BOT"]
+
+    # load on bot start
+    sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
+    sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
+    sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
+
     updater = Updater(token=my_token, use_context=True)
 
     dispatcher = updater.dispatcher
