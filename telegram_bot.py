@@ -26,8 +26,9 @@ logger = logging.getLogger(__name__)
 
 
 def correct_phrase(speller, qphrase: str):
-    suggestions = speller.lookup_compound(clean(qphrase), max_edit_distance=2,
-                                          ignore_non_words=True)
+    suggestions = speller.lookup_compound(
+        clean(qphrase), max_edit_distance=2, ignore_non_words=True
+    )
     if len(suggestions) < 1:
         return qphrase
     else:
@@ -98,8 +99,10 @@ def unknown(update, context):
     )
 
 
-dictionary_path = r'symspell_rsc/frequency_dictionary_en_82_765.txt'  # from repo root
-bigram_path = r'symspell_rsc/frequency_bigramdictionary_en_243_342.txt'  # from repo root
+dictionary_path = r"symspell_rsc/frequency_dictionary_en_82_765.txt"  # from repo root
+bigram_path = (
+    r"symspell_rsc/frequency_bigramdictionary_en_243_342.txt"  # from repo root
+)
 
 if __name__ == "__main__":
     # get token
