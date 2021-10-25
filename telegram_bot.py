@@ -17,8 +17,8 @@ from telegram.ext import Updater
 from ai_single_response import query_gpt_peter
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-model_loc = os.path.join(os.getcwd(), "gp2_DDandPeterTexts_41kPeter-774M")
-
+model_loc = os.path.join(os.getcwd(), "gp2_DDandPeterTexts_774M_73Ksteps")
+# 41k was a pretty good model. not overfitted.
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
@@ -39,7 +39,7 @@ def correct_phrase(speller, qphrase: str):
 def start(update, context):
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="send me texts and I answer.. after like 30 seconds",
+        text="send me texts and I answer.. after like 30-45 seconds",
     )
 
 

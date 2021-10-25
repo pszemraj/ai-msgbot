@@ -5,13 +5,13 @@ An executable way to call the model. example:
 
 """
 import argparse
-import gc
-import os, re
+import os
 import pprint as pp
 import time
 import warnings
 from datetime import datetime
 from os.path import join
+
 from cleantext import clean
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
@@ -20,15 +20,15 @@ from aitextgen import aitextgen
 
 
 def query_gpt_peter(
-    folder_path,
-    prompt_msg: str,
-    speaker=None,
-    responder="peter szemraj",
-    kparam=125,
-    temp=0.75,
-    top_p=0.65,
-    verbose=False,
-    use_gpu=False,
+        folder_path,
+        prompt_msg: str,
+        speaker=None,
+        responder="peter szemraj",
+        kparam=125,
+        temp=0.75,
+        top_p=0.65,
+        verbose=False,
+        use_gpu=False,
 ):
     ai = aitextgen(
         model_folder=folder_path,
@@ -58,7 +58,7 @@ def query_gpt_peter(
         return_as_list=True,
     )
     if verbose:
-        pp.pprint(this_result) # to see what is going on
+        pp.pprint(this_result)  # to see what is going on
         # print("the length is {} and the type of result is {} \n".format(len(this_result), type(this_result)))
     try:
         this_result = str(this_result[0]).split("\n")
@@ -77,12 +77,12 @@ def query_gpt_peter(
         diff_list = []
         name_counter = 0
         break_safe = False
-        #TODO: clean up this code
+        # TODO: clean up this code
         for resline in res_out:
 
             if "peter szemraj:" in resline:
                 name_counter += 1
-                break_safe = True # next line a response from bot
+                break_safe = True  # next line a response from bot
                 continue
             if ":" in resline and name_counter > 0:
                 if break_safe:
@@ -119,7 +119,7 @@ def query_gpt_peter(
 
 # Set up the parsing of command-line arguments
 parser = argparse.ArgumentParser(
-    description="submit a message and have a 335M parameter GPT model respond"
+    description="submit a message and have a 774M parameter GPT model respond"
 )
 parser.add_argument(
     "--prompt",
@@ -133,7 +133,7 @@ parser.add_argument(
     type=str,
     default="gp2_DDandPeterTexts_41kPeter-774M",
     help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
-    "config.json)",
+         "config.json)",
 )
 
 parser.add_argument(
