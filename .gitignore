@@ -9,4 +9,5 @@
 /gpt2_std_gpu_774M_60ksteps/
 /gpt2_dailydialogue_355M_75Ksteps/
 /GPT2_dailydialogue_355M_150Ksteps/
+/GPT2_trivNatQAdailydia_774M_175Ksteps/
 # the above can be downloaded through `download_models.py`
