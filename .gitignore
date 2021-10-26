@@ -13,4 +13,5 @@
 /GPT2_trivNatQAdailydia_774M_175Ksteps/
 /gp2_DDandPeterTexts_41kPeter-774M/
 /gp2_DDandPeterTexts_774M_73Ksteps/
+/gp2_DDandPeterTexts_gpu_774M_175Ksteps/
 # the above can be downloaded through `download_models.py`

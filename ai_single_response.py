@@ -80,7 +80,7 @@ def query_gpt_peter(
         # TODO: clean up this code
         for resline in res_out:
 
-            if "peter szemraj:" in resline:
+            if (responder + ":") in resline:
                 name_counter += 1
                 break_safe = True  # next line a response from bot
                 continue
@@ -205,9 +205,9 @@ if __name__ == "__main__":
         rspndr = "nancy sellers"
         # ^ fake people I made up when parsing Daily Dialogue dataset    # force-update the speaker+responder params for the generic model case
     if "trivnatqa" in model_dir.lower():
-        spkr = "person alpha"
+        spkr = "person alpha" # ^ fake people I made up when parsing Daily Dialogue dataset
         rspndr = "person beta"
-        # ^ fake people I made up when parsing Daily Dialogue dataset
+
 
     st = time.time()
 
