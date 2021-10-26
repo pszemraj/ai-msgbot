@@ -16,6 +16,7 @@ model_links = {
     "gpt2_std_gpu_774M_120ksteps": "https://www.dropbox.com/sh/f8pocv18n0bohng/AACVMXcWR9Kn_CQsZKqpF1xoa?dl=1",
     "gpt2_dailydialogue_355M_75Ksteps": "https://www.dropbox.com/sh/ahx3teywshods41/AACrGhc_Qntw6GuX7ww-3pbBa?dl=1",
     "GPT2_dailydialogue_355M_150Ksteps": "https://www.dropbox.com/sh/nzcgavha8i11mvw/AACZXMoJuSfI3d3vGRrT_cp5a?dl=1",
+    "GPT2_trivNatQAdailydia_774M_175Ksteps":"https://www.dropbox.com/sh/vs848vw311l04ah/AAAuQCyuTEfjaLKo7ipybEZRa?dl=1"
 }
 if __name__ == "__main__":
 
@@ -42,4 +43,10 @@ if __name__ == "__main__":
         # GPT-Peter
         utils.get_zip_URL(
             model_links["gpt2_std_gpu_774M_120ksteps"], extract_loc=os.getcwd()
+        )
+
+    if "GPT2_trivNatQAdailydia_774M_175Ksteps" not in folder_names:
+        # GPT-Peter
+        utils.get_zip_URL(
+            model_links["GPT2_trivNatQAdailydia_774M_175Ksteps"], extract_loc=os.getcwd()
         )

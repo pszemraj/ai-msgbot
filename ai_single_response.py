@@ -203,8 +203,9 @@ if __name__ == "__main__":
     if "dailydialogue" in model_dir.lower():
         spkr = "john smith"
         rspndr = "nancy sellers"
-        # ^ fake people I made up when parsing Daily Dialogue dataset    # force-update the speaker+responder params for the generic model case
-    if "trivnatqa" in model_dir.lower():
+        # ^ fake people I made up when parsing Daily Dialogue dataset    # force-update the speaker+responder params
+        # for the generic model case
+    if "natqa" in model_dir.lower():
         spkr = "person alpha" # ^ fake people I made up when parsing Daily Dialogue dataset
         rspndr = "person beta"
 
