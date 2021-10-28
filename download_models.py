@@ -49,7 +49,8 @@ if __name__ == "__main__":
     if "GPT2_trivNatQAdailydia_774M_175Ksteps" not in folder_names:
         # GPT-Peter
         utils.get_zip_URL(
-            model_links["GPT2_trivNatQAdailydia_774M_175Ksteps"], extract_loc=os.getcwd()
+            model_links["GPT2_trivNatQAdailydia_774M_175Ksteps"],
+            extract_loc=os.getcwd(),
         )
 
     # keep the below commented until uploaded on droobiox
