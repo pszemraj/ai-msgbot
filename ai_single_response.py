@@ -40,6 +40,9 @@ def query_gpt_peter(
     p_list.append(prompt_msg.lower() + "\n")
     p_list.append("\n")
     p_list.append(responder.lower() + ":" + "\n")
+    if "natqa" in folder_path.lower():
+        spkr = "person alpha"  # manual correction
+        rspndr = "person beta"
     this_prompt = "".join(p_list)
     if verbose:
         print("overall prompt:\n")
@@ -77,7 +80,6 @@ def query_gpt_peter(
         diff_list = []
         name_counter = 0
         break_safe = False
-        # TODO: clean up this code
         for resline in res_out:
 
             if (responder + ":") in resline:
@@ -131,7 +133,7 @@ parser.add_argument(
     "--model",
     required=False,
     type=str,
-    default="gp2_DDandPeterTexts_41kPeter-774M",
+    default="gp2_DDandPeterTexts_774M_73Ksteps",
     help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
          "config.json)",
 )
