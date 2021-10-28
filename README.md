@@ -77,9 +77,12 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 
 -   > in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`
 
-5.  evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot
+5. evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot
     -   > this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot
 
+6. try gradio deployment 
+7. try huggingface spaces deployment
+8. Auto_ML based approach to see if multi dimensional hyperparameter 
 * * *
 
 ## Extras, Asides, and Examples
@@ -89,3 +92,8 @@ _An example of end-of-pipeline capabilities (further tuning to come)_
 <img src="https://user-images.githubusercontent.com/74869040/138378926-03c57fa5-d3e9-4a9b-a463-df4b7f66a6af.jpg" width="420" height="960">
 
 -   **Aside: the submitter of this image is also in the analytics club @ ETH Zurich, which the bot knew to reference.**
+
+### Other resources
+
+These are probably worth checking out if you find you like NLP/transformer-style language modeling:
+
