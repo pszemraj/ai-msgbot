@@ -5,7 +5,6 @@ An executable way to call the model. example:
 
 """
 import argparse
-import gc
 import os
 import pprint as pp
 import time
@@ -13,21 +12,23 @@ import warnings
 from datetime import datetime
 from os.path import join
 
+from cleantext import clean
+
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
 
 
 def query_gpt_peter(
-    folder_path,
-    prompt_msg: str,
-    speaker=None,
-    responder="peter szemraj",
-    kparam=125,
-    temp=0.75,
-    top_p=0.65,
-    verbose=False,
-    use_gpu=False,
+        folder_path,
+        prompt_msg: str,
+        speaker=None,
+        responder="peter szemraj",
+        kparam=125,
+        temp=0.75,
+        top_p=0.65,
+        verbose=False,
+        use_gpu=False,
 ):
     ai = aitextgen(
         model_folder=folder_path,
@@ -39,6 +40,9 @@ def query_gpt_peter(
     p_list.append(prompt_msg.lower() + "\n")
     p_list.append("\n")
     p_list.append(responder.lower() + ":" + "\n")
+    if "natqa" in folder_path.lower():
+        spkr = "person alpha"  # manual correction
+        rspndr = "person beta"
     this_prompt = "".join(p_list)
     if verbose:
         print("overall prompt:\n")
@@ -56,27 +60,53 @@ def query_gpt_peter(
         do_sample=True,
         return_as_list=True,
     )
-
+    if verbose:
+        pp.pprint(this_result)  # to see what is going on
+        # print("the length is {} and the type of result is {} \n".format(len(this_result), type(this_result)))
     try:
         this_result = str(this_result[0]).split("\n")
-        res_out = [str(ele).strip() for ele in this_result]
-        p_out = [str(ele).strip() for ele in p_list]
-        diff_list = list(
-            set(res_out).difference(p_out)
-        )  # remove prior prompts for the response
-        this_result = [
-            str(msg)
-            for msg in diff_list
-            if (":" not in str(msg))
-            and ("szemr" not in str(msg))
-            and ("peter" not in str(msg))
-        ]  # remove all names
-        if not isinstance(this_result, list):
-            list(this_result)
-        output = str(this_result[0]).strip()
-        # add second line of output if first is too short (subjective)
-        if len(output) < 15 and len(this_result) > 1:
-            output = output + " " + str(this_result[1]).strip()
+        # this_result = ["".join(ele) for ele in this_result]
+        # p_list = ["".join(ele) for ele in p_list]
+        res_out = [clean(ele) for ele in this_result]
+        p_out = [clean(ele) for ele in p_list]
+        # this_result = [ele.replace("\r","") for ele in this_result]
+        # p_list = [ele.replace("\r", "") for ele in p_list]
+        # res_out = [ele.replace("\n","") for ele in this_result]
+        # p_out = [ele.replace("\n","") for ele in p_list]
+        if verbose:
+            pp.pprint(res_out)  # to see what is going on
+            pp.pprint(p_out)  # to see what is going on
+
+        diff_list = []
+        name_counter = 0
+        break_safe = False
+        for resline in res_out:
+
+            if (responder + ":") in resline:
+                name_counter += 1
+                break_safe = True  # next line a response from bot
+                continue
+            if ":" in resline and name_counter > 0:
+                if break_safe:
+                    diff_list.append(resline)
+                    break_safe = False
+                else:
+                    break
+            if resline in p_out:
+                break_safe = False
+                continue
+
+            else:
+                diff_list.append(resline)
+                break_safe = False
+
+        if verbose:
+            print("------------------------diff list: ")
+            pp.pprint(diff_list)  # to see what is going on
+            print("---------------------------------")
+
+        output = ", ".join(diff_list)
+
     except:
         output = "bro, there was an error. try again"
 
@@ -91,7 +121,7 @@ def query_gpt_peter(
 
 # Set up the parsing of command-line arguments
 parser = argparse.ArgumentParser(
-    description="submit a message and have a 335M parameter GPT model respond"
+    description="submit a message and have a 774M parameter GPT model respond"
 )
 parser.add_argument(
     "--prompt",
@@ -103,9 +133,9 @@ parser.add_argument(
     "--model",
     required=False,
     type=str,
-    default="gp2_DDandPeterTexts_41kPeter-774M",
+    default="gp2_DDandPeterTexts_774M_73Ksteps",
     help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
-    "config.json)",
+         "config.json)",
 )
 
 parser.add_argument(
@@ -175,11 +205,12 @@ if __name__ == "__main__":
     if "dailydialogue" in model_dir.lower():
         spkr = "john smith"
         rspndr = "nancy sellers"
-        # ^ fake people I made up when parsing Daily Dialogue dataset    # force-update the speaker+responder params for the generic model case
-    if "trivnatqa" in model_dir.lower():
-        spkr = "person alpha"
+        # ^ fake people I made up when parsing Daily Dialogue dataset    # force-update the speaker+responder params
+        # for the generic model case
+    if "natqa" in model_dir.lower():
+        spkr = "person alpha" # ^ fake people I made up when parsing Daily Dialogue dataset
         rspndr = "person beta"
-        # ^ fake people I made up when parsing Daily Dialogue dataset
+
 
     st = time.time()
 
@@ -191,7 +222,7 @@ if __name__ == "__main__":
         kparam=k_results,
         temp=my_temp,
         top_p=my_top_p,
-        verbose=False,
+        verbose=want_verbose,
         use_gpu=False,
     )
 
@@ -200,7 +231,6 @@ if __name__ == "__main__":
 
     # pp.pprint(this_result[3].strip(), indent=4)
     rt = round(time.time() - st, 1)
-    gc.collect()
 
     if want_rt:
         print("took {runtime} seconds to generate. \n".format(runtime=rt))
