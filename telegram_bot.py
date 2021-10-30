@@ -39,8 +39,10 @@ def symspell_correct(speller, qphrase: str):
 
 def gramformer_correct(corrector, qphrase: str):
     try:
-        corrected = corrector(clean(qphrase), return_text=True, clean_up_tokenization_spaces=True)
-        return corrected['generated_text ']
+        corrected = corrector(
+            clean(qphrase), return_text=True, clean_up_tokenization_spaces=True
+        )
+        return corrected["generated_text "]
     except:
         print("NOTE - failed to correct with gramformer")
         return clean(qphrase)
@@ -112,8 +114,8 @@ def unknown(update, context):
     )
 
 
-use_gramformer = False # TODO change this to a default argument and use argparse
-gram_model = 'prithivida/grammar_error_correcter_v1'
+use_gramformer = False  # TODO change this to a default argument and use argparse
+gram_model = "prithivida/grammar_error_correcter_v1"
 dictionary_path = r"symspell_rsc/frequency_dictionary_en_82_765.txt"  # from repo root
 bigram_path = (
     r"symspell_rsc/frequency_bigramdictionary_en_243_342.txt"  # from repo root
@@ -127,8 +129,7 @@ if __name__ == "__main__":
 
     # load on bot start
     if use_gramformer:
-        corrector = pipeline("text2text-generation", model=gram_model,
-                             device=-1)
+        corrector = pipeline("text2text-generation", model=gram_model, device=-1)
     else:
         sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
         sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
