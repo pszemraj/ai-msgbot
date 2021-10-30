@@ -60,6 +60,34 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 
 * * *
 
+## Repo Overview and Usage
+
+### Training a model
+
+<font color="yellow"> TODO </font>
+
+### Parsing Message Data 
+
+<font color="yellow"> TODO </font>
+
+### Interaction with a Trained model
+
+- command line
+- "bot mode"
+	- telegram
+	- whatsapp (still mostly unexplored)
+- _real deployment_ @ jonathan lehner_
+
+<font color="yellow"> TODO </font>
+
+#### Model Responses: Spelling / Grammar Correction
+
+- obviously, one of the primary goals of this project is to be able to train a chatbot/QA bot that can respond to the user "unaided" where it does not need hardcoding to be able to handle questions / edge cases. That said, sometimes the model will generate a bunch of strings together,, and applying "general" spell correction helps keep the model responses as comprehensible as possible without interfering with the response / semantics itself.
+- two methods of doing this are currently added:
+	- symspell (via the pysymspell library) _NOTE: while this is fast and works, it sometimes corrects out common text abbreviations to random other short words that are hard to understand, i.e. **tues** and **idk** and so forth_
+	- gramformer (via transformers `pipeline()`object). a pretrained NN that corrects grammar and (to be tested) hopefully does not have the issue described above. Links: [model page](https://huggingface.co/prithivida/grammar_error_correcter_v1), [the models github](https://github.com/PrithivirajDamodaran/Gramformer/) (_note: not using this because it isnt a pypy package, so i just use the hosted model on huggingface), [hf docs on pipelines() object](https://huggingface.co/transformers/main_classes/pipelines.html?highlight=textgeneration)
+
+
 ## TODO and idea list
 
 1.  try generating 5-10 responses at once instead of n=1, and return the one with the highest [harmonic mean sentence score](https://github.com/simonepri/lm-scorer).

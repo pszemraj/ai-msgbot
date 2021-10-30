@@ -1,8 +1,8 @@
-tqdm==4.43.0
-requests==2.24.0
+tqdm~=4.62.3
+requests~=2.26.0
 symspellpy==6.7.0
-pandas==1.3.0
+pandas~=1.3.4
 natsort==7.1.1
 aitextgen==0.5.2
-cleantext==1.1.3
-telegram==0.0.1
+
+transformers~=4.11.3
