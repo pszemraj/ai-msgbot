@@ -42,7 +42,7 @@ def gramformer_correct(corrector, qphrase: str):
         corrected = corrector(
             clean(qphrase), return_text=True, clean_up_tokenization_spaces=True
         )
-        return corrected["generated_text "]
+        return corrected[0]["generated_text"]
     except:
         print("NOTE - failed to correct with gramformer")
         return clean(qphrase)
@@ -97,7 +97,7 @@ def ask_gpt(update, context):
     if use_gramformer:
         bot_resp = gramformer_correct(corrector, qphrase=resp["out_text"])
     else:
-        bot_resp = gramformer_correct(sym_spell, qphrase=resp["out_text"])
+        bot_resp = symspell_correct(sym_spell, qphrase=resp["out_text"])
     rt = round(time.time() - st, 2)
     print(f"took {rt} sec to respond")
     context.bot.send_message(chat_id=update.effective_chat.id, text=bot_resp)
@@ -114,7 +114,7 @@ def unknown(update, context):
     )
 
 
-use_gramformer = False  # TODO change this to a default argument and use argparse
+use_gramformer = True  # TODO change this to a default argument and use argparse
 gram_model = "prithivida/grammar_error_correcter_v1"
 dictionary_path = r"symspell_rsc/frequency_dictionary_en_82_765.txt"  # from repo root
 bigram_path = (
@@ -127,10 +127,12 @@ if __name__ == "__main__":
     my_vars = dict(env_var)
     my_token = my_vars["GPTPETER_BOT"]
 
-    # load on bot start
+    # load on bot start so does not have to reload
     if use_gramformer:
+        print("using gramformer..")
         corrector = pipeline("text2text-generation", model=gram_model, device=-1)
     else:
+        print("using default SymSpell..")
         sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
         sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
         sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
