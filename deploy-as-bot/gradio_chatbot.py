@@ -21,6 +21,7 @@ gpt_peter_model = "gp2_DDandPeterTexts_gpu_774M_175Ksteps"
 gram_model = "prithivida/grammar_error_correcter_v1"
 model_loc = join(dirname(os.getcwd()), gpt_peter_model)
 
+
 def gramformer_correct(corrector, qphrase: str):
     try:
         corrected = corrector(
@@ -85,7 +86,7 @@ if __name__ == "__main__":
         outputs="html",
         title="GPT-Peter: 774M Parameter Model",
         description="A basic interface with a 774M parameter model of the best and most "
-        "humble human to grace the earth. You can view / screenshot your chat history on the right, and feel free to "
+                    "humble human to grace the earth. You can view / screenshot your chat history on the right, and feel free to "
                     "'flag' anything either amusing or nonsensical",
         article="**Important Notes & About:**\n"
                 "1. the model can take up to 60 seconds to respond sometimes, patience is a virtue.\n"

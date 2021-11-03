@@ -61,8 +61,8 @@ if __name__ == "__main__":
                 str(msg)
                 for msg in diff_list
                 if (":" not in str(msg))
-                and ("szemr" not in str(msg))
-                and ("peter" not in str(msg))
+                   and ("szemr" not in str(msg))
+                   and ("peter" not in str(msg))
             ]  # remove all names
             # TODO: if the first element in the list is short (say <10 chars) and a second element exists, join them
 

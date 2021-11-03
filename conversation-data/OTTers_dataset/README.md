@@ -3,10 +3,11 @@
 Explanation of data collection, data splits, and experiments can be found [here](https://arxiv.org/abs/2105.13710).
 
 ## Data
+
 You can download the data already divided in the two `in-domain` and `out-of-domain` splits.
 
-
 Number of topic pairs for each data split:
+
 - **in-domain**: allows one of the topics in each pair of the `test` set to appear in the `train` set, although with a different second topic,
 - **out-of-domain**: none of the topics in the `test` set are present in any of the topic-pairs in the `train` set.
 
@@ -18,15 +19,19 @@ Number of topic pairs for each data split:
 -------------
 
 ## Models
+
 To reproduce our results clone [Multigen](https://github.com/cdjhz/multigen) and follow their instructions to train the model on $\alpha$NLG, then save the trained model as `anlg`.    
 Preprocess multi-hop relational paths for OTTers. Set `$DATA` to either be `in_domain` or `out_of_domain`.
+
 ```bash
 export DATA=in_domain
 python ground_concepts_simple.py $DATA
 python find_neighbours.py $DATA
 python filter_triple.py $DATA
 ```
+
 ### Training
+
 ```bash
 export DATA_TYPE={in_domain, out_of_domain}
 export ROOT_PATH=..
@@ -61,9 +66,10 @@ python3 main.py \
 --logging_steps 20 \
 ```
 
-
 ---------------
+
 ## Citation
+
 If you use the dataset in your work please cite with the following
 
 ```

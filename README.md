@@ -15,18 +15,18 @@ finished!
 "i was just going to show that it's all about $ 5."
 ```
 
--   you can message the bot by clicking [this link](https://t.me/GPTPeter_bot)
+- you can message the bot by clicking [this link](https://t.me/GPTPeter_bot)
 
 * * *
 **Table of Contents**
 
 <!-- TOC -->
 
--   [AI Chatbots based on GPT Architecture](#ai-chatbots-based-on-gpt-architecture)
-    -   [Quick outline of repo:](#quick-outline-of-repo)
-    -   [quickstart](#quickstart)
-    -   [TODO and idea list](#todo-and-idea-list)
-    -   [Extras, Asides, and Examples](#extras-asides-and-examples)
+- [AI Chatbots based on GPT Architecture](#ai-chatbots-based-on-gpt-architecture)
+    - [Quick outline of repo:](#quick-outline-of-repo)
+    - [quickstart](#quickstart)
+    - [TODO and idea list](#todo-and-idea-list)
+    - [Extras, Asides, and Examples](#extras-asides-and-examples)
 
 <!-- /TOC -->
 
@@ -34,10 +34,10 @@ finished!
 
 ## Quick outline of repo:
 
--   training and message EDA notebooks in `colab-notebooks`
--   python scripts for parsing message data into a standard format for training GPT are in `parsing-messages`
--   example data (from the _Daily Dialogues_ dataset) is in `conversation-data`
--   model files need to be downloaded from my dropbox (run `download_models.py`) and it will be done "automatically". They will then show up in folders in your cwd
+- training and message EDA notebooks in `colab-notebooks`
+- python scripts for parsing message data into a standard format for training GPT are in `parsing-messages`
+- example data (from the _Daily Dialogues_ dataset) is in `conversation-data`
+- model files need to be downloaded from my dropbox (run `download_models.py`) and it will be done "automatically". They will then show up in folders in your cwd
 
 **A friend's screenshot: an example bot response on Telegram**
 
@@ -45,14 +45,13 @@ finished!
 
 ## quickstart
 
--   clone the repo
--   with a terminal opened in the repo folder:
-    -   `pip install -r requirements.txt`
-    -   `python download_models.py`
-    -   `python .\ai_single_response.py --responder jonathan --prompt "do you know how to get rich?"`
--   then it will respond!
--   other models are available / will be downloaded, to change the model that generates a response you can pass the argument `--model` for example:
-
+- clone the repo
+- with a terminal opened in the repo folder:
+    - `pip install -r requirements.txt`
+    - `python download_models.py`
+    - `python .\ai_single_response.py --responder jonathan --prompt "do you know how to get rich?"`
+- then it will respond!
+- other models are available / will be downloaded, to change the model that generates a response you can pass the argument `--model` for example:
 
     python ai_single_response.py --model "GPT2_dailydialogue_355M_150Ksteps" --prompt "are you free tomorrow?"
 
@@ -66,7 +65,7 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 
 <font color="yellow"> TODO </font>
 
-### Parsing Message Data 
+### Parsing Message Data
 
 <font color="yellow"> TODO </font>
 
@@ -74,8 +73,8 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 
 - command line
 - "bot mode"
-	- telegram
-	- whatsapp (still mostly unexplored)
+    - telegram
+    - whatsapp (still mostly unexplored)
 - _real deployment_ @ jonathan lehner_
 
 <font color="yellow"> TODO </font>
@@ -84,33 +83,33 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 
 - obviously, one of the primary goals of this project is to be able to train a chatbot/QA bot that can respond to the user "unaided" where it does not need hardcoding to be able to handle questions / edge cases. That said, sometimes the model will generate a bunch of strings together,, and applying "general" spell correction helps keep the model responses as comprehensible as possible without interfering with the response / semantics itself.
 - two methods of doing this are currently added:
-	- symspell (via the pysymspell library) _NOTE: while this is fast and works, it sometimes corrects out common text abbreviations to random other short words that are hard to understand, i.e. **tues** and **idk** and so forth_
-	- gramformer (via transformers `pipeline()`object). a pretrained NN that corrects grammar and (to be tested) hopefully does not have the issue described above. Links: [model page](https://huggingface.co/prithivida/grammar_error_correcter_v1), [the models github](https://github.com/PrithivirajDamodaran/Gramformer/) (_note: not using this because it isnt a pypy package, so i just use the hosted model on huggingface), [hf docs on pipelines() object](https://huggingface.co/transformers/main_classes/pipelines.html?highlight=textgeneration)
-
+    - symspell (via the pysymspell library) _NOTE: while this is fast and works, it sometimes corrects out common text abbreviations to random other short words that are hard to understand, i.e. **tues** and **idk** and so forth_
+    - gramformer (via transformers `pipeline()`object). a pretrained NN that corrects grammar and (to be tested) hopefully does not have the issue described above. Links: [model page](https://huggingface.co/prithivida/grammar_error_correcter_v1), [the models github](https://github.com/PrithivirajDamodaran/Gramformer/) (_note: not using this because it isnt a pypy package, so i just use the hosted model on huggingface), [hf docs on pipelines() object](https://huggingface.co/transformers/main_classes/pipelines.html?highlight=textgeneration)
 
 ## TODO and idea list
 
-1.  try generating 5-10 responses at once instead of n=1, and return the one with the highest [harmonic mean sentence score](https://github.com/simonepri/lm-scorer).
+1. try generating 5-10 responses at once instead of n=1, and return the one with the highest [harmonic mean sentence score](https://github.com/simonepri/lm-scorer).
 
 - > **Rationale**: based on _UNVALIDATED AND UNQUANTIFIED_ trends in the grid search data (see [gridsearch v1](https://www.dropbox.com/s/uanhf2kuyoybo4x/GPT-Peter%20Hyperparam%20Analysis%20w%20Metrics%20-%20Oct-20-2021_15-49.xlsx?dl=0) and [gridsearch v2](https://www.dropbox.com/s/r2xv66wdfyalwyi/GPT-Peter%20Hyperparam%20Analysis%20w%20Metrics%20-%20Oct-21-2021_02-01.xlsx?dl=0)), the responses that rank high on the harmonic mean score also seem the most coherent and responsive to the question at hand \*this is anecdotal
 -   > jury is still out as to what the intuition / reason behind that is. The _product score_ results being useful makes sense, but these are even better
 -   > therefore, generating 5-10 reponses at once, scoring them all at once (_check docs for function_) and returning the corresponding highest-scoring prompt should have the bot behaving more realistically.
 
-2.  continue with hyperparamter optimization on 774M model GPT-Peter. Status of hyperparameter "search" is kept (_and will be updated_) [here](https://gpt-peter-eda.netlify.app/)
+2. continue with hyperparamter optimization on 774M model GPT-Peter. Status of hyperparameter "search" is kept (_and will be updated_) [here](https://gpt-peter-eda.netlify.app/)
 
 -   > examine if any basic ML approaches can model the harmonic mean with [Pycaret](http://www.pycaret.org/tutorials/html/REG102.html)
 
-3.  investigate whatsapp bot potential and utility
-4.  evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint
+3. investigate whatsapp bot potential and utility
+4. evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint
 
 -   > in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`
 
 5. evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot
     -   > this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot
 
-6. try gradio deployment 
+6. try gradio deployment
 7. try huggingface spaces deployment
-8. Auto_ML based approach to see if multi dimensional hyperparameter 
+8. Auto_ML based approach to see if multi dimensional hyperparameter
+
 * * *
 
 ## Extras, Asides, and Examples
@@ -119,7 +118,7 @@ _An example of end-of-pipeline capabilities (further tuning to come)_
 
 <img src="https://user-images.githubusercontent.com/74869040/138378926-03c57fa5-d3e9-4a9b-a463-df4b7f66a6af.jpg" width="420" height="960">
 
--   **Aside: the submitter of this image is also in the analytics club @ ETH Zurich, which the bot knew to reference.**
+- **Aside: the submitter of this image is also in the analytics club @ ETH Zurich, which the bot knew to reference.**
 
 ### Other resources
 
