@@ -86,17 +86,17 @@ if __name__ == "__main__":
         outputs="html",
         title="GPT-Peter: 774M Parameter Model",
         description="A basic interface with a 774M parameter model of the best and most "
-                    "humble human to grace the earth. You can view / screenshot your chat history on the right, and feel free to "
-                    "'flag' anything either amusing or nonsensical",
+        "humble human to grace the earth. You can view / screenshot your chat history on the right, and feel free to "
+        "'flag' anything either amusing or nonsensical",
         article="**Important Notes & About:**\n"
-                "1. the model can take up to 60 seconds to respond sometimes, patience is a virtue.\n"
-                "2. entering your name is completely optional, but might get you a more personalized response if you "
-                "have messaged me in the past.\n"
-                "3. the model started from a pretrained checkpoint, **and in addition was trained on other datasets** "
-                "before Peter's messages says should not be interpreted as a past message or an absolutely true "
-                "statement.\n "
-                "_You can learn more about the model architecture and training process [here]("
-                "https://youtu.be/dQw4w9WgXcQ)._",
+        "1. the model can take up to 60 seconds to respond sometimes, patience is a virtue.\n"
+        "2. entering your name is completely optional, but might get you a more personalized response if you "
+        "have messaged me in the past.\n"
+        "3. the model started from a pretrained checkpoint, **and in addition was trained on other datasets** "
+        "before Peter's messages says should not be interpreted as a past message or an absolutely true "
+        "statement.\n "
+        "_You can learn more about the model architecture and training process [here]("
+        "https://youtu.be/dQw4w9WgXcQ)._",
         css="""
         .chatbox {display:flex;flex-direction:column}
         .user_msg, .resp_msg {padding:4px;margin-bottom:4px;border-radius:4px;width:80%}

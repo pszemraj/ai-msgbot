@@ -20,15 +20,15 @@ from aitextgen import aitextgen
 
 
 def query_gpt_peter(
-        folder_path,
-        prompt_msg: str,
-        speaker=None,
-        responder="peter szemraj",
-        kparam=125,
-        temp=0.75,
-        top_p=0.65,
-        verbose=False,
-        use_gpu=False,
+    folder_path,
+    prompt_msg: str,
+    speaker=None,
+    responder="peter szemraj",
+    kparam=125,
+    temp=0.75,
+    top_p=0.65,
+    verbose=False,
+    use_gpu=False,
 ):
     ai = aitextgen(
         model_folder=folder_path,
@@ -135,7 +135,7 @@ parser.add_argument(
     type=str,
     default="gp2_DDandPeterTexts_774M_73Ksteps",
     help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
-         "config.json)",
+    "config.json)",
 )
 
 parser.add_argument(
