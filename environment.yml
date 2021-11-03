@@ -51,7 +51,7 @@ dependencies:
   - pysocks=1.7.1=py39hcbf5309_3
   - python=3.9.7=h7840368_3_cpython
   - python-dateutil=2.8.2=pyhd8ed1ab_0
-  - python-telegram-bot=13.7=pyhd8ed1ab_0
+  - python-deploy-as-bot=13.7=pyhd8ed1ab_0
   - python-tzdata=2021.2.post0=pyhd8ed1ab_0
   - python_abi=3.9=2_cp39
   - pytz=2021.3=pyhd8ed1ab_0
