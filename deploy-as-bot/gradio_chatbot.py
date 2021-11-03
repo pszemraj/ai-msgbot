@@ -1,11 +1,11 @@
 import os
 import sys
+from os.path import dirname, join
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 
 import gradio as gr
 import logging
-import os
 import time
 import warnings
 
@@ -19,8 +19,7 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 logging.basicConfig()
 gpt_peter_model = "gp2_DDandPeterTexts_gpu_774M_175Ksteps"
 gram_model = "prithivida/grammar_error_correcter_v1"
-model_loc = os.path.join(os.getcwd(), "../{}".format(gpt_peter_model))
-
+model_loc = join(dirname(os.getcwd()), gpt_peter_model)
 
 def gramformer_correct(corrector, qphrase: str):
     try:
@@ -46,6 +45,8 @@ def ask_gpt(message: str, sender: str = ""):
         except:
             # there was some issue getting that info, whatever
             prompt_speaker = None
+    else:
+        prompt_speaker = None
 
     resp = query_gpt_peter(
         folder_path=model_loc,
@@ -84,9 +85,17 @@ if __name__ == "__main__":
         outputs="html",
         title="GPT-Peter: 774M Parameter Model",
         description="A basic interface with a 774M parameter model of the best and most "
-        "humble human to grace the earth. \nNOTE: A) the model can take up to 60 seconds "
-        "to respond sometimes, patience is a virtue. B) entering your name is completely "
-        "optional, but might get you a more personalized response",
+        "humble human to grace the earth. You can view / screenshot your chat history on the right, and feel free to "
+                    "'flag' anything either amusing or nonsensical",
+        article="**Important Notes & About:**\n"
+                "1. the model can take up to 60 seconds to respond sometimes, patience is a virtue.\n"
+                "2. entering your name is completely optional, but might get you a more personalized response if you "
+                "have messaged me in the past.\n"
+                "3. the model started from a pretrained checkpoint, **and in addition was trained on other datasets** "
+                "before Peter's messages says should not be interpreted as a past message or an absolutely true "
+                "statement.\n "
+                "_You can learn more about the model architecture and training process [here]("
+                "https://youtu.be/dQw4w9WgXcQ)._",
         css="""
         .chatbox {display:flex;flex-direction:column}
         .user_msg, .resp_msg {padding:4px;margin-bottom:4px;border-radius:4px;width:80%}
@@ -96,6 +105,7 @@ if __name__ == "__main__":
         allow_screenshot=True,
         allow_flagging=True,
         flagging_dir="gradio_data",
+        flagging_options=["amusing", "I actually laughed", "bad/useless response"],
         enable_queue=True,
         theme="darkhuggingface",
     )

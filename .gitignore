@@ -25,4 +25,5 @@
 *.db-journal
 deploy-as-bot/flagged
 deploy-as-bot/gradio_data
+deploy-as-bot/gradio_queue.db
 
