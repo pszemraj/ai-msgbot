@@ -17,7 +17,7 @@ from ai_single_response import query_gpt_peter
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 logging.basicConfig()
-gpt_peter_model = 'gp2_DDandPeterTexts_gpu_774M_175Ksteps'
+gpt_peter_model = "gp2_DDandPeterTexts_gpu_774M_175Ksteps"
 gram_model = "prithivida/grammar_error_correcter_v1"
 model_loc = os.path.join(os.getcwd(), "../{}".format(gpt_peter_model))
 
@@ -78,20 +78,25 @@ def chat(first_and_last_name, message):
 if __name__ == "__main__":
     corrector = pipeline("text2text-generation", model=gram_model, device=-1)
     print("Finished loading the gramformer model - ", datetime.now())
-    iface = gr.Interface(chat,
-                         inputs=["text", "text"],
-                         outputs="html",
-                         title="GPT-Peter: 774M Parameter Model",
-                         description="A basic interface with a 774M parameter model of the best and most "
-                                     "humble human to grace the earth. \nNOTE: A) the model can take up to 60 seconds "
-                                     "to respond sometimes, patience is a virtue. B) entering your name is completely "
-                                     "optional, but might get you a more personalized response",
-                         css="""
+    iface = gr.Interface(
+        chat,
+        inputs=["text", "text"],
+        outputs="html",
+        title="GPT-Peter: 774M Parameter Model",
+        description="A basic interface with a 774M parameter model of the best and most "
+        "humble human to grace the earth. \nNOTE: A) the model can take up to 60 seconds "
+        "to respond sometimes, patience is a virtue. B) entering your name is completely "
+        "optional, but might get you a more personalized response",
+        css="""
         .chatbox {display:flex;flex-direction:column}
         .user_msg, .resp_msg {padding:4px;margin-bottom:4px;border-radius:4px;width:80%}
         .user_msg {background-color:cornflowerblue;color:white;align-self:start}
         .resp_msg {background-color:lightgray;align-self:self-end}
-    """, allow_screenshot=True, allow_flagging=True, flagging_dir="gradio_data", enable_queue=True,
-                         theme="darkhuggingface",
-                         )
+    """,
+        allow_screenshot=True,
+        allow_flagging=True,
+        flagging_dir="gradio_data",
+        enable_queue=True,
+        theme="darkhuggingface",
+    )
     iface.launch(share=True)

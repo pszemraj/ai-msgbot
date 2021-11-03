@@ -3,6 +3,7 @@ Basic GPT-2 telegram bot
 you need to have your own token to create and run one - here it is in my env variables
 """
 import sys
+
 sys.path.append("..")
 
 import logging
@@ -117,7 +118,9 @@ def unknown(update, context):
 
 use_gramformer = True  # TODO change this to a default argument and use argparse
 gram_model = "prithivida/grammar_error_correcter_v1"
-dictionary_path = r"../symspell_rsc/frequency_dictionary_en_82_765.txt"  # from repo root
+dictionary_path = (
+    r"../symspell_rsc/frequency_dictionary_en_82_765.txt"  # from repo root
+)
 bigram_path = (
     r"symspell_rsc/frequency_bigramdictionary_en_243_342.txt"  # from repo root
 )
