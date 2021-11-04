@@ -1,3 +1,7 @@
+# python basics
+/__pycache__/
+/.idea/
+
 # local model folders for testing / running bots / deploy
 /gpt2_43k_checkpoint/
 /gpt2_135k_checkpoint/
@@ -15,3 +19,11 @@
 /gp2_DDandPeterTexts_774M_73Ksteps/
 /gp2_DDandPeterTexts_gpu_774M_175Ksteps/
 # the above can be downloaded through `download_models.py`
+
+# gradio things
+*.db
+*.db-journal
+deploy-as-bot/flagged
+deploy-as-bot/gradio_data
+deploy-as-bot/gradio_queue.db
+
