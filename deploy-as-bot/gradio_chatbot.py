@@ -17,7 +17,7 @@ from ai_single_response import query_gpt_peter
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 logging.basicConfig()
-gpt_peter_model = "gp2_DDandPeterTexts_gpu_774M_175Ksteps"
+gpt_peter_model = "gp2_DDandPeterTexts_774M_73Ksteps"
 gram_model = "prithivida/grammar_error_correcter_v1"
 model_loc = join(dirname(os.getcwd()), gpt_peter_model)
 
