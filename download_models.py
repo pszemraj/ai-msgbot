@@ -17,8 +17,9 @@ model_links = {
     "gpt2_dailydialogue_355M_75Ksteps": "https://www.dropbox.com/sh/ahx3teywshods41/AACrGhc_Qntw6GuX7ww-3pbBa?dl=1",
     "GPT2_dailydialogue_355M_150Ksteps": "https://www.dropbox.com/sh/nzcgavha8i11mvw/AACZXMoJuSfI3d3vGRrT_cp5a?dl=1",
     "GPT2_trivNatQAdailydia_774M_175Ksteps": "https://www.dropbox.com/sh/vs848vw311l04ah/AAAuQCyuTEfjaLKo7ipybEZRa?dl=1",
-    "gp2_DDandPeterTexts_774M_73Ksteps": "SOON",
+    "gp2_DDandPeterTexts_774M_73Ksteps": "https://www.dropbox.com/sh/bnrwpqqh34s2bea/AAAfuPTJ0A5FgHeOJ0cMlUFha?dl=1",
 }
+
 if __name__ == "__main__":
 
     folder_names = [dir for dir in os.listdir(os.getcwd()) if os.path.isdir(dir)]
