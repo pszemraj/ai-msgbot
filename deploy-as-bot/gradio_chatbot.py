@@ -94,7 +94,7 @@ if __name__ == "__main__":
         "have messaged me in the past.\n"
         "3. the model started from a pretrained checkpoint, **and in addition, was trained on other datasets** "
         "before training on Peter's messages. Anything it says should not be interpreted as an _actual_ past message or"
-                " an absolutely true statement.\n "
+        " an absolutely true statement.\n "
         "_You can learn more about the model architecture and training process [here]("
         "https://youtu.be/dQw4w9WgXcQ)._",
         css="""
