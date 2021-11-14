@@ -1,6 +1,13 @@
+"""
+
+deploy-as-bot\gradio_chatbot.py
+
+A system, method for deploying to Gradio. A human-machine interface with a 774 parameter model of the best and mosthumble human to grace the earth. A device for flagging and/or detecting the presence or absence of a good/bad response.
+
+"""
 import os
 import sys
-from os.path import dirname, join
+from os.path import dirname
 
 sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 
@@ -8,7 +15,7 @@ import gradio as gr
 import logging
 import time
 import warnings
-
+from pathlib import Path
 from cleantext import clean
 from transformers import pipeline
 from datetime import datetime
@@ -17,12 +24,27 @@ from ai_single_response import query_gpt_peter
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 logging.basicConfig()
-gpt_peter_model = "gp2_DDandPeterTexts_774M_73Ksteps"
+default_model = 'gp2_DDandPeterTexts_774M_73Ksteps'
+cwd = Path.cwd()
+model_loc = cwd.parent / default_model
+model_loc = str(model_loc.resolve())
+print(f'using model stored here: \n {model_loc} \n')
+my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
 gram_model = "prithivida/grammar_error_correcter_v1"
-model_loc = join(dirname(os.getcwd()), gpt_peter_model)
 
 
 def gramformer_correct(corrector, qphrase: str):
+    """
+    gramformer_correct - correct a string using a text2textgen pipeline model from transformers
+
+    Args:
+        corrector (transformers.pipeline): [transformers pipeline object, already created w/ relevant model]
+        qphrase (str): [text to be corrected]
+
+    Returns:
+        [str]: [corrected text]
+    """
+
     try:
         corrected = corrector(
             clean(qphrase), return_text=True, clean_up_tokenization_spaces=True
@@ -34,6 +56,16 @@ def gramformer_correct(corrector, qphrase: str):
 
 
 def ask_gpt(message: str, sender: str = ""):
+    """
+    ask_gpt - queries the relevant model with a prompt message and (optional) speaker name
+
+    Args:
+        message (str): prompt message to respond to
+        sender (str, optional): speaker aka who said the message. Defaults to "".
+
+    Returns:
+        [str]: [model response as a string]
+    """
     st = time.time()
     prompt = clean(message)  # clean user input
     prompt = prompt.strip()  # get rid of any extra whitespace
@@ -65,6 +97,16 @@ def ask_gpt(message: str, sender: str = ""):
 
 
 def chat(first_and_last_name, message):
+    """
+    chat - helper function that makes the whole gradio thing work. 
+
+    Args:
+        first_and_last_name (str or None): [speaker of the prompt, if provided]
+        message (str): [description]
+
+    Returns:
+        [str]: [returns an html string to display]
+    """
     history = gr.get_state() or []
     response = ask_gpt(message, sender=first_and_last_name)
     history.append(("You: " + message, " GPT-Peter: " + response + " [end] "))
@@ -107,7 +149,7 @@ if __name__ == "__main__":
         allow_flagging=True,
         flagging_dir="gradio_data",
         flagging_options=["amusing", "I actually laughed", "bad/useless response"],
-        enable_queue=True,
+        enable_queue=True, # allows for dealing with multiple users simultaneously
         theme="darkhuggingface",
     )
     iface.launch(share=True)
