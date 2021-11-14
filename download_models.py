@@ -81,7 +81,7 @@ if __name__ == "__main__":
                 extract_loc=model_dest, verbose=verbose,
             )
             
-        if verbose:print("finished downloading optional model files")
+        if verbose:print("finished downloading optional model files - {ts}".format(ts=get_timestamp()))
 
     # TODO: turn these into functions
     m_name = 'GPT2_trivNatQAdailydia_774M_175Ksteps'
@@ -102,7 +102,7 @@ if __name__ == "__main__":
         extr_loc = cwd / m_name
         model_dest = str(extr_loc.resolve())
         utils.get_zip_URL(
-            model_links["gp2_DDandPeterTexts_774M_73Ksteps"], extract_loc=model_dest, verbose=verbose,
+            model_links[m_name], extract_loc=model_dest, verbose=verbose,
         )
         
     print('finished downloading and checking files {ts}'.format(ts=get_timestamp()))

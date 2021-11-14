@@ -21,7 +21,7 @@ _more deployment ideas / options to come_
 -   python-telegram-bot [quickstart](https://github.com/python-telegram-bot/python-telegram-bot/wiki/Extensions-%E2%80%93-Your-first-Bot)
 -   python-telegram-bot [docs](https://python-telegram-bot.readthedocs.io/en/stable/telegram.html)
 -   [How to create a Telegram Bot in Python in under 10 minutes - codementor](https://www.codementor.io/@karandeepbatra/part-1-how-to-create-a-telegram-bot-in-python-in-under-10-minutes-19yfdv4wrq)
-
+-   An [article](https://www.section.io/engineering-education/building-a-telegram-bot-with-python-to-generate-quotes/) from 2021 that covers creating Telegram API token, bot, etc in Python. 
 ### gradio
 
 - quickstart [here](https://www.gradio.app/getting_started)
