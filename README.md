@@ -23,17 +23,18 @@ finished!
 
 <!-- TOC -->
 
--   [AI Chatbots based on GPT Architecture](#ai-chatbots-based-on-gpt-architecture)
-    -   [Quick outline of repo:](#quick-outline-of-repo)
-    -   [quickstart](#quickstart)
-    -   [Repo Overview and Usage](#repo-overview-and-usage)
-        -   [Training a model](#training-a-model)
-        -   [Parsing Message Data](#parsing-message-data)
-        -   [Interaction with a Trained model](#interaction-with-a-trained-model)
-            -   [Model Responses: Spelling / Grammar Correction](#model-responses-spelling--grammar-correction)
-    -   [TODO and idea list](#todo-and-idea-list)
-    -   [Extras, Asides, and Examples](#extras-asides-and-examples)
-        -   [Other resources](#other-resources)
+- [AI Chatbots based on GPT Architecture](#ai-chatbots-based-on-gpt-architecture)
+  - [Quick outline of repo:](#quick-outline-of-repo)
+  - [quickstart](#quickstart)
+  - [Repo Overview and Usage](#repo-overview-and-usage)
+    - [Training a model](#training-a-model)
+      - [Training: Details](#training-details)
+    - [Parsing Message Data](#parsing-message-data)
+    - [Interaction with a Trained model](#interaction-with-a-trained-model)
+      - [Model Responses: Spelling / Grammar Correction](#model-responses-spelling--grammar-correction)
+  - [TODO and idea list](#todo-and-idea-list)
+  - [Extras, Asides, and Examples](#extras-asides-and-examples)
+    - [Other resources](#other-resources)
 
 <!-- /TOC -->
 
@@ -100,6 +101,12 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 -   depending on compute resources and so forth, it is possible to keep track of the conversation in a helper script/loop, and then feed in the prior conversation and _then_ the prompt so the model can use the context as part of the generation sequence, with of course the [attention mechanism](https://arxiv.org/abs/1706.03762) ultimately focusing on the last text past to it (the actual prompt)
 -   then, a matter of deploying it, whether it is a bot that can help children learn conversation, local lingo, etc in a foreign language or a whatsapp bot to automate social upkeep, the possibilities are endless.
 -
+
+#### Training: Details
+
+-   an example dataset (_Daily Dialogues_) parsed into the script format can be found locally at `conversation-data\Daily-Dialogues\daily_dialogue_augment.txt`.
+    -   When learning, this is probably best to use to finetune the GPT2-model, but there are several other datasets (that need to be parsed) available in the repo at `*\datasets`
+    -   many more datasets are available online at [PapersWithCode](https://paperswithcode.com/datasets?task=dialogue-generation&mod=texts) and [GoogleResearch](https://research.google/tools/datasets/). Seems that _GoogleResearch_ also has a tool for searching for datasets online.
 
 <font color="yellow"> TODO: more words </font>
 
