@@ -1,47 +1,17 @@
-import argparse
 import os
+import sys
+from os.path import dirname, join, basename
+
+sys.path.append(dirname(dirname(os.path.abspath(__file__))))
+
+import argparse
 import pprint as pp
 import re
-import sys
 from datetime import date, datetime
-from os.path import basename, join
 
 from cleantext import clean
-from natsort import natsorted
 from tqdm import tqdm
-
-
-def load_dir_files(directory, req_extension=".txt", return_type="list", verbose=False):
-    appr_files = []
-    # r=root, d=directories, f = files
-    for r, d, f in os.walk(directory):
-        for prefile in f:
-            if prefile.endswith(req_extension):
-                fullpath = os.path.join(r, prefile)
-                appr_files.append(fullpath)
-
-    appr_files = natsorted(appr_files)
-
-    if verbose:
-        print("A list of files in the {} directory are: \n".format(directory))
-        if len(appr_files) < 10:
-            pp.pprint(appr_files)
-        else:
-            pp.pprint(appr_files[:10])
-            print("\n and more. There are a total of {} files".format(len(appr_files)))
-
-    if return_type.lower() == "list":
-        return appr_files
-    else:
-        if verbose:
-            print("returning dictionary")
-
-        appr_file_dict = {}
-        for this_file in appr_files:
-            appr_file_dict[basename(this_file)] = this_file
-
-        return appr_file_dict
-
+from utils import load_dir_files
 
 def parse_whatsapp(text_path:str, verbose:bool=False):
     """

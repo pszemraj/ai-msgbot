@@ -10,6 +10,7 @@ import argparse
 import os
 import utils
 from pathlib import Path
+
 model_links = {
     "gpt335M_275ks_checkpoint": "https://www.dropbox.com/sh/7kyoo9462lykfhp/AACbtz0FpwEvD24J04n53LGca?dl=1",
     "gpt335M_325ks_checkpoint": "https://www.dropbox.com/sh/5qhujccnpr9b8ba/AABTU9V3N87iYy7qwWEDVfnsa?dl=1",
@@ -64,14 +65,14 @@ if __name__ == "__main__":
 
 
     if "GPT2_trivNatQAdailydia_774M_175Ksteps" not in folder_names:
-        # GPT-Peter
+        # base "advanced" 774M param GPT-2 model trained on: Trivia, Natural Questions, Dialy Dialogues
         utils.get_zip_URL(
             model_links["GPT2_trivNatQAdailydia_774M_175Ksteps"],
             extract_loc=my_cwd,
         )
 
     if "gp2_DDandPeterTexts_774M_73Ksteps" not in folder_names:
-        # GPT-Peter
+        # GPT-Peter: trained on 73,000 steps of Peter's messages in addition to same items as GPT2_trivNatQAdailydia_774M_175Ksteps
         utils.get_zip_URL(
             model_links["gp2_DDandPeterTexts_774M_73Ksteps"], extract_loc=my_cwd
         )
