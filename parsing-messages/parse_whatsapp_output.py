@@ -43,7 +43,17 @@ def load_dir_files(directory, req_extension=".txt", return_type="list", verbose=
         return appr_file_dict
 
 
-def parse_whatsapp(text_path, verbose=False):
+def parse_whatsapp(text_path:str, verbose:bool=False):
+    """
+    parse_whatsapp - main function to parse a single conversation exported with whatsapp
+
+    Args:
+        text_path (str): [description]
+        verbose (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        [type]: [description]
+    """
     with open(text_path, "r", encoding="utf-8", errors="ignore") as f:
         textlines = f.readlines()
 
@@ -57,7 +67,7 @@ def parse_whatsapp(text_path, verbose=False):
     for line in sub_textlines:
         line = str(line)
         if "omitted" in line:
-            continue
+            continue # this line just reports an attachment (that is not present)
         else:
             parts = line.split(": ")
             if len(parts) == 2 and isinstance(parts, list):
@@ -77,23 +87,25 @@ def parse_whatsapp(text_path, verbose=False):
 
 
 # Set up the parsing of command-line arguments
-parser = argparse.ArgumentParser(
-    description="convert whatsapp chat exports to GPT-2 input"
-)
-parser.add_argument(
-    "--datadir",
-    required=True,
-    help="Path to input directory containing txt whatsapp exports",
-)
-parser.add_argument(
-    "--outdir",
-    required=False,
-    default=os.getcwd(),
-    help="Path to the output directory, where the output file will be created",
-)
+def get_parser():
+    parser = argparse.ArgumentParser(
+        description="convert whatsapp chat exports to GPT-2 input"
+    )
+    parser.add_argument(
+        "--datadir",
+        required=True,
+        help="Path to input directory containing txt whatsapp exports",
+    )
+    parser.add_argument(
+        "--outdir",
+        required=False,
+        default=os.getcwd(),
+        help="Path to the output directory, where the output file will be created",
+    )
+    return parser
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+    args = get_parser().parse_args()
     input_path = args.datadir
     output_path = args.outdir
 
