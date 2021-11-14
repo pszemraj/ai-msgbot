@@ -72,6 +72,9 @@ if __name__ == "__main__":
         if m_name not in folder_names:
             # "DailyDialogues 355M parameter model - to be trained further with custom data or used directly
             print(f'did not find {m_name} in folders, downloading..')
+            extr_loc = cwd / m_name
+            model_dest = str(extr_loc.resolve())
+
             utils.get_zip_URL(
                 model_links[m_name],
                 extract_loc=model_dest, verbose=verbose,
@@ -83,6 +86,8 @@ if __name__ == "__main__":
     if m_name not in folder_names:
         # base "advanced" 774M param GPT-2 model trained on: Trivia, Natural Questions, Dialy Dialogues
         print(f'did not find {m_name} in folders, downloading..')
+        extr_loc = cwd / m_name
+        model_dest = str(extr_loc.resolve())
         utils.get_zip_URL(
             model_links[m_name],
             extract_loc=model_dest, verbose=verbose,
@@ -90,9 +95,10 @@ if __name__ == "__main__":
 
     m_name = 'gp2_DDandPeterTexts_774M_73Ksteps'
     if m_name not in folder_names:
-        # base "advanced" 774M param GPT-2 model trained on: Trivia, Natural Questions, Dialy Dialogues
-        print(f'did not find {m_name} in folders, downloading..')
         # GPT-Peter: trained on 73,000 steps of Peter's messages in addition to same items as GPT2_trivNatQAdailydia_774M_175Ksteps
+        print(f'did not find {m_name} in folders, downloading..')
+        extr_loc = cwd / m_name
+        model_dest = str(extr_loc.resolve())
         utils.get_zip_URL(
             model_links["gp2_DDandPeterTexts_774M_73Ksteps"], extract_loc=model_dest, verbose=verbose,
         )
