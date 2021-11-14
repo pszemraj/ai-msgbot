@@ -1,7 +1,7 @@
 # python basics
 /__pycache__/
 /.idea/
-
+/scratch/
 # local model folders for testing / running bots / deploy
 /gpt2_43k_checkpoint/
 /gpt2_135k_checkpoint/

@@ -170,6 +170,60 @@ _An example of end-of-pipeline capabilities (further tuning to come)_
 
 -   **Aside: the submitter of this image is also in the analytics club @ ETH Zurich, which the bot knew to reference.**
 
+
+### examples of command-line interaction with "general" conversation bot
+
+The following responses were received for general conversational questions with the `GPT2_trivNatQAdailydia_774M_175Ksteps` model. This is an example of what is capable (and much more!!) in terms of learning to interact with another person, especially in a different language:
+
+```
+C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --time --model "GPT2_trivNatQAdailydia_774M_175Ksteps" --prompt "where is the grocery store?"
+
+... generating...
+
+finished!
+
+"it's on the highway over there."
+took 38.9 seconds to generate.
+
+C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --time --model "GPT2_trivNatQAdailydia_774M_175Ksteps" --prompt "what should I bring to the party?"
+
+... generating...
+
+finished!
+
+'you need to just go to the station to pick up a bottle.'
+took 45.9 seconds to generate.
+
+
+C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --time --model "GPT2_trivNatQAdailydia_774M_175Ksteps" --prompt "can we be friends?"
+
+... generating...
+
+finished!
+
+"sure, let's go."
+took 46.6 seconds to generate.
+
+C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --time --model "GPT2_trivNatQAdailydia_774M_175Ksteps" --prompt "are you free on tuesday?"
+
+... generating...
+
+finished!
+
+"what's the date today?"
+took 41.8 seconds to generate.
+
+
+C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --time --model "GPT2_trivNatQAdailydia_774M_175Ksteps" --prompt "do you like your job?"
+
+... generating...
+
+finished!
+
+'no, not very much.'
+took 50.1 seconds to generate.
+```
+
 ### Other resources
 
 These are probably worth checking out if you find you like NLP/transformer-style language modeling:
