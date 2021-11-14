@@ -1,4 +1,5 @@
 # AI Chatbots based on GPT Architecture
+![ACE-newsletter-workshop-img-cropped](https://user-images.githubusercontent.com/74869040/141669429-6bfd3e3f-2436-482b-b7b3-367bee6c23d3.png)
 
 A little example / guide for building a chatbot that sounds like you (or some dataset / persona you choose) by training a GPT-based model (either GPT2 or GPT-neo). Primarily relies on the `aitextgen` and `python-telegram-bot` libraries.
 
@@ -144,17 +145,20 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 -   > examine if any basic ML approaches can model the harmonic mean with [Pycaret](http://www.pycaret.org/tutorials/html/REG102.html)
 
 3.  investigate whatsapp bot potential and utility
-4.  evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint
+4.  ~~evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint~~
 
--   > in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`
+-   > ~~in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`~~
+-   _yes, it does improve things a lot_ TODO: writeup theory 
 
-5.  evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot
+5.  ~~evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot~~
 
-    -   > this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot
+    -   > ~~this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot~~
+    -   _using Trivia/CoCaQA did help model responses_
 
-6.  try gradio deployment
-7.  try huggingface spaces deployment
-8.  Auto_ML based approach to see if multi dimensional hyperparameter
+6.  ~~try gradio deployment~~
+    -   _implemented_
+8.  try huggingface spaces deployment
+9.  Auto_ML based approach to see if multi dimensional hyperparameter
 
 * * *
 
