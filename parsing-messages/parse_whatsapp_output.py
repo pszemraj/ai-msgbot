@@ -1,3 +1,9 @@
+"""
+parsing-messages\parse_whatsapp_output.py
+
+parse messages exported from WhatsApp via the standard "whatsapp export" process. Assumes that all whatsapp exports are stored somewhere in the user-provided directory, and that they remain in the default export structure of <messages with X contact>/<poorly_labeled_textfile_of_messages.txt>
+"""
+
 import os
 import sys
 from os.path import dirname, join, basename
@@ -12,17 +18,17 @@ from datetime import date, datetime
 from cleantext import clean
 from tqdm import tqdm
 from utils import load_dir_files
-
+from pathlib import Path
 def parse_whatsapp(text_path:str, verbose:bool=False):
     """
     parse_whatsapp - main function to parse a single conversation exported with whatsapp
 
     Args:
-        text_path (str): [description]
-        verbose (bool, optional): [description]. Defaults to False.
+        text_path (str): [path to a text file]
+        verbose (bool, optional): [print additional outputs for debugging]. Defaults to False.
 
     Returns:
-        [type]: [description]
+        [list]: [a list of strings, each corresponding to a line in the overall script]
     """
     with open(text_path, "r", encoding="utf-8", errors="ignore") as f:
         textlines = f.readlines()
@@ -69,7 +75,7 @@ def get_parser():
     parser.add_argument(
         "--outdir",
         required=False,
-        default=os.getcwd(),
+        default=str(Path.cwd().resolve()),
         help="Path to the output directory, where the output file will be created",
     )
     return parser
