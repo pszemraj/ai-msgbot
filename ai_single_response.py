@@ -3,7 +3,9 @@
 An executable way to call the model. example:
 *\gpt2_chatbot> python .\ai_single_response.py --prompt "do you love me?" --speaker "calvin miller"
 
-extended-summary: A system and method for interacting with a virtual machine using a series of messages , each message having associated otherwise one or more actions to be taken by the machine. The messages are stored in a computer - readable medium and can be played back through a speaker at a user - selected rate. A speaker participates in a chat with a responder , and the response from the speaker is used to generate prompts for the responders
+extended-summary: 
+    
+    A system and method for interacting with a virtual machine using a series of messages , each message having associated otherwise one or more actions to be taken by the machine. The messages are stored in a computer - readable medium and can be played back through a speaker at a user - selected rate. A speaker participates in a chat with a responder , and the response from the speaker is used to generate prompts for the responders
 
 """
 import argparse

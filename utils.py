@@ -1,3 +1,7 @@
+
+"""
+general utility functions for loading, saving, etc
+"""
 import os
 import pprint as pp
 import re
@@ -152,7 +156,7 @@ def URL_string_filter(text):
         text ([type]): [description]
 
     Returns:
-        [type]: [description]
+        [str]: [description]
     """
     custom_printable = (
         "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._"
