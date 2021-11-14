@@ -1,17 +1,17 @@
 """
 
 An executable way to call the model. example:
-*\gpt2_chatbot> python .\ai_single_response.py --prompt "do you love me?" --speaker "luz"
+*\gpt2_chatbot> python .\ai_single_response.py --prompt "do you love me?" --speaker "calvin miller"
+
+extended-summary: A system and method for interacting with a virtual machine using a series of messages , each message having associated otherwise one or more actions to be taken by the machine. The messages are stored in a computer - readable medium and can be played back through a speaker at a user - selected rate. A speaker participates in a chat with a responder , and the response from the speaker is used to generate prompts for the responders
 
 """
 import argparse
-import os
 import pprint as pp
 import time
 import warnings
 from datetime import datetime
-from os.path import join
-
+from pathlib import Path
 from cleantext import clean
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
@@ -30,19 +30,36 @@ def query_gpt_peter(
     verbose=False,
     use_gpu=False,
 ):
+    """
+    query_gpt_peter [pass a prompt in to model, get a response. Does NOT "remember" past conversation]
+
+    Args:
+        folder_path ([type]): [description]
+        prompt_msg (str): [description]
+        speaker ([type], optional): [description]. Defaults to None.
+        responder (str, optional): [description]. Defaults to "peter szemraj".
+        kparam (int, optional): [description]. Defaults to 125.
+        temp (float, optional): [description]. Defaults to 0.75.
+        top_p (float, optional): [description]. Defaults to 0.65.
+        verbose (bool, optional): [description]. Defaults to False.
+        use_gpu (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        [dict]: [returns a dict with A) just model response as str B) total conversation]
+    """
     ai = aitextgen(
         model_folder=folder_path,
         to_gpu=use_gpu,
     )
     p_list = []
+    if "natqa" in str(folder_path).lower():
+        speaker = "person alpha"  # manual correction
+        responder = "person beta"
     if speaker is not None:
         p_list.append(speaker.lower() + ":" + "\n")  # write prompt as the speaker
     p_list.append(prompt_msg.lower() + "\n")
     p_list.append("\n")
     p_list.append(responder.lower() + ":" + "\n")
-    if "natqa" in folder_path.lower():
-        spkr = "person alpha"  # manual correction
-        rspndr = "person beta"
     this_prompt = "".join(p_list)
     if verbose:
         print("overall prompt:\n")
@@ -191,8 +208,8 @@ parser.add_argument(
 if __name__ == "__main__":
     args = parser.parse_args()
     query = args.prompt
-    model_dir = args.model
-    model_loc = join(os.getcwd(), model_dir)
+    model_dir = str(args.model)
+    model_loc = Path.cwd() / model_dir
     spkr = args.speaker
     rspndr = args.responder
     k_results = args.topk
@@ -205,16 +222,17 @@ if __name__ == "__main__":
     if "dailydialogue" in model_dir.lower():
         spkr = "john smith"
         rspndr = "nancy sellers"
-        # ^ fake people I made up when parsing Daily Dialogue dataset    # force-update the speaker+responder params
+        # ^ fake people created when parsing Daily Dialogue dataset    
+        # # force-update the speaker+responder params
         # for the generic model case
     if "natqa" in model_dir.lower():
-        spkr = "person alpha"  # ^ fake people I made up when parsing Daily Dialogue dataset
+        spkr = "person alpha"  # ^ fake people created when parsing Daily Dialogue dataset
         rspndr = "person beta"
 
     st = time.time()
 
     resp = query_gpt_peter(
-        folder_path=model_loc,
+        folder_path=model_loc ,
         prompt_msg=query,
         speaker=spkr,
         responder=rspndr,
