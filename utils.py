@@ -12,7 +12,16 @@ from natsort import natsorted
 from symspellpy import SymSpell
 
 
-def correct_phrase_load(my_string):
+def correct_phrase_load(my_string:str):
+    """
+    correct_phrase_load [basic / unoptimized implementation of SymSpell to correct a string]
+
+    Args:
+        my_string (str): [text to be corrected]
+
+    Returns:
+        [type]: [description]
+    """
     sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
 
     dictionary_path = (
@@ -37,8 +46,16 @@ def correct_phrase_load(my_string):
         return first_result._term
 
 
-def fast_scandir(dirname):
-    # return all subfolders in a given filepath
+def fast_scandir(dirname:str):
+    """
+    fast_scandir [an os.path-based means to return all subfolders in a given filepath]
+
+    Args:
+        dirname (str): [description]
+
+    Returns:
+        [list]: [description]
+    """
 
     subfolders = [f.path for f in os.scandir(dirname) if f.is_dir()]
     for dirname in list(subfolders):
@@ -46,24 +63,56 @@ def fast_scandir(dirname):
     return subfolders  # list
 
 
-def create_folder(directory):
+def create_folder(directory:str):
+    
     os.makedirs(directory, exist_ok=True)
 
 
-def chunks(lst, n):
-    """Yield successive n-sized chunks from lst."""
+def chunks(lst:list, n:int):
+    """
+    chunks   -  Yield successive n-sized chunks from lst
+    Args:
+        lst (list): [description]
+        n (int): [description]
+
+    Yields:
+        [type]: [description]
+    """
+    
     for i in range(0, len(lst), n):
         yield lst[i : i + n]
 
 
-def chunky_pandas(my_df, num_chunks=4):
+def chunky_pandas(my_df, num_chunks:int=4):
+    """
+    chunky_pandas [split dataframe into `num_chunks` equal chunks, return each inside a list]
+
+    Args:
+        my_df (pd.DataFrame): [description]
+        num_chunks (int, optional): [description]. Defaults to 4.
+
+    Returns:
+        [type]: [description]
+    """
     n = int(len(my_df) // num_chunks)
     list_df = [my_df[i : i + n] for i in range(0, my_df.shape[0], n)]
 
     return list_df
 
 
-def load_dir_files(directory, req_extension=".txt", return_type="list", verbose=False):
+def load_dir_files(directory:str, req_extension=".txt", return_type="list", verbose=False):
+    """
+    load_dir_files - an os.path based method of returning all files with extension `req_extension` in a given directory and subdirectories
+
+    Args:
+        directory (str): [description]
+        req_extension (str, optional): [description]. Defaults to ".txt".
+        return_type (str, optional): [description]. Defaults to "list".
+        verbose (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        [type]: [description]
+    """
     appr_files = []
     # r=root, d=directories, f = files
     for r, d, f in os.walk(directory):
@@ -96,6 +145,15 @@ def load_dir_files(directory, req_extension=".txt", return_type="list", verbose=
 
 
 def URL_string_filter(text):
+    """
+    URL_string_filter - filter out nonstandard "text" characters
+
+    Args:
+        text ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     custom_printable = (
         "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._"
     )
@@ -120,8 +178,20 @@ def getFilename_fromCd(cd):
 
 
 def get_zip_URL(
-    URLtoget, extract_loc=None, file_header="dropboxexport_", verbose=False
+    URLtoget:str, extract_loc:str=None, file_header:str="dropboxexport_", verbose:bool=False
 ):
+    """
+    get_zip_URL [summary]
+
+    Args:
+        URLtoget (str): [description]
+        extract_loc (str, optional): [description]. Defaults to None.
+        file_header (str, optional): [description]. Defaults to "dropboxexport_".
+        verbose (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        [type]: [description]
+    """
     r = requests.get(URLtoget, allow_redirects=True)
     names = getFilename_fromCd(r.headers.get("content-disposition"))
     fixed_fnames = names.split(";")  # split the multiple results
