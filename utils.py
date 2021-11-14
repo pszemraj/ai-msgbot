@@ -16,6 +16,10 @@ from natsort import natsorted
 from symspellpy import SymSpell
 
 
+def get_timestamp():
+    return datetime.now().strftime("%b-%d-%Y_t-%H")
+
+    
 def correct_phrase_load(my_string:str):
     """
     correct_phrase_load [basic / unoptimized implementation of SymSpell to correct a string]

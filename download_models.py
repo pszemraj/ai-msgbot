@@ -11,6 +11,7 @@ import argparse
 import utils
 from pathlib import Path
 import pprint as pp
+from utils import get_timestamp
 
 model_links = {
     "gpt335M_275ks_checkpoint": "https://www.dropbox.com/sh/7kyoo9462lykfhp/AACbtz0FpwEvD24J04n53LGca?dl=1",
@@ -59,7 +60,7 @@ if __name__ == "__main__":
         # download model files not as useful (skipped by default)
         
         m_name = 'gpt2_325k_checkpoint'
-        if m_name not in folder_names:
+        if not any(m_name in dir for dir in folder_names):
             # standard GPT-2 trained in a mediocre way up to 325,000 steps on my whatsapp data
             print(f'did not find {m_name} in folders, downloading..')
             extr_loc = cwd / m_name
@@ -69,7 +70,7 @@ if __name__ == "__main__":
                 extract_loc=model_dest, verbose=verbose,
             )
         m_name = 'GPT2_dailydialogue_355M_150Ksteps'
-        if m_name not in folder_names:
+        if not any(m_name in dir for dir in folder_names):
             # "DailyDialogues 355M parameter model - to be trained further with custom data or used directly
             print(f'did not find {m_name} in folders, downloading..')
             extr_loc = cwd / m_name
@@ -82,9 +83,10 @@ if __name__ == "__main__":
             
         if verbose:print("finished downloading optional model files")
 
+    # TODO: turn these into functions
     m_name = 'GPT2_trivNatQAdailydia_774M_175Ksteps'
-    if m_name not in folder_names:
-        # base "advanced" 774M param GPT-2 model trained on: Trivia, Natural Questions, Dialy Dialogues
+    if not any(m_name in dir for dir in folder_names):
+        # base "advanced" 774M param GPT-2 model trained on: Trivia, Natural Questions, Daily Dialogues
         print(f'did not find {m_name} in folders, downloading..')
         extr_loc = cwd / m_name
         model_dest = str(extr_loc.resolve())
@@ -94,7 +96,7 @@ if __name__ == "__main__":
         )
 
     m_name = 'gp2_DDandPeterTexts_774M_73Ksteps'
-    if m_name not in folder_names:
+    if not any(m_name in dir for dir in folder_names):
         # GPT-Peter: trained on 73,000 steps of Peter's messages in addition to same items as GPT2_trivNatQAdailydia_774M_175Ksteps
         print(f'did not find {m_name} in folders, downloading..')
         extr_loc = cwd / m_name
@@ -103,4 +105,4 @@ if __name__ == "__main__":
             model_links["gp2_DDandPeterTexts_774M_73Ksteps"], extract_loc=model_dest, verbose=verbose,
         )
         
-    if verbose:print("finished downloading ALL model files")
+    print('finished downloading and checking files {ts}'.format(ts=get_timestamp()))
