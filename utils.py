@@ -1,4 +1,3 @@
-
 """
 general utility functions for loading, saving, etc
 """
@@ -19,8 +18,8 @@ from symspellpy import SymSpell
 def get_timestamp():
     return datetime.now().strftime("%b-%d-%Y_t-%H")
 
-    
-def correct_phrase_load(my_string:str):
+
+def correct_phrase_load(my_string: str):
     """
     correct_phrase_load [basic / unoptimized implementation of SymSpell to correct a string]
 
@@ -54,7 +53,7 @@ def correct_phrase_load(my_string:str):
         return first_result._term
 
 
-def fast_scandir(dirname:str):
+def fast_scandir(dirname: str):
     """
     fast_scandir [an os.path-based means to return all subfolders in a given filepath]
 
@@ -71,12 +70,12 @@ def fast_scandir(dirname:str):
     return subfolders  # list
 
 
-def create_folder(directory:str):
-    
+def create_folder(directory: str):
+
     os.makedirs(directory, exist_ok=True)
 
 
-def chunks(lst:list, n:int):
+def chunks(lst: list, n: int):
     """
     chunks   -  Yield successive n-sized chunks from lst
     Args:
@@ -86,12 +85,12 @@ def chunks(lst:list, n:int):
     Yields:
         [type]: [description]
     """
-    
+
     for i in range(0, len(lst), n):
         yield lst[i : i + n]
 
 
-def chunky_pandas(my_df, num_chunks:int=4):
+def chunky_pandas(my_df, num_chunks: int = 4):
     """
     chunky_pandas [split dataframe into `num_chunks` equal chunks, return each inside a list]
 
@@ -108,7 +107,9 @@ def chunky_pandas(my_df, num_chunks:int=4):
     return list_df
 
 
-def load_dir_files(directory:str, req_extension=".txt", return_type="list", verbose=False):
+def load_dir_files(
+    directory: str, req_extension=".txt", return_type="list", verbose=False
+):
     """
     load_dir_files - an os.path based method of returning all files with extension `req_extension` in a given directory and subdirectories
 
@@ -186,7 +187,10 @@ def getFilename_fromCd(cd):
 
 
 def get_zip_URL(
-    URLtoget:str, extract_loc:str=None, file_header:str="dropboxexport_", verbose:bool=False
+    URLtoget: str,
+    extract_loc: str = None,
+    file_header: str = "dropboxexport_",
+    verbose: bool = False,
 ):
     """
     get_zip_URL [summary]

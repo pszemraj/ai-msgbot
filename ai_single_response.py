@@ -140,7 +140,7 @@ def get_parser():
     Returns:
         [argparse.ArgumentParser]: [the argparser relevant for this script]
     """
-        
+
     parser = argparse.ArgumentParser(
         description="submit a message and have a 774M parameter GPT model respond"
     )
@@ -210,6 +210,7 @@ def get_parser():
     )
     return parser
 
+
 if __name__ == "__main__":
     args = get_parser().parse_args()
     query = args.prompt
@@ -227,17 +228,19 @@ if __name__ == "__main__":
     if "dailydialogue" in model_dir.lower():
         spkr = "john smith"
         rspndr = "nancy sellers"
-        # ^ fake people created when parsing Daily Dialogue dataset    
+        # ^ fake people created when parsing Daily Dialogue dataset
         # # force-update the speaker+responder params
         # for the generic model case
     if "natqa" in model_dir.lower():
-        spkr = "person alpha"  # ^ fake people created when parsing Daily Dialogue dataset
+        spkr = (
+            "person alpha"  # ^ fake people created when parsing Daily Dialogue dataset
+        )
         rspndr = "person beta"
 
     st = time.time()
 
     resp = query_gpt_peter(
-        folder_path=model_loc ,
+        folder_path=model_loc,
         prompt_msg=query,
         speaker=spkr,
         responder=rspndr,

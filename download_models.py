@@ -41,68 +41,79 @@ def get_parser():
         action="store_true",
         help="increases amount of printing info to console",
     )
-    
+
     return parser
 
+
 if __name__ == "__main__":
-    
+
     args = get_parser().parse_args()
     get_all = args.download_all
     verbose = args.verbose
     cwd = Path.cwd()
-    my_cwd = str(cwd.resolve()) # string so it can be passed to os.path() objects 
-    print(f'using {my_cwd} as the working directory to store/check models\n')
+    my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
+    print(f"using {my_cwd} as the working directory to store/check models\n")
     folder_names = [str(p.resolve()) for p in cwd.iterdir() if p.is_dir()]
     if verbose:
         print("folder names are as follows: \n")
         pp.pprint(folder_names, compact=True, indent=4)
     if get_all:
         # download model files not as useful (skipped by default)
-        
-        m_name = 'gpt2_325k_checkpoint'
+
+        m_name = "gpt2_325k_checkpoint"
         if not any(m_name in dir for dir in folder_names):
             # standard GPT-2 trained in a mediocre way up to 325,000 steps on my whatsapp data
-            print(f'did not find {m_name} in folders, downloading..')
+            print(f"did not find {m_name} in folders, downloading..")
             extr_loc = cwd / m_name
             model_dest = str(extr_loc.resolve())
             utils.get_zip_URL(
                 model_links[m_name],
-                extract_loc=model_dest, verbose=verbose,
+                extract_loc=model_dest,
+                verbose=verbose,
             )
-        m_name = 'GPT2_dailydialogue_355M_150Ksteps'
+        m_name = "GPT2_dailydialogue_355M_150Ksteps"
         if not any(m_name in dir for dir in folder_names):
             # "DailyDialogues 355M parameter model - to be trained further with custom data or used directly
-            print(f'did not find {m_name} in folders, downloading..')
+            print(f"did not find {m_name} in folders, downloading..")
             extr_loc = cwd / m_name
             model_dest = str(extr_loc.resolve())
 
             utils.get_zip_URL(
                 model_links[m_name],
-                extract_loc=model_dest, verbose=verbose,
+                extract_loc=model_dest,
+                verbose=verbose,
             )
-            
-        if verbose:print("finished downloading optional model files - {ts}".format(ts=get_timestamp()))
+
+        if verbose:
+            print(
+                "finished downloading optional model files - {ts}".format(
+                    ts=get_timestamp()
+                )
+            )
 
     # TODO: turn these into functions
-    m_name = 'GPT2_trivNatQAdailydia_774M_175Ksteps'
+    m_name = "GPT2_trivNatQAdailydia_774M_175Ksteps"
     if not any(m_name in dir for dir in folder_names):
         # base "advanced" 774M param GPT-2 model trained on: Trivia, Natural Questions, Daily Dialogues
-        print(f'did not find {m_name} in folders, downloading..')
+        print(f"did not find {m_name} in folders, downloading..")
         extr_loc = cwd / m_name
         model_dest = str(extr_loc.resolve())
         utils.get_zip_URL(
             model_links[m_name],
-            extract_loc=model_dest, verbose=verbose,
+            extract_loc=model_dest,
+            verbose=verbose,
         )
 
-    m_name = 'gp2_DDandPeterTexts_774M_73Ksteps'
+    m_name = "gp2_DDandPeterTexts_774M_73Ksteps"
     if not any(m_name in dir for dir in folder_names):
         # GPT-Peter: trained on 73,000 steps of Peter's messages in addition to same items as GPT2_trivNatQAdailydia_774M_175Ksteps
-        print(f'did not find {m_name} in folders, downloading..')
+        print(f"did not find {m_name} in folders, downloading..")
         extr_loc = cwd / m_name
         model_dest = str(extr_loc.resolve())
         utils.get_zip_URL(
-            model_links[m_name], extract_loc=model_dest, verbose=verbose,
+            model_links[m_name],
+            extract_loc=model_dest,
+            verbose=verbose,
         )
-        
-    print('finished downloading and checking files {ts}'.format(ts=get_timestamp()))
+
+    print("finished downloading and checking files {ts}".format(ts=get_timestamp()))

@@ -25,11 +25,11 @@ from transformers import pipeline
 from ai_single_response import query_gpt_peter
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-default_model = 'gp2_DDandPeterTexts_774M_73Ksteps'
+default_model = "gp2_DDandPeterTexts_774M_73Ksteps"
 cwd = Path.cwd()
 model_loc = cwd.parent / default_model
 model_loc = str(model_loc.resolve())
-print(f'using model stored here: \n {model_loc} \n')
+print(f"using model stored here: \n {model_loc} \n")
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
 
 logging.basicConfig(
@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 
 def symspell_correct(speller, qphrase: str):
     """
-    symspell_correct corrects a string using symspellpy 
+    symspell_correct corrects a string using symspellpy
 
     Args:
         speller (symspellpy.SymSpell): [symspellpy SymSpell class object, already instantiated]
@@ -70,7 +70,7 @@ def gramformer_correct(corrector, qphrase: str):
     Returns:
         [str]: [corrected text]
     """
-    
+
     try:
         corrected = corrector(
             clean(qphrase), return_text=True, clean_up_tokenization_spaces=True

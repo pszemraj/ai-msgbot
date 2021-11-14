@@ -19,7 +19,9 @@ from cleantext import clean
 from tqdm import tqdm
 from utils import load_dir_files
 from pathlib import Path
-def parse_whatsapp(text_path:str, verbose:bool=False):
+
+
+def parse_whatsapp(text_path: str, verbose: bool = False):
     """
     parse_whatsapp - main function to parse a single conversation exported with whatsapp
 
@@ -43,7 +45,7 @@ def parse_whatsapp(text_path:str, verbose:bool=False):
     for line in sub_textlines:
         line = str(line)
         if "omitted" in line:
-            continue # this line just reports an attachment (that is not present)
+            continue  # this line just reports an attachment (that is not present)
         else:
             parts = line.split(": ")
             if len(parts) == 2 and isinstance(parts, list):
@@ -79,6 +81,7 @@ def get_parser():
         help="Path to the output directory, where the output file will be created",
     )
     return parser
+
 
 if __name__ == "__main__":
     args = get_parser().parse_args()

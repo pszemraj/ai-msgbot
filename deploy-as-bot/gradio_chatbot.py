@@ -24,11 +24,11 @@ from ai_single_response import query_gpt_peter
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 logging.basicConfig()
-default_model = 'gp2_DDandPeterTexts_774M_73Ksteps'
+default_model = "gp2_DDandPeterTexts_774M_73Ksteps"
 cwd = Path.cwd()
 model_loc = cwd.parent / default_model
 model_loc = str(model_loc.resolve())
-print(f'using model stored here: \n {model_loc} \n')
+print(f"using model stored here: \n {model_loc} \n")
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
 gram_model = "prithivida/grammar_error_correcter_v1"
 
@@ -98,7 +98,7 @@ def ask_gpt(message: str, sender: str = ""):
 
 def chat(first_and_last_name, message):
     """
-    chat - helper function that makes the whole gradio thing work. 
+    chat - helper function that makes the whole gradio thing work.
 
     Args:
         first_and_last_name (str or None): [speaker of the prompt, if provided]
@@ -149,7 +149,7 @@ if __name__ == "__main__":
         allow_flagging=True,
         flagging_dir="gradio_data",
         flagging_options=["amusing", "I actually laughed", "bad/useless response"],
-        enable_queue=True, # allows for dealing with multiple users simultaneously
+        enable_queue=True,  # allows for dealing with multiple users simultaneously
         theme="darkhuggingface",
     )
     iface.launch(share=True)

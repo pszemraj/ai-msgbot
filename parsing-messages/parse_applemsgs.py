@@ -24,7 +24,8 @@ from tqdm import tqdm
 
 from utils import load_dir_files
 
-def parse_apple_msg(csv_path:str, verbose=False):
+
+def parse_apple_msg(csv_path: str, verbose=False):
     """
     parse_apple_msg [parses a csv of messages exported from a device, in Apple format (i.e. has specific apple columns and/or artifacts in messages)]
 
@@ -35,7 +36,7 @@ def parse_apple_msg(csv_path:str, verbose=False):
     Returns:
         [list]: [returns a list of strings, each representing a line in the dialogue "script"]
     """
-    
+
     df = pd.read_csv(csv_path).convert_dtypes()
 
     clean_df = df[df.Text.notnull()]
@@ -107,8 +108,9 @@ def get_parser():
         default=os.getcwd(),
         help="Path to the output directory, where the output file will be created",
     )
-    
+
     return parser
+
 
 if __name__ == "__main__":
     args = get_parser().parse_args()
