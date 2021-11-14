@@ -5,7 +5,7 @@ An executable way to call the model. example:
 
 extended-summary: 
     
-    A system and method for interacting with a virtual machine using a series of messages , each message having associated otherwise one or more actions to be taken by the machine. The messages are stored in a computer - readable medium and can be played back through a speaker at a user - selected rate. A speaker participates in a chat with a responder , and the response from the speaker is used to generate prompts for the responders
+    A system and method for interacting with a virtual machine using a series of messages , each message having associated otherwise one or more actions to be taken by the machine. The speaker participates in a chat with a responder , and the response from the responder is returned.
 
 """
 import argparse
@@ -81,17 +81,10 @@ def query_gpt_peter(
     )
     if verbose:
         pp.pprint(this_result)  # to see what is going on
-        # print("the length is {} and the type of result is {} \n".format(len(this_result), type(this_result)))
     try:
         this_result = str(this_result[0]).split("\n")
-        # this_result = ["".join(ele) for ele in this_result]
-        # p_list = ["".join(ele) for ele in p_list]
         res_out = [clean(ele) for ele in this_result]
         p_out = [clean(ele) for ele in p_list]
-        # this_result = [ele.replace("\r","") for ele in this_result]
-        # p_list = [ele.replace("\r", "") for ele in p_list]
-        # res_out = [ele.replace("\n","") for ele in this_result]
-        # p_out = [ele.replace("\n","") for ele in p_list]
         if verbose:
             pp.pprint(res_out)  # to see what is going on
             pp.pprint(p_out)  # to see what is going on
@@ -139,76 +132,85 @@ def query_gpt_peter(
 
 
 # Set up the parsing of command-line arguments
-parser = argparse.ArgumentParser(
-    description="submit a message and have a 774M parameter GPT model respond"
-)
-parser.add_argument(
-    "--prompt",
-    required=True,  # MUST HAVE A PROMPT
-    type=str,
-    help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder.",
-)
-parser.add_argument(
-    "--model",
-    required=False,
-    type=str,
-    default="gp2_DDandPeterTexts_774M_73Ksteps",
-    help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
-    "config.json)",
-)
+def get_parser():
+    """
+    get_parser [a helper function for the argparse module]
 
-parser.add_argument(
-    "--speaker",
-    required=False,
-    default=None,
-    help="who the prompt is from (to the bot). Note this does not help if you do not text me often",
-)
-parser.add_argument(
-    "--responder",
-    required=False,
-    default="peter szemraj",
-    help="who the responder is. default = peter szemraj",
-)
+    Returns:
+        [argparse.ArgumentParser]: [the argparser relevant for this script]
+    """
+        
+    parser = argparse.ArgumentParser(
+        description="submit a message and have a 774M parameter GPT model respond"
+    )
+    parser.add_argument(
+        "--prompt",
+        required=True,  # MUST HAVE A PROMPT
+        type=str,
+        help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder.",
+    )
+    parser.add_argument(
+        "--model",
+        required=False,
+        type=str,
+        default="gp2_DDandPeterTexts_774M_73Ksteps",
+        help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
+        "config.json)",
+    )
 
-parser.add_argument(
-    "--topk",
-    required=False,
-    type=int,
-    default=125,
-    help="how many responses to sample. lower = more random responses",
-)
+    parser.add_argument(
+        "--speaker",
+        required=False,
+        default=None,
+        help="who the prompt is from (to the bot). Note this does not help if you do not text me often",
+    )
+    parser.add_argument(
+        "--responder",
+        required=False,
+        default="peter szemraj",
+        help="who the responder is. default = peter szemraj",
+    )
 
-parser.add_argument(
-    "--temp",
-    required=False,
-    type=float,
-    default=0.75,
-    help="roughly considered as 'model creativity'",
-)
+    parser.add_argument(
+        "--topk",
+        required=False,
+        type=int,
+        default=125,
+        help="how many responses to sample. lower = more random responses",
+    )
 
-parser.add_argument(
-    "--topp",
-    required=False,
-    type=float,
-    default=0.65,
-    help="nucleus sampling frac - aka: what fraction of possible options are considered?",
-)
+    parser.add_argument(
+        "--temp",
+        required=False,
+        type=float,
+        default=0.75,
+        help="roughly considered as 'model creativity'",
+    )
 
-parser.add_argument(
-    "--verbose",
-    default=False,
-    action="store_true",
-    help="pass this argument if you want all the printouts",
-)
-parser.add_argument(
-    "--time",
-    default=False,
-    action="store_true",
-    help="pass this argument if you want to know runtime",
-)
+    parser.add_argument(
+        "--topp",
+        required=False,
+        type=float,
+        default=0.65,
+        help="nucleus sampling frac - aka: what fraction of possible options are considered?",
+    )
+
+    parser.add_argument(
+        "--verbose",
+        default=False,
+        action="store_true",
+        help="pass this argument if you want all the printouts",
+    )
+    parser.add_argument(
+        "--time",
+        default=False,
+        action="store_true",
+        help="pass this argument if you want to know runtime",
+    )
+    return parser
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+    args = get_parser().parse_args()
     query = args.prompt
     model_dir = str(args.model)
     model_loc = Path.cwd() / model_dir

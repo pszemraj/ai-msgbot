@@ -40,25 +40,26 @@ if __name__ == "__main__":
     args = get_parser().parse_args()
     get_all = args.download_all
     cwd = Path.cwd()
-    my_cwd = str(cwd.re
-    folder_names = [dir for dir in os.listdir(os.getcwd()) if os.path.isdir(dir)]
+    my_cwd = str(cwd.resolve()) #string so it can be passed to os.path() objects 
+    
+    folder_names = [dir for dir in os.listdir(my_cwd) if os.path.isdir(dir)]
     if get_all:
         # download model files not as useful (skipped by default)
         if "gpt2_325k_checkpoint" not in folder_names:
             # standard GPT-2 trained in a mediocre way up to 325,000 steps on my whats app data
             utils.get_zip_URL(
-                model_links["gpt335M_325ks_checkpoint"], extract_loc=os.getcwd()
+                model_links["gpt335M_325ks_checkpoint"], extract_loc=my_cwd
             )
         if "gpt-neo_datasetv2" not in folder_names:
             # the GPT-Neo small model by EleutherAI trained on my whatsapp data (this was the first one I made.. might suck
             utils.get_zip_URL(
-                model_links["gpt-neo-125M_150ks_checkpoint"], extract_loc=os.getcwd()
+                model_links["gpt-neo-125M_150ks_checkpoint"], extract_loc=my_cwd
             )
 
         if "GPT2_dailydialogue_355M_150Ksteps" not in folder_names:
             # "DailyDialogues 355M parameter model - to be trained further with custom data or used directly
             utils.get_zip_URL(
-                model_links["GPT2_dailydialogue_355M_150Ksteps"], extract_loc=os.getcwd()
+                model_links["GPT2_dailydialogue_355M_150Ksteps"], extract_loc=my_cwd
             )
 
 
@@ -66,11 +67,11 @@ if __name__ == "__main__":
         # GPT-Peter
         utils.get_zip_URL(
             model_links["GPT2_trivNatQAdailydia_774M_175Ksteps"],
-            extract_loc=os.getcwd(),
+            extract_loc=my_cwd,
         )
 
     if "gp2_DDandPeterTexts_774M_73Ksteps" not in folder_names:
         # GPT-Peter
         utils.get_zip_URL(
-            model_links["gp2_DDandPeterTexts_774M_73Ksteps"], extract_loc=os.getcwd()
+            model_links["gp2_DDandPeterTexts_774M_73Ksteps"], extract_loc=my_cwd
         )
