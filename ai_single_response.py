@@ -30,8 +30,12 @@ def query_gpt_peter(
     verbose=False,
     use_gpu=False,
 ):
+
+    print("query gpt peter")
+    print(folder_path)
+    run_dir = "Users/jonathan/ai-msgbot/gpt2_dailydialogue_355M_150Ksteps/pytorch_model.bin"
     ai = aitextgen(
-        model_folder=folder_path,
+        model_folder=f"{run_dir}",
         to_gpu=use_gpu,
     )
     p_list = []
@@ -193,6 +197,10 @@ if __name__ == "__main__":
     query = args.prompt
     model_dir = args.model
     model_loc = join(os.getcwd(), model_dir)
+    print(os.getcwd())
+    print("modeldir")
+    print(model_dir)
+    print(model_loc)
     spkr = args.speaker
     rspndr = args.responder
     k_results = args.topk
