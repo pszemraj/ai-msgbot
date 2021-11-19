@@ -50,10 +50,8 @@ def query_gpt_peter(
     Returns:
         [dict]: [returns a dict with A) just model response as str B) total conversation]
     """
-    
-    run_dir = "Users/jonathan/ai-msgbot/gpt2_dailydialogue_355M_150Ksteps/pytorch_model.bin"
     ai = aitextgen(
-        model_folder=f"{run_dir}",
+        model_folder=folder_path,
         to_gpu=use_gpu,
     )
     p_list = []
@@ -156,7 +154,7 @@ def get_parser():
         "--model",
         required=False,
         type=str,
-        default="gp2_DDandPeterTexts_774M_73Ksteps",
+        default="GPT2_dailydialogue_355M_150Ksteps", # "gp2_DDandPeterTexts_774M_73Ksteps",
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
         "config.json)",
     )
