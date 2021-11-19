@@ -50,8 +50,10 @@ def query_gpt_peter(
     Returns:
         [dict]: [returns a dict with A) just model response as str B) total conversation]
     """
+    
+    run_dir = "Users/jonathan/ai-msgbot/gpt2_dailydialogue_355M_150Ksteps/pytorch_model.bin"
     ai = aitextgen(
-        model_folder=folder_path,
+        model_folder=f"{run_dir}",
         to_gpu=use_gpu,
     )
     p_list = []

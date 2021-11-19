@@ -60,6 +60,8 @@ finished!
         -   _NOTE:_ if any errors with the conda install, it may ask for an environment name which is `gpt2_chatbot`
     -   `python download_models.py`
     -   `python .\ai_single_response.py --responder jonathan --prompt "do you know how to get rich?"`
+    -   `MacOS: python ./ai_single_response.py --responder jonathan --prompt "do you know how to get rich?"`
+
 -   then it will respond!
 -   other models are available / will be downloaded, to change the model that generates a response you can pass the argument `--model` for example:
 
