@@ -56,7 +56,8 @@ finished!
 
 -   clone the repo
 -   with a terminal opened in the repo folder:
-    -   `pip install -r requirements.txt`
+    -   `pip install -r requirements.txt` if using conda: `conda env create --file environment.yml`
+        -   _NOTE:_ if any errors with the conda install, it may ask for an environment name which is `gpt2_chatbot`
     -   `python download_models.py`
     -   `python .\ai_single_response.py --responder jonathan --prompt "do you know how to get rich?"`
 -   then it will respond!
