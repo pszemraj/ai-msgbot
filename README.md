@@ -1,4 +1,5 @@
 # AI Chatbots based on GPT Architecture
+![ACE-newsletter-workshop-img-cropped](https://user-images.githubusercontent.com/74869040/141669429-6bfd3e3f-2436-482b-b7b3-367bee6c23d3.png)
 
 A little example / guide for building a chatbot that sounds like you (or some dataset / persona you choose) by training a GPT-based model (either GPT2 or GPT-neo). Primarily relies on the `aitextgen` and `python-telegram-bot` libraries.
 
@@ -23,17 +24,18 @@ finished!
 
 <!-- TOC -->
 
--   [AI Chatbots based on GPT Architecture](#ai-chatbots-based-on-gpt-architecture)
-    -   [Quick outline of repo:](#quick-outline-of-repo)
-    -   [quickstart](#quickstart)
-    -   [Repo Overview and Usage](#repo-overview-and-usage)
-        -   [Training a model](#training-a-model)
-        -   [Parsing Message Data](#parsing-message-data)
-        -   [Interaction with a Trained model](#interaction-with-a-trained-model)
-            -   [Model Responses: Spelling / Grammar Correction](#model-responses-spelling--grammar-correction)
-    -   [TODO and idea list](#todo-and-idea-list)
-    -   [Extras, Asides, and Examples](#extras-asides-and-examples)
-        -   [Other resources](#other-resources)
+- [AI Chatbots based on GPT Architecture](#ai-chatbots-based-on-gpt-architecture)
+  - [Quick outline of repo:](#quick-outline-of-repo)
+  - [quickstart](#quickstart)
+  - [Repo Overview and Usage](#repo-overview-and-usage)
+    - [Training a model](#training-a-model)
+      - [Training: Details](#training-details)
+    - [Parsing Message Data](#parsing-message-data)
+    - [Interaction with a Trained model](#interaction-with-a-trained-model)
+      - [Model Responses: Spelling / Grammar Correction](#model-responses-spelling--grammar-correction)
+  - [TODO and idea list](#todo-and-idea-list)
+  - [Extras, Asides, and Examples](#extras-asides-and-examples)
+    - [Other resources](#other-resources)
 
 <!-- /TOC -->
 
@@ -54,7 +56,8 @@ finished!
 
 -   clone the repo
 -   with a terminal opened in the repo folder:
-    -   `pip install -r requirements.txt`
+    -   `pip install -r requirements.txt` if using conda: `conda env create --file environment.yml`
+        -   _NOTE:_ if any errors with the conda install, it may ask for an environment name which is `gpt2_chatbot`
     -   `python download_models.py`
     -   `python .\ai_single_response.py --responder jonathan --prompt "do you know how to get rich?"`
     -   `MacOS: python ./ai_single_response.py --responder jonathan --prompt "do you know how to get rich?"`
@@ -103,6 +106,12 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 -   then, a matter of deploying it, whether it is a bot that can help children learn conversation, local lingo, etc in a foreign language or a whatsapp bot to automate social upkeep, the possibilities are endless.
 -
 
+#### Training: Details
+
+-   an example dataset (_Daily Dialogues_) parsed into the script format can be found locally at `conversation-data\Daily-Dialogues\daily_dialogue_augment.txt`.
+    -   When learning, this is probably best to use to finetune the GPT2-model, but there are several other datasets (that need to be parsed) available in the repo at `*\datasets`
+    -   many more datasets are available online at [PapersWithCode](https://paperswithcode.com/datasets?task=dialogue-generation&mod=texts) and [GoogleResearch](https://research.google/tools/datasets/). Seems that _GoogleResearch_ also has a tool for searching for datasets online.
+
 <font color="yellow"> TODO: more words </font>
 
 ### Parsing Message Data
@@ -139,17 +148,20 @@ the other files (`gptPeter_gpt2_335M.py` and `gptPeter-125M.py` specifically) ar
 -   > examine if any basic ML approaches can model the harmonic mean with [Pycaret](http://www.pycaret.org/tutorials/html/REG102.html)
 
 3.  investigate whatsapp bot potential and utility
-4.  evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint
+4.  ~~evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint~~
 
--   > in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`
+-   > ~~in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`~~
+-   _yes, it does improve things a lot_ TODO: writeup theory 
 
-5.  evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot
+5.  ~~evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot~~
 
-    -   > this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot
+    -   > ~~this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot~~
+    -   _using Trivia/CoCaQA did help model responses_
 
-6.  try gradio deployment
-7.  try huggingface spaces deployment
-8.  Auto_ML based approach to see if multi dimensional hyperparameter
+6.  ~~try gradio deployment~~
+    -   _implemented_
+8.  try huggingface spaces deployment
+9.  Auto_ML based approach to see if multi dimensional hyperparameter
 
 * * *
 
@@ -160,6 +172,60 @@ _An example of end-of-pipeline capabilities (further tuning to come)_
 <img src="https://user-images.githubusercontent.com/74869040/138378926-03c57fa5-d3e9-4a9b-a463-df4b7f66a6af.jpg" width="420" height="960">
 
 -   **Aside: the submitter of this image is also in the analytics club @ ETH Zurich, which the bot knew to reference.**
+
+
+### examples of command-line interaction with "general" conversation bot
+
+The following responses were received for general conversational questions with the `GPT2_trivNatQAdailydia_774M_175Ksteps` model. This is an example of what is capable (and much more!!) in terms of learning to interact with another person, especially in a different language:
+
+```
+C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --time --model "GPT2_trivNatQAdailydia_774M_175Ksteps" --prompt "where is the grocery store?"
+
+... generating...
+
+finished!
+
+"it's on the highway over there."
+took 38.9 seconds to generate.
+
+C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --time --model "GPT2_trivNatQAdailydia_774M_175Ksteps" --prompt "what should I bring to the party?"
+
+... generating...
+
+finished!
+
+'you need to just go to the station to pick up a bottle.'
+took 45.9 seconds to generate.
+
+
+C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --time --model "GPT2_trivNatQAdailydia_774M_175Ksteps" --prompt "can we be friends?"
+
+... generating...
+
+finished!
+
+"sure, let's go."
+took 46.6 seconds to generate.
+
+C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --time --model "GPT2_trivNatQAdailydia_774M_175Ksteps" --prompt "are you free on tuesday?"
+
+... generating...
+
+finished!
+
+"what's the date today?"
+took 41.8 seconds to generate.
+
+
+C:\Users\peter\PycharmProjects\gpt2_chatbot>python ai_single_response.py --time --model "GPT2_trivNatQAdailydia_774M_175Ksteps" --prompt "do you like your job?"
+
+... generating...
+
+finished!
+
+'no, not very much.'
+took 50.1 seconds to generate.
+```
 
 ### Other resources
 

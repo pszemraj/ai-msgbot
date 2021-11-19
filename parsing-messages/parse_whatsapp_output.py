@@ -1,49 +1,37 @@
-import argparse
+"""
+parsing-messages\parse_whatsapp_output.py
+
+parse messages exported from WhatsApp via the standard "whatsapp export" process. Assumes that all whatsapp exports are stored somewhere in the user-provided directory, and that they remain in the default export structure of <messages with X contact>/<poorly_labeled_textfile_of_messages.txt>
+"""
+
 import os
+import sys
+from os.path import dirname, join, basename
+
+sys.path.append(dirname(dirname(os.path.abspath(__file__))))
+
+import argparse
 import pprint as pp
 import re
-import sys
 from datetime import date, datetime
-from os.path import basename, join
 
 from cleantext import clean
-from natsort import natsorted
 from tqdm import tqdm
+from utils import load_dir_files
+from pathlib import Path
 
 
-def load_dir_files(directory, req_extension=".txt", return_type="list", verbose=False):
-    appr_files = []
-    # r=root, d=directories, f = files
-    for r, d, f in os.walk(directory):
-        for prefile in f:
-            if prefile.endswith(req_extension):
-                fullpath = os.path.join(r, prefile)
-                appr_files.append(fullpath)
+def parse_whatsapp(text_path: str, verbose: bool = False):
+    """
+    parse_whatsapp - main function to parse a single conversation exported with whatsapp
 
-    appr_files = natsorted(appr_files)
+    Args:
+        text_path (str): [path to a text file]
+        verbose (bool, optional): [print additional outputs for debugging]. Defaults to False.
 
-    if verbose:
-        print("A list of files in the {} directory are: \n".format(directory))
-        if len(appr_files) < 10:
-            pp.pprint(appr_files)
-        else:
-            pp.pprint(appr_files[:10])
-            print("\n and more. There are a total of {} files".format(len(appr_files)))
-
-    if return_type.lower() == "list":
-        return appr_files
-    else:
-        if verbose:
-            print("returning dictionary")
-
-        appr_file_dict = {}
-        for this_file in appr_files:
-            appr_file_dict[basename(this_file)] = this_file
-
-        return appr_file_dict
-
-
-def parse_whatsapp(text_path, verbose=False):
+    Returns:
+        [list]: [a list of strings, each corresponding to a line in the overall script]
+    """
     with open(text_path, "r", encoding="utf-8", errors="ignore") as f:
         textlines = f.readlines()
 
@@ -57,7 +45,7 @@ def parse_whatsapp(text_path, verbose=False):
     for line in sub_textlines:
         line = str(line)
         if "omitted" in line:
-            continue
+            continue  # this line just reports an attachment (that is not present)
         else:
             parts = line.split(": ")
             if len(parts) == 2 and isinstance(parts, list):
@@ -77,23 +65,26 @@ def parse_whatsapp(text_path, verbose=False):
 
 
 # Set up the parsing of command-line arguments
-parser = argparse.ArgumentParser(
-    description="convert whatsapp chat exports to GPT-2 input"
-)
-parser.add_argument(
-    "--datadir",
-    required=True,
-    help="Path to input directory containing txt whatsapp exports",
-)
-parser.add_argument(
-    "--outdir",
-    required=False,
-    default=os.getcwd(),
-    help="Path to the output directory, where the output file will be created",
-)
+def get_parser():
+    parser = argparse.ArgumentParser(
+        description="convert whatsapp chat exports to GPT-2 input"
+    )
+    parser.add_argument(
+        "--datadir",
+        required=True,
+        help="Path to input directory containing txt whatsapp exports",
+    )
+    parser.add_argument(
+        "--outdir",
+        required=False,
+        default=str(Path.cwd().resolve()),
+        help="Path to the output directory, where the output file will be created",
+    )
+    return parser
+
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+    args = get_parser().parse_args()
     input_path = args.datadir
     output_path = args.outdir
 

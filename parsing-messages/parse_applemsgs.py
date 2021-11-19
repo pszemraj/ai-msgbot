@@ -1,55 +1,42 @@
 """
-Similar to the whatsapp parser, but this parses output CSVs of iphone / apple texts
+parsing-messages\parse_applemsgs.py
+
+Similar to the whatsapp parser, but this parses output CSVs of iphone / apple texts.
+
+Note that this script was geared towards data in the iMazing export format/structure, as my messaage data was exported in this way. if message data is exported in another way, it's likely that some manipulation of the columns is required (which is doable! just fyi). 
 
 """
+import os
+import sys
+from os.path import dirname, join, basename
+
+sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 
 import argparse
-import os
 import pprint as pp
-import sys
 from datetime import date, datetime
 from os.path import basename, join
 
 import pandas as pd
 from cleantext import clean
 from natsort import natsort_keygen
-from natsort import natsorted
 from tqdm import tqdm
 
-
-def load_dir_files(directory, req_extension=".txt", return_type="list", verbose=False):
-    appr_files = []
-    # r=root, d=directories, f = files
-    for r, d, f in os.walk(directory):
-        for prefile in f:
-            if prefile.endswith(req_extension):
-                fullpath = os.path.join(r, prefile)
-                appr_files.append(fullpath)
-
-    appr_files = natsorted(appr_files)
-
-    if verbose:
-        print("A list of files in the {} directory are: \n".format(directory))
-        if len(appr_files) < 10:
-            pp.pprint(appr_files)
-        else:
-            pp.pprint(appr_files[:10])
-            print("\n and more. There are a total of {} files".format(len(appr_files)))
-
-    if return_type.lower() == "list":
-        return appr_files
-    else:
-        if verbose:
-            print("returning dictionary")
-
-        appr_file_dict = {}
-        for this_file in appr_files:
-            appr_file_dict[basename(this_file)] = this_file
-
-        return appr_file_dict
+from utils import load_dir_files
 
 
-def parse_apple_msg(csv_path, verbose=False):
+def parse_apple_msg(csv_path: str, verbose=False):
+    """
+    parse_apple_msg [parses a csv of messages exported from a device, in Apple format (i.e. has specific apple columns and/or artifacts in messages)]
+
+    Args:
+        csv_path (str): [path to a CSV file containing messages and other relevant info]
+        verbose (bool, optional): [debug printouts]. Defaults to False.
+
+    Returns:
+        [list]: [returns a list of strings, each representing a line in the dialogue "script"]
+    """
+
     df = pd.read_csv(csv_path).convert_dtypes()
 
     clean_df = df[df.Text.notnull()]
@@ -100,23 +87,33 @@ def parse_apple_msg(csv_path, verbose=False):
 
 
 # Set up the parsing of command-line arguments
-parser = argparse.ArgumentParser(
-    description="convert csv apple message exports to GPT-2 input"
-)
-parser.add_argument(
-    "--datadir",
-    required=True,
-    help="Path to input directory containing .csv apple message exports",
-)
-parser.add_argument(
-    "--outdir",
-    required=False,
-    default=os.getcwd(),
-    help="Path to the output directory, where the output file will be created",
-)
+def get_parser():
+    """
+    get_parser - helper function for argparse
+
+    Returns:
+        [argparse.ArgumentParser]: [parsed arguments from user]
+    """
+    parser = argparse.ArgumentParser(
+        description="convert csv apple message exports to GPT-2 input"
+    )
+    parser.add_argument(
+        "--datadir",
+        required=True,
+        help="Path to input directory containing .csv apple message exports",
+    )
+    parser.add_argument(
+        "--outdir",
+        required=False,
+        default=os.getcwd(),
+        help="Path to the output directory, where the output file will be created",
+    )
+
+    return parser
+
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+    args = get_parser().parse_args()
     input_path = args.datadir
     output_path = args.outdir
 

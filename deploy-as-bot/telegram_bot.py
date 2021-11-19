@@ -1,13 +1,16 @@
 """
 Basic GPT-2 telegram bot
 you need to have your own token to create and run one - here it is in my env variables
-"""
-import sys
+creating a bot: https://www.section.io/engineering-education/building-a-telegram-bot-with-python-to-generate-quotes/
 
-sys.path.append("..")
+"""
+import os
+import sys
+from os.path import dirname
+
+sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 
 import logging
-import os
 import time
 import warnings
 
@@ -16,12 +19,19 @@ from symspellpy import SymSpell
 from telegram.ext import CommandHandler
 from telegram.ext import Filters, MessageHandler
 from telegram.ext import Updater
+from pathlib import Path
 from transformers import pipeline
 
 from ai_single_response import query_gpt_peter
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-model_loc = os.path.join(os.getcwd(), "../gp2_DDandPeterTexts_774M_73Ksteps")
+default_model = "gp2_DDandPeterTexts_774M_73Ksteps"
+cwd = Path.cwd()
+model_loc = cwd.parent / default_model
+model_loc = str(model_loc.resolve())
+print(f"using model stored here: \n {model_loc} \n")
+my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
+
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
@@ -29,6 +39,16 @@ logger = logging.getLogger(__name__)
 
 
 def symspell_correct(speller, qphrase: str):
+    """
+    symspell_correct corrects a string using symspellpy
+
+    Args:
+        speller (symspellpy.SymSpell): [symspellpy SymSpell class object, already instantiated]
+        qphrase (str): [text to be corrected]
+
+    Returns:
+        [str]: [corrected text]
+    """
     suggestions = speller.lookup_compound(
         clean(qphrase), max_edit_distance=2, ignore_non_words=True
     )
@@ -40,6 +60,17 @@ def symspell_correct(speller, qphrase: str):
 
 
 def gramformer_correct(corrector, qphrase: str):
+    """
+    gramformer_correct - correct a string using a text2textgen pipeline model from transformers
+
+    Args:
+        corrector (transformers.pipeline): [transformers pipeline object, already created w/ relevant model]
+        qphrase (str): [text to be corrected]
+
+    Returns:
+        [str]: [corrected text]
+    """
+
     try:
         corrected = corrector(
             clean(qphrase), return_text=True, clean_up_tokenization_spaces=True
@@ -51,6 +82,7 @@ def gramformer_correct(corrector, qphrase: str):
 
 
 def start(update, context):
+    """instantiates telegram bot"""
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="send me texts and I answer.. after like 30-45 seconds",
@@ -69,6 +101,13 @@ def echo(update, context):
 
 
 def ask_gpt(update, context):
+    """
+    ask_gpt - queries the relevant gpt2 model and interfaces with Telegram
+
+    Args:
+        update ([type]): [description]
+        context ([type]): [description]
+    """
     st = time.time()
     prompt = clean(update.message.text)  # clean user input
     prompt = prompt.strip()  # get rid of any extra whitespace
@@ -111,12 +150,14 @@ def error(update, context):
 
 
 def unknown(update, context):
+    """Responds to unknown command"""
+
     context.bot.send_message(
         chat_id=update.effective_chat.id, text="m8, I didn't understand that command."
     )
 
 
-use_gramformer = True  # TODO change this to a default argument and use argparse
+use_gramformer = True  # TODO: change this to a default argument and use argparse
 gram_model = "prithivida/grammar_error_correcter_v1"
 dictionary_path = (
     r"../symspell_rsc/frequency_dictionary_en_82_765.txt"  # from repo root

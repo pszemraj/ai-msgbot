@@ -1,17 +1,20 @@
 """
+ai_single_response.py
 
 An executable way to call the model. example:
-*\gpt2_chatbot> python .\ai_single_response.py --prompt "do you love me?" --speaker "luz"
+*\gpt2_chatbot> python .\ai_single_response.py --prompt "do you love me?" --speaker "calvin miller"
+
+extended-summary: 
+    
+    A system and method for interacting with a virtual machine using a series of messages , each message having associated otherwise one or more actions to be taken by the machine. The speaker participates in a chat with a responder , and the response from the responder is returned.
 
 """
 import argparse
-import os
 import pprint as pp
 import time
 import warnings
 from datetime import datetime
-from os.path import join
-
+from pathlib import Path
 from cleantext import clean
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
@@ -30,23 +33,38 @@ def query_gpt_peter(
     verbose=False,
     use_gpu=False,
 ):
+    """
+    query_gpt_peter [pass a prompt in to model, get a response. Does NOT "remember" past conversation]
 
-    print("query gpt peter")
-    print(folder_path)
+    Args:
+        folder_path ([type]): [description]
+        prompt_msg (str): [description]
+        speaker ([type], optional): [description]. Defaults to None.
+        responder (str, optional): [description]. Defaults to "peter szemraj".
+        kparam (int, optional): [description]. Defaults to 125.
+        temp (float, optional): [description]. Defaults to 0.75.
+        top_p (float, optional): [description]. Defaults to 0.65.
+        verbose (bool, optional): [description]. Defaults to False.
+        use_gpu (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        [dict]: [returns a dict with A) just model response as str B) total conversation]
+    """
+    
     run_dir = "Users/jonathan/ai-msgbot/gpt2_dailydialogue_355M_150Ksteps/pytorch_model.bin"
     ai = aitextgen(
         model_folder=f"{run_dir}",
         to_gpu=use_gpu,
     )
     p_list = []
+    if "natqa" in str(folder_path).lower():
+        speaker = "person alpha"  # manual correction
+        responder = "person beta"
     if speaker is not None:
         p_list.append(speaker.lower() + ":" + "\n")  # write prompt as the speaker
     p_list.append(prompt_msg.lower() + "\n")
     p_list.append("\n")
     p_list.append(responder.lower() + ":" + "\n")
-    if "natqa" in folder_path.lower():
-        spkr = "person alpha"  # manual correction
-        rspndr = "person beta"
     this_prompt = "".join(p_list)
     if verbose:
         print("overall prompt:\n")
@@ -66,17 +84,10 @@ def query_gpt_peter(
     )
     if verbose:
         pp.pprint(this_result)  # to see what is going on
-        # print("the length is {} and the type of result is {} \n".format(len(this_result), type(this_result)))
     try:
         this_result = str(this_result[0]).split("\n")
-        # this_result = ["".join(ele) for ele in this_result]
-        # p_list = ["".join(ele) for ele in p_list]
         res_out = [clean(ele) for ele in this_result]
         p_out = [clean(ele) for ele in p_list]
-        # this_result = [ele.replace("\r","") for ele in this_result]
-        # p_list = [ele.replace("\r", "") for ele in p_list]
-        # res_out = [ele.replace("\n","") for ele in this_result]
-        # p_out = [ele.replace("\n","") for ele in p_list]
         if verbose:
             pp.pprint(res_out)  # to see what is going on
             pp.pprint(p_out)  # to see what is going on
@@ -124,83 +135,89 @@ def query_gpt_peter(
 
 
 # Set up the parsing of command-line arguments
-parser = argparse.ArgumentParser(
-    description="submit a message and have a 774M parameter GPT model respond"
-)
-parser.add_argument(
-    "--prompt",
-    required=True,  # MUST HAVE A PROMPT
-    type=str,
-    help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder.",
-)
-parser.add_argument(
-    "--model",
-    required=False,
-    type=str,
-    default="gp2_DDandPeterTexts_774M_73Ksteps",
-    help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
-    "config.json)",
-)
+def get_parser():
+    """
+    get_parser [a helper function for the argparse module]
 
-parser.add_argument(
-    "--speaker",
-    required=False,
-    default=None,
-    help="who the prompt is from (to the bot). Note this does not help if you do not text me often",
-)
-parser.add_argument(
-    "--responder",
-    required=False,
-    default="peter szemraj",
-    help="who the responder is. default = peter szemraj",
-)
+    Returns:
+        [argparse.ArgumentParser]: [the argparser relevant for this script]
+    """
 
-parser.add_argument(
-    "--topk",
-    required=False,
-    type=int,
-    default=125,
-    help="how many responses to sample. lower = more random responses",
-)
+    parser = argparse.ArgumentParser(
+        description="submit a message and have a 774M parameter GPT model respond"
+    )
+    parser.add_argument(
+        "--prompt",
+        required=True,  # MUST HAVE A PROMPT
+        type=str,
+        help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder.",
+    )
+    parser.add_argument(
+        "--model",
+        required=False,
+        type=str,
+        default="gp2_DDandPeterTexts_774M_73Ksteps",
+        help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
+        "config.json)",
+    )
 
-parser.add_argument(
-    "--temp",
-    required=False,
-    type=float,
-    default=0.75,
-    help="roughly considered as 'model creativity'",
-)
+    parser.add_argument(
+        "--speaker",
+        required=False,
+        default=None,
+        help="who the prompt is from (to the bot). Note this does not help if you do not text me often",
+    )
+    parser.add_argument(
+        "--responder",
+        required=False,
+        default="peter szemraj",
+        help="who the responder is. default = peter szemraj",
+    )
 
-parser.add_argument(
-    "--topp",
-    required=False,
-    type=float,
-    default=0.65,
-    help="nucleus sampling frac - aka: what fraction of possible options are considered?",
-)
+    parser.add_argument(
+        "--topk",
+        required=False,
+        type=int,
+        default=125,
+        help="how many responses to sample. lower = more random responses",
+    )
 
-parser.add_argument(
-    "--verbose",
-    default=False,
-    action="store_true",
-    help="pass this argument if you want all the printouts",
-)
-parser.add_argument(
-    "--time",
-    default=False,
-    action="store_true",
-    help="pass this argument if you want to know runtime",
-)
+    parser.add_argument(
+        "--temp",
+        required=False,
+        type=float,
+        default=0.75,
+        help="roughly considered as 'model creativity'",
+    )
+
+    parser.add_argument(
+        "--topp",
+        required=False,
+        type=float,
+        default=0.65,
+        help="nucleus sampling frac - aka: what fraction of possible options are considered?",
+    )
+
+    parser.add_argument(
+        "--verbose",
+        default=False,
+        action="store_true",
+        help="pass this argument if you want all the printouts",
+    )
+    parser.add_argument(
+        "--time",
+        default=False,
+        action="store_true",
+        help="pass this argument if you want to know runtime",
+    )
+    return parser
+
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+    args = get_parser().parse_args()
     query = args.prompt
-    model_dir = args.model
-    model_loc = join(os.getcwd(), model_dir)
-    print(os.getcwd())
-    print("modeldir")
-    print(model_dir)
-    print(model_loc)
+    model_dir = str(args.model)
+    model_loc = Path.cwd() / model_dir
     spkr = args.speaker
     rspndr = args.responder
     k_results = args.topk
@@ -213,10 +230,13 @@ if __name__ == "__main__":
     if "dailydialogue" in model_dir.lower():
         spkr = "john smith"
         rspndr = "nancy sellers"
-        # ^ fake people I made up when parsing Daily Dialogue dataset    # force-update the speaker+responder params
+        # ^ fake people created when parsing Daily Dialogue dataset
+        # # force-update the speaker+responder params
         # for the generic model case
     if "natqa" in model_dir.lower():
-        spkr = "person alpha"  # ^ fake people I made up when parsing Daily Dialogue dataset
+        spkr = (
+            "person alpha"  # ^ fake people created when parsing Daily Dialogue dataset
+        )
         rspndr = "person beta"
 
     st = time.time()

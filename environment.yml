@@ -4,13 +4,14 @@ channels:
   - defaults
 dependencies:
   - apscheduler=3.6.3=py39hcbf5309_3
+  - autopep8=1.6.0=pyhd8ed1ab_1
   - backcall=0.2.0=pyh9f0ad1d_0
   - backports=1.0=py_2
   - backports.functools_lru_cache=1.6.4=pyhd8ed1ab_0
   - brotlipy=0.7.0=py39hb82d6ee_1001
   - ca-certificates=2021.10.8=h5b45459_0
   - cachetools=4.2.2=pyhd8ed1ab_0
-  - certifi=2021.10.8=py39hcbf5309_0
+  - certifi=2021.10.8=py39hcbf5309_1
   - cffi=1.14.6=py39h0878f49_1
   - chardet=4.0.0=py39hcbf5309_1
   - charset-normalizer=2.0.0=pyhd8ed1ab_0
@@ -45,6 +46,7 @@ dependencies:
   - pickleshare=0.7.5=py39hde42818_1002
   - pip=21.3=pyhd8ed1ab_0
   - prompt-toolkit=3.0.21=pyha770c72_0
+  - pycodestyle=2.8.0=pyhd8ed1ab_0
   - pycparser=2.20=pyh9f0ad1d_2
   - pygments=2.10.0=pyhd8ed1ab_0
   - pyopenssl=21.0.0=pyhd8ed1ab_0
@@ -62,6 +64,7 @@ dependencies:
   - six=1.16.0=pyh6c4a22f_0
   - sqlite=3.36.0=h8ffe710_2
   - tbb=2021.3.0=h2d74725_0
+  - toml=0.10.2=pyhd8ed1ab_0
   - tornado=6.1=py39hb82d6ee_1
   - tqdm=4.62.3=pyhd8ed1ab_0
   - traitlets=5.1.0=pyhd8ed1ab_0
@@ -78,96 +81,97 @@ dependencies:
   - win_inet_pton=1.1.0=py39hcbf5309_2
   - zeromq=4.3.4=h0e60522_1
   - pip:
-      - absl-py==0.14.1
-      - aiohttp==3.7.4.post0
-      - aitextgen==0.5.2
-      - analytics-python==1.4.0
-      - async-generator==1.10
-      - async-timeout==3.0.1
-      - attrs==21.2.0
-      - backoff==1.10.0
-      - bcrypt==3.2.0
-      - clean-text==0.5.0
-      - click==8.0.3
-      - cycler==0.10.0
-      - emoji==1.6.1
-      - ffmpy==0.3.0
-      - filelock==3.3.1
-      - fire==0.4.0
-      - flask==2.0.2
-      - flask-cachebuster==1.0.0
-      - flask-cors==3.0.10
-      - flask-login==0.5.0
-      - fsspec==2021.10.1
-      - ftfy==6.0.3
-      - future==0.18.2
-      - google-auth==2.3.0
-      - google-auth-oauthlib==0.4.6
-      - gradio==2.4.1
-      - grpcio==1.41.0
-      - h11==0.12.0
-      - htmlmin==0.1.12
-      - huggingface-hub==0.0.19
-      - imagehash==4.2.1
-      - itsdangerous==2.0.1
-      - jinja2==3.0.2
-      - joblib==1.0.1
-      - kiwisolver==1.3.2
-      - markdown==3.3.4
-      - markdown2==2.4.1
-      - markupsafe==2.0.1
-      - matplotlib==3.4.3
-      - missingno==0.5.0
-      - monotonic==1.6
-      - multidict==5.2.0
-      - multimethod==1.6
-      - networkx==2.6.3
-      - oauthlib==3.1.1
-      - outcome==1.1.0
-      - packaging==21.0
-      - pandas-profiling==3.1.0
-      - paramiko==2.8.0
-      - phik==0.12.0
-      - pillow==8.4.0
-      - protobuf==3.18.1
-      - pyasn1==0.4.8
-      - pyasn1-modules==0.2.8
-      - pycryptodome==3.11.0
-      - pydantic==1.8.2
-      - pydeprecate==0.3.1
-      - pydub==0.25.1
-      - pynacl==1.4.0
-      - pyparsing==2.4.7
-      - python-axolotl==0.2.3
-      - python-axolotl-curve25519==0.4.1.post2
-      - pytorch-lightning==1.4.9
-      - pywavelets==1.1.1
-      - pyyaml==6.0
-      - regex==2021.10.8
-      - requests-oauthlib==1.3.0
-      - rsa==4.7.2
-      - sacremoses==0.0.46
-      - scipy==1.7.1
-      - seaborn==0.11.2
-      - selenium==4.0.0
-      - sniffio==1.2.0
-      - sortedcontainers==2.4.0
-      - symspellpy==6.7.0
-      - tangled-up-in-unicode==0.1.0
-      - tensorboard==2.7.0
-      - tensorboard-data-server==0.6.1
-      - tensorboard-plugin-wit==1.8.0
-      - termcolor==1.1.0
-      - tokenizers==0.10.3
-      - torch==1.9.1
-      - torchmetrics==0.5.1
-      - transformers==4.12.2
-      - trio==0.19.0
-      - trio-websocket==0.9.2
-      - typing-extensions==3.10.0.2
-      - visions==0.7.4
-      - webwhatsapi==2.0.5
-      - werkzeug==2.0.2
-      - wsproto==1.0.0
-      - yarl==1.7.0
+    - absl-py==0.14.1
+    - aiohttp==3.7.4.post0
+    - aitextgen==0.5.2
+    - analytics-python==1.4.0
+    - async-generator==1.10
+    - async-timeout==3.0.1
+    - attrs==21.2.0
+    - backoff==1.10.0
+    - bcrypt==3.2.0
+    - clean-text==0.5.0
+    - click==8.0.3
+    - cycler==0.10.0
+    - emoji==1.6.1
+    - ffmpy==0.3.0
+    - filelock==3.3.1
+    - fire==0.4.0
+    - flask==2.0.2
+    - flask-cachebuster==1.0.0
+    - flask-cors==3.0.10
+    - flask-login==0.5.0
+    - fsspec==2021.10.1
+    - ftfy==6.0.3
+    - future==0.18.2
+    - google-auth==2.3.0
+    - google-auth-oauthlib==0.4.6
+    - gradio==2.4.1
+    - grpcio==1.41.0
+    - h11==0.12.0
+    - htmlmin==0.1.12
+    - huggingface-hub==0.1.2
+    - imagehash==4.2.1
+    - itsdangerous==2.0.1
+    - jinja2==3.0.2
+    - joblib==1.0.1
+    - kiwisolver==1.3.2
+    - markdown==3.3.4
+    - markdown2==2.4.1
+    - markupsafe==2.0.1
+    - matplotlib==3.4.3
+    - missingno==0.5.0
+    - monotonic==1.6
+    - multidict==5.2.0
+    - multimethod==1.6
+    - networkx==2.6.3
+    - oauthlib==3.1.1
+    - openwa==1.3.15
+    - outcome==1.1.0
+    - packaging==21.0
+    - pandas-profiling==3.1.0
+    - paramiko==2.8.0
+    - phik==0.12.0
+    - pillow==8.4.0
+    - protobuf==3.18.1
+    - pyasn1==0.4.8
+    - pyasn1-modules==0.2.8
+    - pycryptodome==3.11.0
+    - pydantic==1.8.2
+    - pydeprecate==0.3.1
+    - pydub==0.25.1
+    - pynacl==1.4.0
+    - pyparsing==2.4.7
+    - python-axolotl==0.2.3
+    - python-axolotl-curve25519==0.4.1.post2
+    - pytorch-lightning==1.4.9
+    - pywavelets==1.1.1
+    - pyyaml==6.0
+    - regex==2021.10.8
+    - requests-oauthlib==1.3.0
+    - rsa==4.7.2
+    - sacremoses==0.0.46
+    - scipy==1.7.1
+    - seaborn==0.11.2
+    - selenium==4.0.0
+    - sniffio==1.2.0
+    - sortedcontainers==2.4.0
+    - symspellpy==6.7.0
+    - tangled-up-in-unicode==0.1.0
+    - tensorboard==2.7.0
+    - tensorboard-data-server==0.6.1
+    - tensorboard-plugin-wit==1.8.0
+    - termcolor==1.1.0
+    - tokenizers==0.10.3
+    - torch==1.9.1
+    - torchmetrics==0.5.1
+    - transformers==4.12.5
+    - trio==0.19.0
+    - trio-websocket==0.9.2
+    - typing-extensions==3.10.0.2
+    - visions==0.7.4
+    - webwhatsapi==2.0.5
+    - werkzeug==2.0.2
+    - wsproto==1.0.0
+    - yarl==1.7.0
 prefix: C:\ProgramData\Miniconda3\envs\gpt2_chatbot
