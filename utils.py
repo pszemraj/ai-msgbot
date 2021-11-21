@@ -17,6 +17,7 @@ from symspellpy import SymSpell
 import pandas as pd
 from tqdm.auto import tqdm
 
+
 def get_timestamp():
     return datetime.now().strftime("%b-%d-%Y_t-%H")
 
@@ -239,7 +240,7 @@ def get_zip_URL(
     return dl_place
 
 
-def merge_dataframes(data_dir:str, ext='.xlsx', verbose=False):
+def merge_dataframes(data_dir: str, ext=".xlsx", verbose=False):
     """
     merge_dataframes - given a filepath, loads and attempts to merge all files as dataframes
 
@@ -250,30 +251,32 @@ def merge_dataframes(data_dir:str, ext='.xlsx', verbose=False):
     Returns:
         pd.DataFrame(): merged dataframe
     """
-    
+
     src = Path(data_dir)
     src_str = str(src.resolve())
     mrg_df = pd.DataFrame()
-    
-    all_reports = load_dir_files(
-        directory=src_str, req_extension=ext, verbose=verbose)
-    
+
+    all_reports = load_dir_files(directory=src_str, req_extension=ext, verbose=verbose)
+
     failed = []
-    
+
     for df_path in tqdm(all_reports, total=len(all_reports), desc="joining data..."):
-        
+
         try:
             this_df = pd.read_excel(df_path).convert_dtypes()
-            
+
             mrg_df = pd.concat([mrg_df, this_df], axis=0)
         except:
             short_p = os.path.basename(df_path)
             print(
-                f"WARNING - file with extension {ext} and name {short_p} could not be read.")
+                f"WARNING - file with extension {ext} and name {short_p} could not be read."
+            )
             failed.append(short_p)
-            
-    if len(failed) > 0: print("failed to merge {} files, investigate as needed")
-        
-    if verbose: pp.pprint(mrg_df.info(True))
-    
+
+    if len(failed) > 0:
+        print("failed to merge {} files, investigate as needed")
+
+    if verbose:
+        pp.pprint(mrg_df.info(True))
+
     return mrg_df
