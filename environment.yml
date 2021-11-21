@@ -106,7 +106,7 @@ dependencies:
     - future==0.18.2
     - google-auth==2.3.0
     - google-auth-oauthlib==0.4.6
-    - gradio==2.4.1
+    - gradio==2.4.5
     - grpcio==1.41.0
     - h11==0.12.0
     - htmlmin==0.1.12
