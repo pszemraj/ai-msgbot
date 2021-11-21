@@ -1,7 +1,7 @@
 # AI Chatbots based on GPT Architecture
 ![ACE-newsletter-workshop-img-cropped](https://user-images.githubusercontent.com/74869040/141669429-6bfd3e3f-2436-482b-b7b3-367bee6c23d3.png)
 
-A little example / guide for building a chatbot that sounds like you (or some dataset / persona you choose) by training a GPT-based model (either GPT2 or GPT-neo). Primarily relies on the `aitextgen` and `python-telegram-bot` libraries.
+A little example / guide for building a chatbot that sounds like you (or some dataset / persona you choose) by training a GPT-based model (either GPT2 or GPT-neo). Primarily relies on the `[aitextgen](https://github.com/minimaxir/aitextgen)` and `[python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)` libraries.
 
 > Note that the training was done on Colab to leverage the GPU.
 
