@@ -22,11 +22,11 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 from aitextgen import aitextgen
 
 
-def query_gpt_peter(
+def query_gpt_model(
     folder_path,
     prompt_msg: str,
     speaker=None,
-    responder="peter szemraj",
+    responder="person beta",
     kparam=125,
     temp=0.75,
     top_p=0.65,
@@ -34,13 +34,13 @@ def query_gpt_peter(
     use_gpu=False,
 ):
     """
-    query_gpt_peter [pass a prompt in to model, get a response. Does NOT "remember" past conversation]
+    query_gpt_model [pass a prompt in to model, get a response. Does NOT "remember" past conversation]
 
     Args:
         folder_path ([type]): [description]
         prompt_msg (str): [description]
         speaker ([type], optional): [description]. Defaults to None.
-        responder (str, optional): [description]. Defaults to "peter szemraj".
+        responder (str, optional): [description]. Defaults to "person beta".
         kparam (int, optional): [description]. Defaults to 125.
         temp (float, optional): [description]. Defaults to 0.75.
         top_p (float, optional): [description]. Defaults to 0.65.
@@ -79,6 +79,7 @@ def query_gpt_peter(
         top_p=top_p,
         do_sample=True,
         return_as_list=True,
+        use_cache=True,
     )
     if verbose:
         pp.pprint(this_result)  # to see what is going on
@@ -121,7 +122,7 @@ def query_gpt_peter(
         output = ", ".join(diff_list)
 
     except:
-        output = "bro, there was an error. try again"
+        output = "oops, there was an error. try again"
 
     p_list.append(output + "\n")
     p_list.append("\n")
@@ -154,30 +155,31 @@ def get_parser():
         "--model",
         required=False,
         type=str,
-        default="GPT2_dailydialogue_355M_150Ksteps",  # "gp2_DDandPeterTexts_774M_73Ksteps",
+        # "gp2_DDandPeterTexts_774M_73Ksteps", - from GPT-Peter
+        default="GPT2_trivNatQAdailydia_774M_175Ksteps",
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
-        "config.json)",
+        "config.json). No models? Run the script download_models.py",
     )
 
     parser.add_argument(
         "--speaker",
         required=False,
         default=None,
-        help="who the prompt is from (to the bot). Note this does not help if you do not text me often",
+        help="Who the prompt is from (to the bot). Primarily relevant to bots trained on multi-individual chat data",
     )
     parser.add_argument(
         "--responder",
         required=False,
         default="peter szemraj",
-        help="who the responder is. default = peter szemraj",
+        help="who the responder is. Primarily relevant to bots trained on multi-individual chat data",
     )
 
     parser.add_argument(
         "--topk",
         required=False,
         type=int,
-        default=125,
-        help="how many responses to sample. lower = more random responses",
+        default=150,
+        help="how many responses to sample (positive integer). lower = more random responses",
     )
 
     parser.add_argument(
@@ -185,7 +187,7 @@ def get_parser():
         required=False,
         type=float,
         default=0.75,
-        help="roughly considered as 'model creativity'",
+        help="specify temperature hyperparam (0-1). roughly considered as 'model creativity'",
     )
 
     parser.add_argument(
@@ -193,7 +195,7 @@ def get_parser():
         required=False,
         type=float,
         default=0.65,
-        help="nucleus sampling frac - aka: what fraction of possible options are considered?",
+        help="nucleus sampling frac (0-1). aka: what fraction of possible options are considered?",
     )
 
     parser.add_argument(
@@ -228,18 +230,20 @@ if __name__ == "__main__":
     if "dailydialogue" in model_dir.lower():
         spkr = "john smith"
         rspndr = "nancy sellers"
-        # ^ fake people created when parsing Daily Dialogue dataset
+        # ^ arbitrary people created when parsing Daily Dialogue dataset
         # # force-update the speaker+responder params
         # for the generic model case
     if "natqa" in model_dir.lower():
         spkr = (
-            "person alpha"  # ^ fake people created when parsing Daily Dialogue dataset
+            "person alpha"  
         )
         rspndr = "person beta"
+        # ^ arbitrary people created when parsing NatQA + TriviaQA + Daily Dialogue datasets
+
 
     st = time.time()
 
-    resp = query_gpt_peter(
+    resp = query_gpt_model(
         folder_path=model_loc,
         prompt_msg=query,
         speaker=spkr,

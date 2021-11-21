@@ -22,7 +22,7 @@ from telegram.ext import Updater
 from pathlib import Path
 from transformers import pipeline
 
-from ai_single_response import query_gpt_peter
+from ai_single_response import query_gpt_model
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 default_model = "gp2_DDandPeterTexts_774M_73Ksteps"
@@ -127,7 +127,7 @@ def ask_gpt(update, context):
     context.bot.send_message(
         chat_id=update.effective_chat.id, text="... neurons are working ..."
     )
-    resp = query_gpt_peter(
+    resp = query_gpt_model(
         folder_path=model_loc,
         prompt_msg=prompt,
         speaker=prompt_speaker,
