@@ -74,7 +74,7 @@ _Note: the bot in the image of question was trained on the author's text message
 -   then it will respond!
 -   other models are available / will be downloaded, to change the model that generates a response you can pass the argument `--model` for example:
 
-    python ai_single_response.py --model "GPT2_dailydialogue_355M_150Ksteps" --prompt "are you free tomorrow?"
+    `python ai_single_response.py --model "GPT2_dailydialogue_355M_150Ksteps" --prompt "are you free tomorrow?"`
 
 * * *
 

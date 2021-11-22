@@ -12,7 +12,7 @@ _more deployment ideas / options to come_
 ## telegram
 
 - Deploy the bot to telegram using the `python-telegram-bot` package
-- Test it by messaging @GPTPeter_bot on [telegram](https://telegram.org/)
+- You can message an example bot by clicking [this link](https://t.me/GPTfriend_bot). _Please note that at present this bot is run locally on a machine, and may not be online 24/7._
 
 ---
 
