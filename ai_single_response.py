@@ -170,7 +170,7 @@ def get_parser():
     parser.add_argument(
         "--responder",
         required=False,
-        default="peter szemraj",
+        default="person beta",
         help="who the responder is. Primarily relevant to bots trained on multi-individual chat data",
     )
 

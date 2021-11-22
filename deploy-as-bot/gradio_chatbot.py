@@ -2,7 +2,8 @@
 
 deploy-as-bot\gradio_chatbot.py
 
-A system, method for deploying to Gradio. A human-machine interface with a 774 parameter model of the best and mosthumble human to grace the earth. A device for flagging and/or detecting the presence or absence of a good/bad response.
+A system, method for deploying to Gradio. Gradio is a basic "deploy" interface which allows for other users to test your model from a web URL. It also enables some basic functionality like user flagging for weird responses.
+Note that the URL is displayed once the script is run. 
 
 """
 import os
@@ -131,18 +132,11 @@ if __name__ == "__main__":
         inputs=["text", "text"],
         outputs="html",
         title="GPT-Peter: 774M Parameter Model",
-        description="A basic interface with a 774M parameter model of the best and most "
-        "humble human to grace the earth. You can view / screenshot your chat history on the right, and feel free to "
-        "'flag' anything either amusing or nonsensical",
+        description="A basic interface with a 774M parameter model trained on general Q&A and conversation. Treat it like a friend!",
         article="**Important Notes & About:**\n"
         "1. the model can take up to 60 seconds to respond sometimes, patience is a virtue.\n"
-        "2. entering your name is completely optional, but might get you a more personalized response if you "
-        "have messaged me in the past.\n"
-        "3. the model started from a pretrained checkpoint, **and in addition, was trained on other datasets** "
-        "before training on Peter's messages. Anything it says should not be interpreted as an _actual_ past message or"
-        " an absolutely true statement.\n "
-        "_You can learn more about the model architecture and training process [here]("
-        "https://youtu.be/dQw4w9WgXcQ)._",
+        "2. entering a username is completely optional.\n"
+        "3. the model started from a pretrained checkpoint, and was trained on several different datasets. Anything it says sshould be fact-checked before being regarded as a true statement.\n ",
         css="""
         .chatbox {display:flex;flex-direction:column}
         .user_msg, .resp_msg {padding:4px;margin-bottom:4px;border-radius:4px;width:80%}
@@ -152,7 +146,7 @@ if __name__ == "__main__":
         allow_screenshot=True,
         allow_flagging=True,
         flagging_dir="gradio_data",
-        flagging_options=["amusing", "I actually laughed", "bad/useless response"],
+        flagging_options=["great response", "doesn't make sense", "bad/offensive response"],
         enable_queue=True,  # allows for dealing with multiple users simultaneously
         theme="darkhuggingface",
     )
