@@ -161,8 +161,6 @@ def unknown(update, context):
     )
 
 
-# use_gramformer = True  # TODO: change this to a default argument and use argparse
-# gram_model = "prithivida/grammar_error_correcter_v1"
 dictionary_path = (
     r"../symspell_rsc/frequency_dictionary_en_82_765.txt"  # from repo root
 )
@@ -191,13 +189,12 @@ def get_parser():
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
         "config.json). No models? Run the script download_models.py",
     )
-
+    
     parser.add_argument(
         "--use-gramformer",
-        required=False,
-        type=bool,
         default=True,
-        help="specify whether to correct model responses with gramformer (True) or symspell (False)",
+        action="store_false",
+        help="passing this argument DEACTIVATES gramformer and switches to symspell",
     )
     parser.add_argument(
         "--gram-model",

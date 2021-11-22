@@ -2,6 +2,8 @@
 /__pycache__/
 /.idea/
 /scratch/
+
+
 # local model folders for testing / running bots / deploy
 /gpt2_43k_checkpoint/
 /gpt2_135k_checkpoint/
@@ -31,3 +33,9 @@ deploy-as-bot\gradio_data
 deploy-as-bot/gradio_queue.db
 deploy-as-bot\gradio_queue.db
 
+
+# notebooks containing personal data
+colab-notebooks/GPT2norm_aitextgen_text_generation_+_training_on_GPU.ipynb
+colab-notebooks/aitextgen-tutorial-modified-trainingGPT.ipynb
+colab-notebooks/convert_whatsapp_export_to_GPT2_script.ipynb
+colab-notebooks/EDA_exported_phone_text_data.ipynb
