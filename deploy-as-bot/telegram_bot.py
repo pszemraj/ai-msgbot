@@ -128,7 +128,8 @@ def ask_gpt(update, context):
         # there was some issue getting that info, whatever
         prompt_speaker = None
     context.bot.send_message(
-        chat_id=update.effective_chat.id, text="... neurons are working ..." # confirms receipt / running to user
+        chat_id=update.effective_chat.id,
+        text="... neurons are working ...",  # confirms receipt / running to user
     )
     resp = query_gpt_model(
         folder_path=model_loc,
@@ -189,7 +190,7 @@ def get_parser():
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
         "config.json). No models? Run the script download_models.py",
     )
-    
+
     parser.add_argument(
         "--use-gramformer",
         default=True,
@@ -221,7 +222,7 @@ if __name__ == "__main__":
 
     # load on bot start so does not have to reload
     use_gramformer = args.use_gramformer
-    
+
     if use_gramformer:
         print("using gramformer..")
         corrector = pipeline("text2text-generation", model=gram_model, device=-1)

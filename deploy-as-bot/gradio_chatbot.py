@@ -86,7 +86,7 @@ def ask_gpt(message: str, sender: str = ""):
         speaker=prompt_speaker,
         kparam=150,
         temp=0.75,
-        top_p=0.65, # optimize this with hyperparam search
+        top_p=0.65,  # optimize this with hyperparam search
     )
     bot_resp = gramformer_correct(corrector, qphrase=resp["out_text"])
     rt = round(time.time() - st, 2)
@@ -138,7 +138,7 @@ def get_parser():
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
         "config.json). No models? Run the script download_models.py",
     )
-    
+
     parser.add_argument(
         "--gram-model",
         required=False,
@@ -146,8 +146,9 @@ def get_parser():
         default="prithivida/grammar_error_correcter_v1",
         help="text2text generation model ID from huggingface for the model to correct grammar",
     )
-    
+
     return parser
+
 
 if __name__ == "__main__":
     args = get_parser().parse_args()
@@ -177,7 +178,11 @@ if __name__ == "__main__":
         allow_screenshot=True,
         allow_flagging=True,
         flagging_dir="gradio_data",
-        flagging_options=["great response", "doesn't make sense", "bad/offensive response"],
+        flagging_options=[
+            "great response",
+            "doesn't make sense",
+            "bad/offensive response",
+        ],
         enable_queue=True,  # allows for dealing with multiple users simultaneously
         theme="darkhuggingface",
     )
