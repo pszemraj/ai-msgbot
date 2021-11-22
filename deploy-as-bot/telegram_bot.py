@@ -26,7 +26,7 @@ from transformers import pipeline
 from ai_single_response import query_gpt_model
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-default_model = "gp2_DDandPeterTexts_774M_73Ksteps"
+default_model = "GPT2_trivNatQAdailydia_774M_175Ksteps"
 cwd = Path.cwd()
 model_loc = cwd.parent / default_model
 model_loc = str(model_loc.resolve())
