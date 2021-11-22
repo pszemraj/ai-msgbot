@@ -27,7 +27,7 @@ def query_gpt_model(
     prompt_msg: str,
     speaker=None,
     responder="person beta",
-    kparam=125,
+    kparam=150,
     temp=0.75,
     top_p=0.65,
     verbose=False,

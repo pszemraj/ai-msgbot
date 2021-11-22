@@ -1,6 +1,7 @@
 """
 Basic GPT-2 telegram bot
-you need to have your own token to create and run one - here it is in my env variables
+
+you need to have your own token to create and run one - this script loads and reads the user's environmental variables
 creating a bot: https://www.section.io/engineering-education/building-a-telegram-bot-with-python-to-generate-quotes/
 
 """
@@ -85,14 +86,14 @@ def start(update, context):
     """instantiates telegram bot"""
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="send me texts and I answer.. after like 30-45 seconds",
+        text="A GPT chatbot model - send it messages as if to a friend.",
     )
 
 
 def help(update, context):
     """Send a message when the command /help is issued."""
     update.message.reply_text(
-        "idk - there are not any options rn, just send normal texts"
+        "There are no options at the moment, just send normal texts to the Bot. Note: 1) only messages w/ text are supported 2) if bot does not respond/ "
     )
 
 
@@ -105,8 +106,8 @@ def ask_gpt(update, context):
     ask_gpt - queries the relevant gpt2 model and interfaces with Telegram
 
     Args:
-        update ([type]): [description]
-        context ([type]): [description]
+        update (telegram class obj): [description]
+        context (telegram class obj): [description]
     """
     st = time.time()
     prompt = clean(update.message.text)  # clean user input
@@ -115,7 +116,7 @@ def ask_gpt(update, context):
         prompt = prompt[:100]  # truncate
         context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="ur prompt is quite long, truncating to first 100 characters",
+            text="INFO: prompt is too long, truncating to first 100 chars",
         )
     try:
         firstname = clean(update.message.chat.first_name)
@@ -125,7 +126,7 @@ def ask_gpt(update, context):
         # there was some issue getting that info, whatever
         prompt_speaker = None
     context.bot.send_message(
-        chat_id=update.effective_chat.id, text="... neurons are working ..."
+        chat_id=update.effective_chat.id, text="... neurons are working ..." # confirms receipt / running to user
     )
     resp = query_gpt_model(
         folder_path=model_loc,
@@ -133,8 +134,9 @@ def ask_gpt(update, context):
         speaker=prompt_speaker,
         kparam=125,
         temp=0.75,
-        top_p=0.65,  # latest hyperparam search results 21-oct
+        top_p=0.65,  # can be changed based on hyperparam desires
     )
+    # now, actually respond from model
     if use_gramformer:
         bot_resp = gramformer_correct(corrector, qphrase=resp["out_text"])
     else:
@@ -153,7 +155,7 @@ def unknown(update, context):
     """Responds to unknown command"""
 
     context.bot.send_message(
-        chat_id=update.effective_chat.id, text="m8, I didn't understand that command."
+        chat_id=update.effective_chat.id, text="Command not understood, sorry!"
     )
 
 

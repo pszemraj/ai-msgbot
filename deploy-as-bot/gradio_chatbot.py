@@ -3,7 +3,9 @@
 deploy-as-bot\gradio_chatbot.py
 
 A system, method for deploying to Gradio. Gradio is a basic "deploy" interface which allows for other users to test your model from a web URL. It also enables some basic functionality like user flagging for weird responses.
-Note that the URL is displayed once the script is run. Set the working directory to */deploy-as-bot in terminal before running.
+Note that the URL is displayed once the script is run. 
+
+Set the working directory to */deploy-as-bot in terminal before running.
 
 """
 import os
