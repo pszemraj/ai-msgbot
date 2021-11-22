@@ -1,10 +1,11 @@
 absl-py==0.14.1
-aiohttp>=3.7.4
+aiohttp==3.8.1
+aiosignal==1.2.0
 aitextgen==0.5.2
 analytics-python==1.4.0
 APScheduler==3.6.3
 async-generator==1.10
-async-timeout==3.0.1
+async-timeout==4.0.1
 attrs==21.2.0
 autopep8==1.6.0
 backcall==0.2.0
@@ -34,6 +35,7 @@ Flask==2.0.2
 Flask-CacheBuster==1.0.0
 Flask-Cors==3.0.10
 Flask-Login==0.5.0
+frozenlist==1.2.0
 fsspec==2021.10.1
 ftfy==6.0.3
 future==0.18.2

@@ -82,11 +82,12 @@ dependencies:
   - zeromq=4.3.4=h0e60522_1
   - pip:
     - absl-py==0.14.1
-    - aiohttp==3.7.4.post0
+    - aiohttp==3.8.1
+    - aiosignal==1.2.0
     - aitextgen==0.5.2
     - analytics-python==1.4.0
     - async-generator==1.10
-    - async-timeout==3.0.1
+    - async-timeout==4.0.1
     - attrs==21.2.0
     - backoff==1.10.0
     - bcrypt==3.2.0
@@ -101,6 +102,7 @@ dependencies:
     - flask-cachebuster==1.0.0
     - flask-cors==3.0.10
     - flask-login==0.5.0
+    - frozenlist==1.2.0
     - fsspec==2021.10.1
     - ftfy==6.0.3
     - future==0.18.2

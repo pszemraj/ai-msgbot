@@ -6,6 +6,7 @@ Similar to the whatsapp parser, but this parses output CSVs of iphone / apple te
 Note that this script was geared towards data in the iMazing export format/structure, as my messaage data was exported in this way. if message data is exported in another way, it's likely that some manipulation of the columns is required (which is doable! just fyi). 
 
 """
+
 import os
 import sys
 from os.path import dirname, join, basename

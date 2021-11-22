@@ -1,9 +1,11 @@
 """
 Basic GPT-2 telegram bot
-you need to have your own token to create and run one - here it is in my env variables
-creating a bot: https://www.section.io/engineering-education/building-a-telegram-bot-with-python-to-generate-quotes/
+
+you need to have your own token to create and run one - this script loads and reads the user's environmental variables
+creating a bot: https://www.codementor.io/@karandeepbatra/part-1-how-to-create-a-telegram-bot-in-python-in-under-10-minutes-19yfdv4wrq 
 
 """
+import argparse
 import os
 import sys
 from os.path import dirname
@@ -22,14 +24,10 @@ from telegram.ext import Updater
 from pathlib import Path
 from transformers import pipeline
 
-from ai_single_response import query_gpt_peter
+from ai_single_response import query_gpt_model
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-default_model = "gp2_DDandPeterTexts_774M_73Ksteps"
 cwd = Path.cwd()
-model_loc = cwd.parent / default_model
-model_loc = str(model_loc.resolve())
-print(f"using model stored here: \n {model_loc} \n")
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
 
 logging.basicConfig(
@@ -85,14 +83,14 @@ def start(update, context):
     """instantiates telegram bot"""
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="send me texts and I answer.. after like 30-45 seconds",
+        text="A GPT chatbot model - send it messages as if to a friend.",
     )
 
 
 def help(update, context):
     """Send a message when the command /help is issued."""
     update.message.reply_text(
-        "idk - there are not any options rn, just send normal texts"
+        "There are no options at the moment, just send normal texts to the Bot. Note: 1) only messages w/ text are supported 2) if bot does not respond, it may be offline. Contact the bot manager."
     )
 
 
@@ -105,8 +103,8 @@ def ask_gpt(update, context):
     ask_gpt - queries the relevant gpt2 model and interfaces with Telegram
 
     Args:
-        update ([type]): [description]
-        context ([type]): [description]
+        update (telegram class obj): [description]
+        context (telegram class obj): [description]
     """
     st = time.time()
     prompt = clean(update.message.text)  # clean user input
@@ -115,7 +113,7 @@ def ask_gpt(update, context):
         prompt = prompt[:100]  # truncate
         context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="ur prompt is quite long, truncating to first 100 characters",
+            text="INFO: prompt is too long, truncating to first 100 chars",
         )
     try:
         firstname = clean(update.message.chat.first_name)
@@ -125,16 +123,18 @@ def ask_gpt(update, context):
         # there was some issue getting that info, whatever
         prompt_speaker = None
     context.bot.send_message(
-        chat_id=update.effective_chat.id, text="... neurons are working ..."
+        chat_id=update.effective_chat.id,
+        text="... neurons are working ...",  # confirms receipt / running to user
     )
-    resp = query_gpt_peter(
+    resp = query_gpt_model(
         folder_path=model_loc,
         prompt_msg=prompt,
         speaker=prompt_speaker,
         kparam=125,
         temp=0.75,
-        top_p=0.65,  # latest hyperparam search results 21-oct
+        top_p=0.65,  # can be changed based on hyperparam desires
     )
+    # now, actually respond from model
     if use_gramformer:
         bot_resp = gramformer_correct(corrector, qphrase=resp["out_text"])
     else:
@@ -153,12 +153,10 @@ def unknown(update, context):
     """Responds to unknown command"""
 
     context.bot.send_message(
-        chat_id=update.effective_chat.id, text="m8, I didn't understand that command."
+        chat_id=update.effective_chat.id, text="Command not understood, sorry!"
     )
 
 
-use_gramformer = True  # TODO: change this to a default argument and use argparse
-gram_model = "prithivida/grammar_error_correcter_v1"
 dictionary_path = (
     r"../symspell_rsc/frequency_dictionary_en_82_765.txt"  # from repo root
 )
@@ -166,13 +164,60 @@ bigram_path = (
     r"symspell_rsc/frequency_bigramdictionary_en_243_342.txt"  # from repo root
 )
 
+
+def get_parser():
+    """
+    get_parser - a helper function for the argparse module
+
+    Returns:
+        [argparse.ArgumentParser]: [the argparser relevant for this script]
+    """
+
+    parser = argparse.ArgumentParser(
+        description="submit a message and have a 774M parameter GPT model respond"
+    )
+    parser.add_argument(
+        "--model",
+        required=False,
+        type=str,
+        # "gp2_DDandPeterTexts_774M_73Ksteps", - from GPT-Peter
+        default="GPT2_trivNatQAdailydia_774M_175Ksteps",
+        help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
+        "config.json). No models? Run the script download_models.py",
+    )
+
+    parser.add_argument(
+        "--use-gramformer",
+        default=True,
+        action="store_false",
+        help="passing this argument DEACTIVATES gramformer and switches to symspell",
+    )
+    parser.add_argument(
+        "--gram-model",
+        required=False,
+        type=str,
+        default="prithivida/grammar_error_correcter_v1",
+        help="text2text generation model ID from huggingface for the model to correct grammar",
+    )
+
+    return parser
+
+
 if __name__ == "__main__":
+    args = get_parser().parse_args()
+    default_model = str(args.model)
+    model_loc = cwd.parent / default_model
+    model_loc = str(model_loc.resolve())
+    gram_model = args.gram_model
+    print(f"using model stored here: \n {model_loc} \n")
     # get token
     env_var = os.environ
     my_vars = dict(env_var)
-    my_token = my_vars["GPTPETER_BOT"]
+    my_token = my_vars["GPTFRIEND_BOT"]
 
     # load on bot start so does not have to reload
+    use_gramformer = args.use_gramformer
+
     if use_gramformer:
         print("using gramformer..")
         corrector = pipeline("text2text-generation", model=gram_model, device=-1)

@@ -2,7 +2,10 @@
 
 deploy-as-bot\gradio_chatbot.py
 
-A system, method for deploying to Gradio. A human-machine interface with a 774 parameter model of the best and mosthumble human to grace the earth. A device for flagging and/or detecting the presence or absence of a good/bad response.
+A system, method for deploying to Gradio. Gradio is a basic "deploy" interface which allows for other users to test your model from a web URL. It also enables some basic functionality like user flagging for weird responses.
+Note that the URL is displayed once the script is run. 
+
+Set the working directory to */deploy-as-bot in terminal before running.
 
 """
 import os
@@ -13,24 +16,20 @@ sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 
 import gradio as gr
 import logging
+import argparse
 import time
 import warnings
 from pathlib import Path
 from cleantext import clean
 from transformers import pipeline
 from datetime import datetime
-from ai_single_response import query_gpt_peter
+from ai_single_response import query_gpt_model
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 logging.basicConfig()
-default_model = "gp2_DDandPeterTexts_774M_73Ksteps"
 cwd = Path.cwd()
-model_loc = cwd.parent / default_model
-model_loc = str(model_loc.resolve())
-print(f"using model stored here: \n {model_loc} \n")
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
-gram_model = "prithivida/grammar_error_correcter_v1"
 
 
 def gramformer_correct(corrector, qphrase: str):
@@ -81,13 +80,13 @@ def ask_gpt(message: str, sender: str = ""):
     else:
         prompt_speaker = None
 
-    resp = query_gpt_peter(
+    resp = query_gpt_model(
         folder_path=model_loc,
         prompt_msg=prompt,
         speaker=prompt_speaker,
         kparam=150,
         temp=0.75,
-        top_p=0.65,  # latest hyperparam search results 21-oct
+        top_p=0.65,  # optimize this with hyperparam search
     )
     bot_resp = gramformer_correct(corrector, qphrase=resp["out_text"])
     rt = round(time.time() - st, 2)
@@ -109,7 +108,7 @@ def chat(first_and_last_name, message):
     """
     history = gr.get_state() or []
     response = ask_gpt(message, sender=first_and_last_name)
-    history.append(("You: " + message, " GPT-Peter: " + response + " [end] "))
+    history.append(("You: " + message, " GPT-Model: " + response + " [end] "))
     gr.set_state(history)
     html = ""
     for user_msg, resp_msg in history:
@@ -119,26 +118,57 @@ def chat(first_and_last_name, message):
     return html
 
 
+def get_parser():
+    """
+    get_parser - a helper function for the argparse module
+
+    Returns:
+        [argparse.ArgumentParser]: [the argparser relevant for this script]
+    """
+
+    parser = argparse.ArgumentParser(
+        description="submit a message and have a 774M parameter GPT model respond"
+    )
+    parser.add_argument(
+        "--model",
+        required=False,
+        type=str,
+        # "gp2_DDandPeterTexts_774M_73Ksteps", - from GPT-Peter
+        default="GPT2_trivNatQAdailydia_774M_175Ksteps",
+        help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
+        "config.json). No models? Run the script download_models.py",
+    )
+
+    parser.add_argument(
+        "--gram-model",
+        required=False,
+        type=str,
+        default="prithivida/grammar_error_correcter_v1",
+        help="text2text generation model ID from huggingface for the model to correct grammar",
+    )
+
+    return parser
+
+
 if __name__ == "__main__":
+    args = get_parser().parse_args()
+    default_model = str(args.model)
+    model_loc = cwd.parent / default_model
+    model_loc = str(model_loc.resolve())
+    gram_model = args.gram_model
+    print(f"using model stored here: \n {model_loc} \n")
     corrector = pipeline("text2text-generation", model=gram_model, device=-1)
     print("Finished loading the gramformer model - ", datetime.now())
     iface = gr.Interface(
         chat,
         inputs=["text", "text"],
         outputs="html",
-        title="GPT-Peter: 774M Parameter Model",
-        description="A basic interface with a 774M parameter model of the best and most "
-        "humble human to grace the earth. You can view / screenshot your chat history on the right, and feel free to "
-        "'flag' anything either amusing or nonsensical",
+        title="GPT-Chatbot Demo: 774M Parameter Model",
+        description="A basic interface with a 774M parameter model trained on general Q&A and conversation. Treat it like a friend!",
         article="**Important Notes & About:**\n"
         "1. the model can take up to 60 seconds to respond sometimes, patience is a virtue.\n"
-        "2. entering your name is completely optional, but might get you a more personalized response if you "
-        "have messaged me in the past.\n"
-        "3. the model started from a pretrained checkpoint, **and in addition, was trained on other datasets** "
-        "before training on Peter's messages. Anything it says should not be interpreted as an _actual_ past message or"
-        " an absolutely true statement.\n "
-        "_You can learn more about the model architecture and training process [here]("
-        "https://youtu.be/dQw4w9WgXcQ)._",
+        "2. entering a username is completely optional.\n"
+        "3. the model started from a pretrained checkpoint, and was trained on several different datasets. Anything it says sshould be fact-checked before being regarded as a true statement.\n ",
         css="""
         .chatbox {display:flex;flex-direction:column}
         .user_msg, .resp_msg {padding:4px;margin-bottom:4px;border-radius:4px;width:80%}
@@ -148,7 +178,11 @@ if __name__ == "__main__":
         allow_screenshot=True,
         allow_flagging=True,
         flagging_dir="gradio_data",
-        flagging_options=["amusing", "I actually laughed", "bad/useless response"],
+        flagging_options=[
+            "great response",
+            "doesn't make sense",
+            "bad/offensive response",
+        ],
         enable_queue=True,  # allows for dealing with multiple users simultaneously
         theme="darkhuggingface",
     )
