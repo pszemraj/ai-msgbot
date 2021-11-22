@@ -2,7 +2,7 @@
 ai_single_response.py
 
 An executable way to call the model. example:
-*\gpt2_chatbot> python .\ai_single_response.py --prompt "do you love me?" --speaker "calvin miller"
+*\gpt2_chatbot> python .\ai_single_response.py --prompt "where is the grocery store?" --time
 
 extended-summary: 
     
