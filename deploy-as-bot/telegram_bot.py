@@ -5,6 +5,7 @@ you need to have your own token to create and run one - this script loads and re
 creating a bot: https://www.codementor.io/@karandeepbatra/part-1-how-to-create-a-telegram-bot-in-python-in-under-10-minutes-19yfdv4wrq 
 
 """
+import argparse
 import os
 import sys
 from os.path import dirname
@@ -26,12 +27,13 @@ from transformers import pipeline
 from ai_single_response import query_gpt_model
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-default_model = "GPT2_trivNatQAdailydia_774M_175Ksteps"
 cwd = Path.cwd()
+my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
+
+default_model = "GPT2_trivNatQAdailydia_774M_175Ksteps"
 model_loc = cwd.parent / default_model
 model_loc = str(model_loc.resolve())
 print(f"using model stored here: \n {model_loc} \n")
-my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -93,7 +95,7 @@ def start(update, context):
 def help(update, context):
     """Send a message when the command /help is issued."""
     update.message.reply_text(
-        "There are no options at the moment, just send normal texts to the Bot. Note: 1) only messages w/ text are supported 2) if bot does not respond/ "
+        "There are no options at the moment, just send normal texts to the Bot. Note: 1) only messages w/ text are supported 2) if bot does not respond, it may be offline. Contact the bot manager."
     )
 
 
@@ -159,8 +161,8 @@ def unknown(update, context):
     )
 
 
-use_gramformer = True  # TODO: change this to a default argument and use argparse
-gram_model = "prithivida/grammar_error_correcter_v1"
+# use_gramformer = True  # TODO: change this to a default argument and use argparse
+# gram_model = "prithivida/grammar_error_correcter_v1"
 dictionary_path = (
     r"../symspell_rsc/frequency_dictionary_en_82_765.txt"  # from repo root
 )
@@ -168,13 +170,61 @@ bigram_path = (
     r"symspell_rsc/frequency_bigramdictionary_en_243_342.txt"  # from repo root
 )
 
+
+def get_parser():
+    """
+    get_parser - a helper function for the argparse module
+
+    Returns:
+        [argparse.ArgumentParser]: [the argparser relevant for this script]
+    """
+
+    parser = argparse.ArgumentParser(
+        description="submit a message and have a 774M parameter GPT model respond"
+    )
+    parser.add_argument(
+        "--model",
+        required=False,
+        type=str,
+        # "gp2_DDandPeterTexts_774M_73Ksteps", - from GPT-Peter
+        default="GPT2_trivNatQAdailydia_774M_175Ksteps",
+        help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
+        "config.json). No models? Run the script download_models.py",
+    )
+
+    parser.add_argument(
+        "--use-gramformer",
+        required=False,
+        type=bool,
+        default=True,
+        help="specify whether to correct model responses with gramformer (True) or symspell (False)",
+    )
+    parser.add_argument(
+        "--gram-model",
+        required=False,
+        type=str,
+        default="prithivida/grammar_error_correcter_v1",
+        help="text2text generation model ID from huggingface for the model to correct grammar",
+    )
+
+    return parser
+
+
 if __name__ == "__main__":
+    args = get_parser().parse_args()
+    default_model = str(args.model)
+    model_loc = cwd.parent / default_model
+    model_loc = str(model_loc.resolve())
+    gram_model = args.gram_model
+    print(f"using model stored here: \n {model_loc} \n")
     # get token
     env_var = os.environ
     my_vars = dict(env_var)
     my_token = my_vars["GPTFRIEND_BOT"]
 
     # load on bot start so does not have to reload
+    use_gramformer = args.use_gramformer
+    
     if use_gramformer:
         print("using gramformer..")
         corrector = pipeline("text2text-generation", model=gram_model, device=-1)
