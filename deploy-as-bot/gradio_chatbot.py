@@ -30,7 +30,6 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 logging.basicConfig()
 cwd = Path.cwd()
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
-gram_model = "prithivida/grammar_error_correcter_v1"
 
 
 def gramformer_correct(corrector, qphrase: str):
@@ -140,6 +139,14 @@ def get_parser():
         "config.json). No models? Run the script download_models.py",
     )
     
+    parser.add_argument(
+        "--gram-model",
+        required=False,
+        type=str,
+        default="prithivida/grammar_error_correcter_v1",
+        help="text2text generation model ID from huggingface for the model to correct grammar",
+    )
+    
     return parser
 
 if __name__ == "__main__":
@@ -147,6 +154,7 @@ if __name__ == "__main__":
     default_model = str(args.model)
     model_loc = cwd.parent / default_model
     model_loc = str(model_loc.resolve())
+    gram_model = args.gram_model
     print(f"using model stored here: \n {model_loc} \n")
     corrector = pipeline("text2text-generation", model=gram_model, device=-1)
     print("Finished loading the gramformer model - ", datetime.now())
