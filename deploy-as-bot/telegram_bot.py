@@ -2,7 +2,7 @@
 Basic GPT-2 telegram bot
 
 you need to have your own token to create and run one - this script loads and reads the user's environmental variables
-creating a bot: https://www.section.io/engineering-education/building-a-telegram-bot-with-python-to-generate-quotes/
+creating a bot: https://www.codementor.io/@karandeepbatra/part-1-how-to-create-a-telegram-bot-in-python-in-under-10-minutes-19yfdv4wrq 
 
 """
 import os
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     # get token
     env_var = os.environ
     my_vars = dict(env_var)
-    my_token = my_vars["GPTPETER_BOT"]
+    my_token = my_vars["GPTFRIEND_BOT"]
 
     # load on bot start so does not have to reload
     if use_gramformer:
