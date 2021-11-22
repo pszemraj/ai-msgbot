@@ -234,12 +234,9 @@ if __name__ == "__main__":
         # # force-update the speaker+responder params
         # for the generic model case
     if "natqa" in model_dir.lower():
-        spkr = (
-            "person alpha"  
-        )
+        spkr = "person alpha"
         rspndr = "person beta"
         # ^ arbitrary people created when parsing NatQA + TriviaQA + Daily Dialogue datasets
-
 
     st = time.time()
 
