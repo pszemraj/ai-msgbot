@@ -30,11 +30,6 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 cwd = Path.cwd()
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
 
-default_model = "GPT2_trivNatQAdailydia_774M_175Ksteps"
-model_loc = cwd.parent / default_model
-model_loc = str(model_loc.resolve())
-print(f"using model stored here: \n {model_loc} \n")
-
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
