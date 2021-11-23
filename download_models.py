@@ -18,6 +18,7 @@ model_links = {
     "GPT2_dailydialogue_355M_150Ksteps": "https://www.dropbox.com/sh/nzcgavha8i11mvw/AACZXMoJuSfI3d3vGRrT_cp5a?dl=1",
     "GPT2_trivNatQAdailydia_774M_175Ksteps": "https://www.dropbox.com/sh/vs848vw311l04ah/AAAuQCyuTEfjaLKo7ipybEZRa?dl=1",
     "gp2_DDandPeterTexts_774M_73Ksteps": "https://www.dropbox.com/sh/bnrwpqqh34s2bea/AAAfuPTJ0A5FgHeOJ0cMlUFha?dl=1",
+    "GPT2_WoW_100k_genconv_355M": "https://www.dropbox.com/sh/5hvgjgmpy5ucq4t/AAAITp8gTjiilla1Q7lvX_2ua?dl=1",
 }
 
 # Set up the parsing of command-line arguments
@@ -92,6 +93,18 @@ if __name__ == "__main__":
     m_name = "gp2_DDandPeterTexts_774M_73Ksteps"
     if not any(m_name in dir for dir in folder_names):
         # GPT-Peter: trained on 73,000 steps of Peter's messages in addition to same items as GPT2_trivNatQAdailydia_774M_175Ksteps
+        print(f"did not find {m_name} in folders, downloading..")
+        extr_loc = cwd / m_name
+        model_dest = str(extr_loc.resolve())
+        utils.get_zip_URL(
+            model_links[m_name],
+            extract_loc=model_dest,
+            verbose=verbose,
+        )
+        
+    m_name = "GPT2_WoW_100k_genconv_355M"
+    if not any(m_name in dir for dir in folder_names):
+        # GPT2_WoW_100k_genconv_355M: pretrained GPT-2 fine-tuned on wizard of wikipedia dataset for 100k steps
         print(f"did not find {m_name} in folders, downloading..")
         extr_loc = cwd / m_name
         model_dest = str(extr_loc.resolve())

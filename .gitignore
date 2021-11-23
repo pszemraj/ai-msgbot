@@ -20,6 +20,7 @@
 /gp2_DDandPeterTexts_41kPeter-774M/
 /gp2_DDandPeterTexts_774M_73Ksteps/
 /gp2_DDandPeterTexts_gpu_774M_175Ksteps/
+/GPT2_WoW_100k_genconv_355M/
 # the above can be downloaded through `download_models.py`
 
 # gradio things
