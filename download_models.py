@@ -101,7 +101,7 @@ if __name__ == "__main__":
             extract_loc=model_dest,
             verbose=verbose,
         )
-        
+
     m_name = "GPT2_WoW_100k_genconv_355M"
     if not any(m_name in dir for dir in folder_names):
         # GPT2_WoW_100k_genconv_355M: pretrained GPT-2 fine-tuned on wizard of wikipedia dataset for 100k steps
