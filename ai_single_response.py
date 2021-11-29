@@ -58,6 +58,12 @@ def query_gpt_model(
     if "natqa" in str(folder_path).lower():
         speaker = "person alpha"  # manual correction
         responder = "person beta"
+    if "wow" in str(folder_path).lower():
+        speaker = "person alpha"  # manual correction
+        responder = "person beta"
+    if "peter" in str(folder_path).lower():
+        speaker = None  # manual correction
+        responder = "peter szemraj"
     if speaker is not None:
         p_list.append(speaker.lower() + ":" + "\n")  # write prompt as the speaker
     p_list.append(prompt_msg.lower() + "\n")
