@@ -45,6 +45,7 @@ def query_gpt_model(
     Returns:
         [dict]: [returns a dict with A) just model response as str B) total conversation]
     """
+    
     ai = aitextgen(
         model_folder=folder_path,
         to_gpu=use_gpu,
