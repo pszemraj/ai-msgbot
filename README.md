@@ -81,6 +81,8 @@ _Note: the bot in the image of question was trained on the author's text message
 
 ## Repo Overview and Usage
 
+![process flow](https://user-images.githubusercontent.com/74869040/144432206-f584d1c1-a890-4a56-8439-ac7542c7af8c.png)
+
 ### New to Colab?
 
 `aitextgen` is largely designed around leveraging Colab's free-GPU capabilities to train models. Training a text generation model, and most transformer models, _is resource intensive_. If new to the Google Colab environment, check out the below to understand more of what it is and how it works.
