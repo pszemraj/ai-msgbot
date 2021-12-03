@@ -5,12 +5,7 @@
 
 
 # local model folders for testing / running bots / deploy
-/gpt2_43k_checkpoint/
-/gpt2_135k_checkpoint/
-/gpt2_200k_checkpoint/
-/gpt2_275k_checkpoint/
-/gpt2_325k_checkpoint/
-/gpt2_385k_checkpoint/
+*checkpoint*
 /gpt2_std_gpu_774M_120ksteps/
 /gpt2_std_gpu_774M_60ksteps/
 /gpt2_dailydialogue_355M_75Ksteps/
@@ -21,6 +16,11 @@
 /gp2_DDandPeterTexts_774M_73Ksteps/
 /gp2_DDandPeterTexts_gpu_774M_175Ksteps/
 /GPT2_WoW_100k_genconv_355M/
+/GPT2_774M_chk_175KnatQAtrivDD_100kWoW/
+*GPTneo*
+*GPTpeter*
+*1pt3B*
+
 # the above can be downloaded through `download_models.py`
 
 # gradio things

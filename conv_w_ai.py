@@ -1,12 +1,7 @@
 """
-ai_single_response.py
+WIP
 
-An executable way to call the model. example:
-*\gpt2_chatbot> python .\ai_single_response.py --prompt "where is the grocery store?" --time
-
-extended-summary: 
-    
-    A system and method for interacting with a virtual machine using a series of messages , each message having associated otherwise one or more actions to be taken by the machine. The speaker participates in a chat with a responder , and the response from the responder is returned.
+convert ai_single_response to now respond to the whole conversation
 
 """
 import argparse
@@ -50,6 +45,7 @@ def query_gpt_model(
     Returns:
         [dict]: [returns a dict with A) just model response as str B) total conversation]
     """
+    
     ai = aitextgen(
         model_folder=folder_path,
         to_gpu=use_gpu,
@@ -58,12 +54,6 @@ def query_gpt_model(
     if "natqa" in str(folder_path).lower():
         speaker = "person alpha"  # manual correction
         responder = "person beta"
-    if "wow" in str(folder_path).lower():
-        speaker = "person alpha"  # manual correction
-        responder = "person beta"
-    if "peter" in str(folder_path).lower():
-        speaker = None  # manual correction
-        responder = "peter szemraj"
     if speaker is not None:
         p_list.append(speaker.lower() + ":" + "\n")  # write prompt as the speaker
     p_list.append(prompt_msg.lower() + "\n")
