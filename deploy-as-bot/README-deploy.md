@@ -29,3 +29,9 @@ _more deployment ideas / options to come_
 
 - quickstart [here](https://www.gradio.app/getting_started)
 - [documentation page](https://gradio.app/docs)
+
+### permanent gradio 
+https://abidlabs.medium.com/quickly-deploying-gradio-on-aws-242af2374784
+
+### hosting on huggingface spaces
+https://huggingface.co/docs/hub/spaces
