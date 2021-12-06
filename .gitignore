@@ -5,23 +5,21 @@
 
 
 # local model folders for testing / running bots / deploy
-*checkpoint*
+
 /gpt2_std_gpu_774M_120ksteps/
 /gpt2_std_gpu_774M_60ksteps/
 /gpt2_dailydialogue_355M_75Ksteps/
-/GPT2_dailydialogue_355M_150Ksteps/
 /gp2_DDandPeterTexts_14kPeter_774M/
-/GPT2_trivNatQAdailydia_774M_175Ksteps/
 /gp2_DDandPeterTexts_41kPeter-774M/
 /gp2_DDandPeterTexts_774M_73Ksteps/
 /gp2_DDandPeterTexts_gpu_774M_175Ksteps/
-/GPT2_WoW_100k_genconv_355M/
-/GPT2_774M_chk_175KnatQAtrivDD_100kWoW/
+*checkpoint*
+*GPT2*
 *GPTneo*
 *GPTpeter*
 *1pt3B*
 
-# the above can be downloaded through `download_models.py`
+# most of ^ can be downloaded through `download_models.py`
 
 # gradio things
 *.db
@@ -30,13 +28,7 @@
 gradio_data
 deploy-as-bot/flagged
 deploy-as-bot/gradio_data
-deploy-as-bot\gradio_data
 deploy-as-bot/gradio_queue.db
-deploy-as-bot\gradio_queue.db
 
 
 # notebooks containing personal data
-colab-notebooks/GPT2norm_aitextgen_text_generation_+_training_on_GPU.ipynb
-colab-notebooks/aitextgen-tutorial-modified-trainingGPT.ipynb
-colab-notebooks/convert_whatsapp_export_to_GPT2_script.ipynb
-colab-notebooks/EDA_exported_phone_text_data.ipynb
