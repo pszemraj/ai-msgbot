@@ -163,12 +163,12 @@ if __name__ == "__main__":
         chat,
         inputs=["text", "text"],
         outputs="html",
-        title="GPT-Chatbot Demo: 774M Parameter Model",
+        title="Real-Impact English Chat Demo 英语聊天演示",
         description="A basic interface with a 774M parameter model trained on general Q&A and conversation. Treat it like a friend!",
         article="**Important Notes & About:**\n"
-        "1. the model can take up to 60 seconds to respond sometimes, patience is a virtue.\n"
+        "1. the model can take up to 200 seconds to respond sometimes, patience is a virtue.\n"
         "2. entering a username is completely optional.\n"
-        "3. the model started from a pretrained checkpoint, and was trained on several different datasets. Anything it says sshould be fact-checked before being regarded as a true statement.\n ",
+        "3. the model was trained on several different datasets. Anything it says should be fact-checked before being regarded as a true statement.\n ",
         css="""
         .chatbox {display:flex;flex-direction:column}
         .user_msg, .resp_msg {padding:4px;margin-bottom:4px;border-radius:4px;width:80%}
