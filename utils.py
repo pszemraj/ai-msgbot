@@ -232,7 +232,7 @@ def get_zip_URL(
     try:
         os.remove(save_loc)
         del save_loc
-    except:
+    except Exception:
         print("unable to delete original zipfile - check if exists", datetime.now())
 
     print("finished extracting zip - ", datetime.now())
@@ -266,7 +266,7 @@ def merge_dataframes(data_dir: str, ext=".xlsx", verbose=False):
             this_df = pd.read_excel(df_path).convert_dtypes()
 
             mrg_df = pd.concat([mrg_df, this_df], axis=0)
-        except:
+        except Exception:
             short_p = os.path.basename(df_path)
             print(
                 f"WARNING - file with extension {ext} and name {short_p} could not be read."
@@ -280,3 +280,97 @@ def merge_dataframes(data_dir: str, ext=".xlsx", verbose=False):
         pp.pprint(mrg_df.info(True))
 
     return mrg_df
+
+
+def download_URL(url: str, file=None, dlpath=None, verbose=False):
+    """
+    download_URL - download a file from a URL and show progress bar
+
+    Parameters
+    ----------
+    url : str
+        [description]
+    file : [type], optional
+        [description], by default None
+    dlpath : [type], optional
+        [description], by default None
+    verbose : bool, optional
+        [description], by default False
+
+    Returns
+    -------
+    str - path to the downloaded file
+    """
+    
+    if file is None:
+        if '?dl=' in url:
+            # is a dropbox link
+            prefile = url.split("/")[-1]
+            filename = str(prefile).split("?dl=")[0]
+        else:
+            filename = url.split("/")[-1]
+            
+        file = clean(filename)
+    if dlpath is None:
+        dlpath = Path.cwd() # save to current working directory
+    else:
+        dlpath = Path(dlpath) # make a path object
+        
+    r = requests.get(url, stream=True, allow_redirects=True)
+    total_size = int(r.headers.get("content-length"))
+    initial_pos = 0
+    dl_loc = dlpath / file
+    with open(str(dl_loc.resolve()), "wb") as f:
+        with tqdm(
+            total=total_size,
+            unit='B',
+            unit_scale=True,
+            desc=file,
+            initial=initial_pos,
+            ascii=True,
+        ) as pbar:
+            for ch in r.iter_content(chunk_size=1024):
+                if ch:
+                    f.write(ch)
+                    pbar.update(len(ch))
+                    
+    if verbose: print(f"\ndownloaded {file} to {dlpath}\n")
+    
+    return str(dl_loc.resolve())
+
+
+# my_url = "https://www.dropbox.com/s/63t6t9wr3tzb13f/a_Da_Vinci_style_portrait_painting%20%2830%29.jpg?dl=1"
+
+# download_URL(my_url, dlpath=Path.cwd() / 'scratch', verbose=True)
+
+
+def dl_extract_zip(
+    URLtoget: str,
+    extract_loc: str = None,
+    file_header: str = "dropboxexport_",
+    verbose: bool = False,
+):
+    extract_loc = Path(extract_loc)
+    extract_loc.mkdir(parents=True, exist_ok=True)
+    
+    save_loc = download_URL(
+        url=URLtoget, file=f'{file_header}.zip', dlpath=None, verbose=verbose)
+    
+    shutil.unpack_archive(save_loc, extract_dir=extract_loc)
+    
+    if verbose:
+        print("extracted zip file - ", datetime.now())
+        x = load_dir_files(extract_loc, req_extension="", verbose=verbose)
+
+    # remove original
+    try:
+        os.remove(save_loc)
+        del save_loc
+    except Exception:
+        print("unable to delete original zipfile - check if exists", datetime.now())
+    
+    if verbose: print("finished extracting zip - ", datetime.now())
+    
+    return extract_loc
+
+
