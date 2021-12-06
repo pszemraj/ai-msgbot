@@ -59,4 +59,7 @@ https://huggingface.co/docs/hub/spaces
 - pip install -r requirements.txt
 - cd deploy-as-bot
 - scp -r ../GPTneo_conv_33kWoW_18kDD root@ :/root/ai-msgbot
+- python
+- import nltk
+- nltk.download('stopwords')
 - nohup python gradio_chatbot_DO.py --model GPTneo_conv_33kWoW_18kDD &
