@@ -30,7 +30,7 @@ def correct_phrase_load(my_string: str):
         my_string (str): [text to be corrected]
 
     Returns:
-        [type]: [description]
+        str: the corrected string
     """
     sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
 
@@ -123,7 +123,7 @@ def load_dir_files(
         verbose (bool, optional): [description]. Defaults to False.
 
     Returns:
-        [type]: [description]
+        list or dict: an iterable of filepaths or a dict of filepaths and their respective filenames
     """
     appr_files = []
     # r=root, d=directories, f = files
@@ -164,7 +164,7 @@ def URL_string_filter(text):
         text ([type]): [description]
 
     Returns:
-        [str]: [description]
+        [str]: the filtered string
     """
     custom_printable = (
         "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._"
@@ -176,6 +176,7 @@ def URL_string_filter(text):
 
 
 def getFilename_fromCd(cd):
+    """ getFilename_fromCd - get the filename from a given cd str """
     if not cd:
         return None
     fname = re.findall("filename=(.+)", cd)
@@ -249,7 +250,7 @@ def merge_dataframes(data_dir: str, ext=".xlsx", verbose=False):
         ext (str, optional): [anticipate file extension for the dataframes ]. Defaults to '.xlsx'.
 
     Returns:
-        pd.DataFrame(): merged dataframe
+        pd.DataFrame(): merged dataframe of all files
     """
 
     src = Path(data_dir)
@@ -289,7 +290,7 @@ def download_URL(url: str, file=None, dlpath=None, verbose=False):
     Parameters
     ----------
     url : str
-        [description]
+        URL to download
     file : [type], optional
         [description], by default None
     dlpath : [type], optional
@@ -352,9 +353,9 @@ def dl_extract_zip(
     Parameters
     ----------
     URLtoget : str
-        [description]
+        zip file URL to download
     extract_loc : str, optional
-        [description], by default None
+        directory to extract zip to , by default None
     file_header : str, optional
         [description], by default "TEMP_archive_dl_"
     verbose : bool, optional
