@@ -1,7 +1,8 @@
 """
 Basic GPT-2 telegram bot
 
-you need to have your own token to create and run one - this script loads and reads the user's environmental variables
+you need to have your own token to create and run one - this script loads and reads the user's environmental variables. This script assumes the API token is stored under "GPTFRIEND_BOT"
+
 creating a bot: https://www.codementor.io/@karandeepbatra/part-1-how-to-create-a-telegram-bot-in-python-in-under-10-minutes-19yfdv4wrq 
 
 """
