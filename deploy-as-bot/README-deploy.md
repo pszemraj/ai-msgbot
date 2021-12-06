@@ -58,4 +58,5 @@ https://huggingface.co/docs/hub/spaces
 - pipenv shell
 - pip install -r requirements.txt
 - cd deploy-as-bot
+- scp -r ../GPTneo_conv_33kWoW_18kDD root@ :/root/ai-msgbot
 - nohup python gradio_chatbot_DO.py --model GPTneo_conv_33kWoW_18kDD &
