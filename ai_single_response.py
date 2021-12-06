@@ -78,7 +78,7 @@ def query_gpt_model(
         n=1,
         top_k=kparam,
         batch_size=512,
-        max_length=128,
+        max_length=256,
         min_length=16,
         prompt=this_prompt,
         temperature=temp,

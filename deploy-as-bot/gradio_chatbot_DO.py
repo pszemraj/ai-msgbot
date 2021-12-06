@@ -24,6 +24,8 @@ from cleantext import clean
 from transformers import pipeline
 from datetime import datetime
 from ai_single_response import query_gpt_model
+#from gradio.networking import get_state, set_state
+from flask import Flask, request, session, jsonify, abort, send_file, render_template, redirect
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
@@ -68,8 +70,8 @@ def ask_gpt(message: str, sender: str = ""):
     st = time.time()
     prompt = clean(message)  # clean user input
     prompt = prompt.strip()  # get rid of any extra whitespace
-    if len(prompt) > 100:
-        prompt = prompt[:100]  # truncate
+    if len(prompt) > 200:
+        prompt = prompt[-200:]  # truncate
     sender = clean(sender.strip())
     if len(sender) > 2:
         try:
@@ -106,15 +108,16 @@ def chat(first_and_last_name, message):
     Returns:
         [str]: [returns an html string to display]
     """
-    history = gr.get_state() or []
+    history = session.get("my_state") or []
     response = ask_gpt(message, sender=first_and_last_name)
-    history.append(("You: " + message, " GPT-Model: " + response + " [end] "))
-    gr.set_state(history)
-    html = ""
+    history.append((f"{first_and_last_name}: " + message, " GPT-Model: " + response)) #+ " [end] "))
+    session["my_state"] = history
+    session.modified = True
+    html = "<div class='chatbot'>"
     for user_msg, resp_msg in history:
-        html += f"{user_msg}"
-        html += f"{resp_msg}"
-    html += ""
+        html += f"<div class='user_msg'>{user_msg}</div>"
+        html += f"<div class='resp_msg' style='color: black'>{resp_msg}</div>"
+    html += "</div>"
     return html
 
 
@@ -176,7 +179,7 @@ if __name__ == "__main__":
         .resp_msg {background-color:lightgray;align-self:self-end}
     """,
         allow_screenshot=True,
-        allow_flagging=True,
+        allow_flagging=False,
         flagging_dir="gradio_data",
         flagging_options=[
             "great response",
