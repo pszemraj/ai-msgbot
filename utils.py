@@ -339,17 +339,32 @@ def download_URL(url: str, file=None, dlpath=None, verbose=False):
     return str(dl_loc.resolve())
 
 
-# my_url = "https://www.dropbox.com/s/63t6t9wr3tzb13f/a_Da_Vinci_style_portrait_painting%20%2830%29.jpg?dl=1"
-
-# download_URL(my_url, dlpath=Path.cwd() / 'scratch', verbose=True)
-
 
 def dl_extract_zip(
     URLtoget: str,
     extract_loc: str = None,
-    file_header: str = "dropboxexport_",
+    file_header: str = "TEMP_archive_dl_",
     verbose: bool = False,
 ):
+    """
+    dl_extract_zip - generic function to download a zip file and extract it
+
+    Parameters
+    ----------
+    URLtoget : str
+        [description]
+    extract_loc : str, optional
+        [description], by default None
+    file_header : str, optional
+        [description], by default "TEMP_archive_dl_"
+    verbose : bool, optional
+        [description], by default False
+
+    Returns
+    -------
+    str - path to the downloaded and extracted folder
+    """
+
     extract_loc = Path(extract_loc)
     extract_loc.mkdir(parents=True, exist_ok=True)
     
