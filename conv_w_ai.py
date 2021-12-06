@@ -50,10 +50,11 @@ def query_gpt_model(
         to_gpu=use_gpu,
     )
     p_list = []
-    if any("natqa", 'dd', "trivqa", "wow") in str(folder_path).lower():
+    if any("natqa", "dd", "trivqa", "wow") in str(folder_path).lower():
         speaker = "person alpha"  # manual correction
         responder = "person beta"
-    if speaker is not None:        p_list.append(speaker.lower() + ":" + "\n") # add speaker to prompt
+    if speaker is not None:
+        p_list.append(speaker.lower() + ":" + "\n")  # add speaker to prompt
     p_list.append(prompt_msg.lower() + "\n")
     p_list.append("\n")
     p_list.append(responder.lower() + ":" + "\n")
@@ -127,17 +128,18 @@ def query_gpt_model(
     return model_responses
 
 
-def query_gpt_model_conversation(folder_path,
-                                 prompt_msg: str,
-                                 prior_conv: str,
-                                 speaker=None,
-                                 responder="person beta",
-                                 kparam=150,
-                                 temp=0.75,
-                                 top_p=0.65,
-                                 verbose=False,
-                                 use_gpu=False,
-                                 ):
+def query_gpt_model_conversation(
+    folder_path,
+    prompt_msg: str,
+    prior_conv: str,
+    speaker=None,
+    responder="person beta",
+    kparam=150,
+    temp=0.75,
+    top_p=0.65,
+    verbose=False,
+    use_gpu=False,
+):
     # WORK IN PROGRESS
     # need to figure out the code for multi-response opt before this can be used
 
