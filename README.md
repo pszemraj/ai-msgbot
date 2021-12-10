@@ -46,7 +46,7 @@ finished!
 
 ---
 
-## Quick outline of repo:
+## Quick outline of repo
 
 - training and message EDA notebooks in `colab-notebooks`
 - python scripts for parsing message data into a standard format for training GPT are in `parsing-messages`
@@ -55,7 +55,7 @@ finished!
 
 **A friend's screenshot: an example bot response on Telegram**
 
-<img src="https://user-images.githubusercontent.com/74869040/138378871-d3508ce8-8dd0-45b8-92e2-92bc5ae1d530.jpg" width="600" height="200">
+<img src="https://user-images.githubusercontent.com/74869040/138378871-d3508ce8-8dd0-45b8-92e2-92bc5ae1d530.jpg" minwidth="600" minheight="200">
 
 _Note: the bot in the image of question was trained on the author's text message data, who sometimes has a problem showing up on time for events._
 
@@ -121,6 +121,7 @@ _Note: the bot in the image of question was trained on the author's text message
 - then, you leverage the text-generative model to reply to messages. This is done by "behind the scenes" parsing/presenting the query with either a real or artificial speaker name, and having the response be from `target_name` and in the case of GPT-Peter, is me.
 - depending on compute resources and so forth, it is possible to keep track of the conversation in a helper script/loop, and then feed in the prior conversation and _then_ the prompt so the model can use the context as part of the generation sequence, with of course the [attention mechanism](https://arxiv.org/abs/1706.03762) ultimately focusing on the last text past to it (the actual prompt)
 - then, a matter of deploying it, whether it is a bot that can help children learn conversation, local lingo, etc in a foreign language or a whatsapp bot to automate social upkeep, the possibilities are endless.
+
 -
 
 #### Training: Details
@@ -142,11 +143,10 @@ _Note: the bot in the image of question was trained on the author's text message
 ### Interaction with a Trained model
 
 - command line
-- general deployment via Gradio
+- Gradio - locally hosted runtime with public URL
 - "bot mode"
   - telegram
-  - whatsapp (still mostly unexplored)
-- _real deployment_ @ jonathan lehner\_
+- TODO: explore permnanent virtual hosting applications
 
 <font color="yellow"> TODO: more words </font>
 
@@ -163,38 +163,39 @@ _What we plan to add to this repo in the foreseeable future._
 
 ### worklist
 
-1.  finish out `conv_w_ai.py` that is capable of being fed a whole conversation (or at least, the last several messages) to prime response and "remember" things.
-2.  add-in option of generating multiple responses to user prompt and automatically applying sentence scoring to them and returning the one with the highest mean sentence score.
-3.  assess generalization of hyperparameters for "text-message-esque" bots
-4.  provide more parsed datasets to be used for training models
+1. finish out `conv_w_ai.py` that is capable of being fed a whole conversation (or at least, the last several messages) to prime response and "remember" things.
+2. add-in option of generating multiple responses to user prompt and automatically applying sentence scoring to them and returning the one with the highest mean sentence score.
+3. assess generalization of hyperparameters for "text-message-esque" bots
+4. provide more parsed datasets to be used for training models
 
 ### idea list
 
-1.  try generating 5-10 responses at once instead of n=1, and return the one with the highest [harmonic mean sentence score](https://github.com/simonepri/lm-scorer). **IN PROGRESS**
+1. try generating 5-10 responses at once instead of n=1, and return the one with the highest [harmonic mean sentence score](https://github.com/simonepri/lm-scorer). **IN PROGRESS**
 
 - > **Rationale**: based on _UNVALIDATED AND UNQUANTIFIED_ trends in the grid search data (see [gridsearch v1](https://www.dropbox.com/s/uanhf2kuyoybo4x/GPT-Peter%20Hyperparam%20Analysis%20w%20Metrics%20-%20Oct-20-2021_15-49.xlsx?dl=0) and [gridsearch v2](https://www.dropbox.com/s/r2xv66wdfyalwyi/GPT-Peter%20Hyperparam%20Analysis%20w%20Metrics%20-%20Oct-21-2021_02-01.xlsx?dl=0)), the responses that rank high on the harmonic mean score also seem the most coherent and responsive to the question at hand \*this is anecdotal
 - > jury is still out as to what the intuition / reason behind that is. The _product score_ results being useful makes sense, but these are even better
 - > therefore, generating 5-10 reponses at once, scoring them all at once (_check docs for function_) and returning the corresponding highest-scoring prompt should have the bot behaving more realistically.
 
-2.  continue with hyperparamter optimization on fine-tuned models. Status of hyperparameter "search" is kept (_and will be updated_) [here](https://ai-msgbot-gptneo-1pt3b.netlify.app/) for a **general** chatbot that is a fine-tuned version of GPT-Neo 1.3B. Data related to hyperparamter optimization for GPT-Peter (on personal whatsapp messages ) will be further made available if useful. **IN PROGRESS**
+2. continue with hyperparameter optimization on fine-tuned models. Status of hyperparameter "search" is kept (_and will be updated_) [here](https://ai-msgbot-gptneo-1pt3b.netlify.app/) for a **general** chatbot that is a fine-tuned version of GPT-Neo 1.3B. Data related to hyperparamter optimization for GPT-Peter (on personal whatsapp messages ) will be further made available if useful. **IN PROGRESS**
 
 - > examine if any basic ML approaches can model the harmonic/geometric mean response scores with [Pycaret](http://www.pycaret.org/tutorials/html/REG102.html)
 
-3.  investigate whatsapp bot potential and utility
-4.  ~~evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint~~
+3. ~~investigate whatsapp bot potential and utility~~
+> unable to reliably host a local whatsapp web interface to connect to at all as whatsapp does not have an API. 
+4. ~~evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint~~
 
 - > ~~in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`~~
 - > **yes, it does improve things a lot\_ TODO: writeup theory**
 
-5.  ~~evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot~~
+5. ~~evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot~~
 
     - > ~~this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot~~
     - > **using Trivia/CoCaQA did help model responses**
 
-6.  ~~try gradio deployment~~
+6. ~~try gradio deployment~~
     - _implemented_
-7.  try huggingface spaces deployment
-8.  Auto_ML based approach to see if multi dimensional hyperparameter
+7. try huggingface spaces deployment
+8. Auto_ML based approach to see if multi dimensional hyperparameter search/model reveals anything
 
 ---
 
@@ -255,8 +256,8 @@ The following responses were received for general conversational questions with 
 
 These are probably worth checking out if you find you like NLP/transformer-style language modeling:
 
-1.  [The Huggingface Transformer and NLP course](https://huggingface.co/course/chapter1/2?fw=pt)
-2.  [Practical Deep Learning for Coders](https://course.fast.ai/) from fast.ai
+1. [The Huggingface Transformer and NLP course](https://huggingface.co/course/chapter1/2?fw=pt)
+2. [Practical Deep Learning for Coders](https://course.fast.ai/) from fast.ai
 
 ## Citations
 
