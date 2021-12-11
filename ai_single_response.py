@@ -147,8 +147,7 @@ def get_parser():
     """
     get_parser [a helper function for the argparse module]
 
-    Returns:
-        [argparse.ArgumentParser]: [the argparser relevant for this script]
+    Returns: argparse.ArgumentParser
     """
 
     parser = argparse.ArgumentParser(
@@ -265,7 +264,7 @@ if __name__ == "__main__":
     pp.pprint(output, indent=4)
 
     # pp.pprint(this_result[3].strip(), indent=4)
-    rt = round(time.time() - st, 1)
+    rt = round(time.perf_counter()- st, 1)
 
     if want_rt:
         print("took {runtime} seconds to generate. \n".format(runtime=rt))
