@@ -4,11 +4,9 @@
 ai_single_response.py
 
 An executable way to call the model. example:
-*\gpt2_chatbot> python .\ai_single_response.py --prompt "where is the grocery store?" --time
+*\gpt2_chatbot> python ai_single_response.py --model "GPT2_conversational_355M_WoW10k" --prompt "hey, what's up?" --time
 
-extended-summary:
-
-    A system and method for interacting with a virtual machine using a series of messages , each message having associated otherwise one or more actions to be taken by the machine. The speaker participates in a chat with a responder , and the response from the responder is returned.
+query_gpt_model is used throughout the code, and is the "fundamental" building block of the bot and how everything works. I would recommend testing this function with a few different models.
 
 """
 import argparse
@@ -19,7 +17,7 @@ import warnings
 from datetime import datetime
 from pathlib import Path
 from cleantext import clean
-
+from utils import print_spacer
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
@@ -44,16 +42,12 @@ def extract_response(full_resp:list, plist:list, verbose:bool=False):
         del full_resp[:p_len] # remove the prompts from the responses
     else:
         print("the isolated responses are:\n")
-        print("\n".join(full_resp))
+        pp.pprint(full_resp)
+        print_spacer()
         print("the input prompt was:\n")
-        print("\n".join(plist))
-        sys.exit("WARNING: some prompts not found in the responses")
-    # for line in full_resp:
-        # iso_resp.append(line) if line not in plist else None
-        # if line in plist:
-        #     continue
-        # else:
-        #     iso_resp.append(line)
+        pp.pprint(plist)
+        print_spacer()
+        sys.exit("Exiting: some prompts not found in the responses")
     if verbose:
         print("the isolated responses are:\n")
         print("\n".join(full_resp))
@@ -61,7 +55,8 @@ def extract_response(full_resp:list, plist:list, verbose:bool=False):
         print("\n".join(plist))
     return full_resp  # list of only the model generated responses
 
-def get_bot_response(name_resp:str, model_resp:str, verbose:bool=False):
+
+def get_bot_response(name_resp: str, model_resp: str,  name_spk:str, verbose: bool = False):
 
     """
 
@@ -83,6 +78,8 @@ def get_bot_response(name_resp:str, model_resp:str, verbose:bool=False):
             name_counter += 1
             break_safe = True # know the line is from bot as this line starts with the name of the bot
             continue
+        if name_spk is not None and name_spk.lower() in resline.lower():
+            break
         if ":" in resline and name_counter > 0:
             if break_safe:
                 # we know this is a response from the bot even tho ':' is in the line
@@ -149,7 +146,7 @@ def query_gpt_model(
         if verbose:
             print("speaker and responder not set - using default")
         speaker = "person" if speaker is None else speaker
-        responder = "person" if responder is None else responder
+        responder = "george robot" if responder is None else responder
 
     p_list = []  # track conversation
     p_list.append(speaker.lower() + ":" + "\n")
@@ -187,7 +184,9 @@ def query_gpt_model(
     og_res = this_result.copy()
     og_prompt = p_list.copy()
     diff_list = extract_response(this_result, p_list, verbose=verbose) # isolate the responses from the prompts
-    bot_dialogue = get_bot_response(name_resp=responder, model_resp = diff_list, verbose=verbose) # extract the bot response from the model generated text
+    # extract the bot response from the model generated text
+    bot_dialogue = get_bot_response(
+        name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose)
     bot_resp = ", ".join(bot_dialogue)
 
     og_prompt.append(bot_resp + "\n")
