@@ -190,7 +190,7 @@ def converse_w_ai(
         this_result = ai.generate(
             n=1,
             prompt=p_instance,
-            batch_size=128, # attempt to run generate on ~1 batch in default case
+            batch_size=128, # attempt to run generate in ~1 batch in default case
             max_length=resp_length+input_len,
             min_length=16+input_len, # the prompt input counts for text length constraints
             top_k=kparam,
