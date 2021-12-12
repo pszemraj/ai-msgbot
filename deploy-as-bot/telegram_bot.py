@@ -181,7 +181,6 @@ def get_parser():
         "--model",
         required=False,
         type=str,
-        # "gp2_DDandPeterTexts_774M_73Ksteps", - from GPT-Peter
         default="GPT2_trivNatQAdailydia_774M_175Ksteps",
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
         "config.json). No models? Run the script download_models.py",
