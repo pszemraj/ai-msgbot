@@ -18,11 +18,13 @@ from datetime import datetime
 from pathlib import Path
 from cleantext import clean
 from utils import print_spacer
+
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
 
-def extract_response(full_resp:list, plist:list, verbose:bool=False):
+
+def extract_response(full_resp: list, plist: list, verbose: bool = False):
     """
     extract_response - helper fn for ai_single_response.py. By default aitextgen returns the prompt and the response, we just want the response
 
@@ -35,11 +37,13 @@ def extract_response(full_resp:list, plist:list, verbose:bool=False):
     full_resp = [clean(ele) for ele in full_resp]
     plist = [clean(pr) for pr in plist]
     p_len = len(plist)
-    assert len(full_resp) >= p_len, "model output should have as many lines or longer as the input."
+    assert (
+        len(full_resp) >= p_len
+    ), "model output should have as many lines or longer as the input."
 
     if set(plist).issubset(full_resp):
 
-        del full_resp[:p_len] # remove the prompts from the responses
+        del full_resp[:p_len]  # remove the prompts from the responses
     else:
         print("the isolated responses are:\n")
         pp.pprint(full_resp)
@@ -58,7 +62,9 @@ def extract_response(full_resp:list, plist:list, verbose:bool=False):
     return full_resp  # list of only the model generated responses
 
 
-def get_bot_response(name_resp: str, model_resp: str,  name_spk:str, verbose: bool = False):
+def get_bot_response(
+    name_resp: str, model_resp: str, name_spk: str, verbose: bool = False
+):
 
     """
 
@@ -78,7 +84,7 @@ def get_bot_response(name_resp: str, model_resp: str,  name_spk:str, verbose: bo
     for resline in model_resp:
         if resline.startswith(name_resp):
             name_counter += 1
-            break_safe = True # know the line is from bot as this line starts with the name of the bot
+            break_safe = True  # know the line is from bot as this line starts with the name of the bot
             continue
         if name_spk is not None and name_spk.lower() in resline.lower():
             break
@@ -185,10 +191,13 @@ def query_gpt_model(
     )  # TODO: adjust hardcoded value for index to dynamic (if n>1)
     og_res = this_result.copy()
     og_prompt = p_list.copy()
-    diff_list = extract_response(this_result, p_list, verbose=verbose) # isolate the responses from the prompts
+    diff_list = extract_response(
+        this_result, p_list, verbose=verbose
+    )  # isolate the responses from the prompts
     # extract the bot response from the model generated text
     bot_dialogue = get_bot_response(
-        name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose)
+        name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose
+    )
     bot_resp = ", ".join(bot_dialogue)
 
     og_prompt.append(bot_resp + "\n")
@@ -197,6 +206,7 @@ def query_gpt_model(
     print("\nfinished!")
 
     return {"out_text": bot_resp, "full_conv": og_prompt}  # model responses
+
 
 # Set up the parsing of command-line arguments
 def get_parser():
