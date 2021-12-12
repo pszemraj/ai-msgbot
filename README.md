@@ -7,13 +7,12 @@ This repo covers the practical use case of building a chatbot that sounds like y
 > **Note** that most model training was done on Colab to leverage the GPU.
 
 ```bazaar
-$ python ai_single_response.py --prompt "how can I order food?" --temp 0.7
+python ai_single_response.py --model "GPT2_conversational_355M_WoW10k" --prompt "hey, what's up?"
 
 ... generating...
 
 finished!
-
-'what kind of food do you want?'
+"i'm doing a lot of traveling. do you like to travel?"
 ```
 
 - you can message an example bot by clicking [this link](https://t.me/GPTfriend_bot). Please note that at present this bot is run locally on a machine, and may not be online 24/7.
