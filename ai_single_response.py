@@ -23,6 +23,32 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
 
+def extract_response(full_resp:list, plist:list, verbose:bool=False):
+    """
+    extract_response - helper fn for ai_single_response.py. By default aitextgen returns the prompt and the response, we just want the response
+    
+    Args:
+        full_resp (list): a list of strings, each string is a response
+        plist (list): a list of strings, each string is a prompt
+        
+        verbose (bool, optional): 4 debug. Defaults to False.
+    """
+    
+    plist = [ele for ele in plist]
+
+    iso_resp = []
+    for line in full_resp:
+        iso_resp.append(line) if line not in plist else None
+        # if line in plist:
+        #     continue
+        # else:
+        #     iso_resp.append(line)
+    if verbose:
+        print("the isolated responses are:\n")
+        print("\n".join(iso_resp))
+        print("the input prompt was:\n")
+        print("\n".join(plist))
+    return iso_resp # list of only the model gnerated responses
 
 def query_gpt_model(
     folder_path,
