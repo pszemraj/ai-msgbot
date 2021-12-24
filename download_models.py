@@ -1,5 +1,5 @@
 """
-download_models.py
+download_models.py - get all args by python download_models.py --help
 
 downloads the model files needed to run things in this repo. If things change just update the folder name and the links. Note that model files are between 1.5 - 5 gb, and can take a while to download.
 
@@ -10,13 +10,15 @@ https://www.dropbox.com/sh/e2hbxkzu1e4vtte/AACdUHz-J735F5Cn-KV4udlka?dl=0
 More to come, but we plan to move all of the models to huggingface.co/models/ - you can see the first here:
 
 https://huggingface.co/ethzanalytics
+
+
 """
 
 import argparse
-import utils
 from pathlib import Path
 import pprint as pp
 from utils import get_timestamp, dl_extract_zip
+from aitextgen import aitextgen
 
 dbx_links = {
     "gpt2_dailydialogue_355M_75Ksteps": "https://www.dropbox.com/sh/ahx3teywshods41/AACrGhc_Qntw6GuX7ww-3pbBa?dl=1",
@@ -49,6 +51,12 @@ def get_parser():
         description="downloads model files if not found in local working directory"
     )
     parser.add_argument(
+        "--hf-model",
+        default=None,
+        required=False,
+        help="the name of the model to be downloaded from huggingface.co/models/ and saved to current working directory (CWD)",
+    )
+    parser.add_argument(
         "--download-all",
         default=False,
         action="store_true",
@@ -78,6 +86,17 @@ if __name__ == "__main__":
     cwd = Path.cwd()
     my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
     print(f"using {my_cwd} as the working directory to store/check models\n")
+
+    # download HF model if passed
+
+    if args.hf_model is not None:
+        hf_model_name = args.hf_model
+        ai = aitextgen(hf_model_name, use_gpu=False)
+        save_name = hf_model_name.split("/")[-1]
+        save_name = save_name.replace(".", "_")
+        hf_save_path = cwd / save_name
+        ai.save(target_folder=hf_save_path)
+        print(f"saved {hf_model_name} to {hf_save_path}")
 
     # download the model files
     folder_names = [str(p.resolve()) for p in cwd.iterdir() if p.is_dir()]
