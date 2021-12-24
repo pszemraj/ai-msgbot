@@ -217,7 +217,7 @@ def get_parser():
     """
 
     parser = argparse.ArgumentParser(
-        description="submit a message and have a 774M parameter GPT model respond"
+        description="submit a message and have a pretrained GPT model respond"
     )
     parser.add_argument(
         "--prompt",
