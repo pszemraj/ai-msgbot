@@ -41,7 +41,9 @@ def download_model(model_name, model_links=dbx_links, extr_loc=None, verbose=Fal
         print(f"Downloading {model_name}")
 
     model_dest = str(extr_loc.resolve())
-    dl_extract_zip(URLtoget=model_links[model_name], extract_loc=model_dest, verbose=verbose)
+    dl_extract_zip(
+        URLtoget=model_links[model_name], extract_loc=model_dest, verbose=verbose
+    )
     if verbose:
         print(f"finished downloading {model_name}\n")
 
@@ -76,6 +78,7 @@ def get_parser():
     )
 
     return parser
+
 
 if __name__ == "__main__":
     ## get args
