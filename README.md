@@ -15,7 +15,8 @@ finished!
 "i'm doing a lot of traveling. do you like to travel?"
 ```
 
-- you can message an example bot by clicking [this link](https://t.me/GPTfriend_bot). Please note that at present this bot is run locally on a machine, and may not be online 24/7.
+- some example trained models for usage as a chatbot can be found on the [ETHZ Analytics Organization on Huggingface](https://huggingface.co/ethzanalytics) with some limited testing abilities in the inference API
+- you can message an example bot on **Telegram** by clicking [this link](https://t.me/GPTfriend_bot). Please note that at present this bot is run locally on a machine, and may not be online 24/7.
 
 ---
 
