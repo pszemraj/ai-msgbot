@@ -22,6 +22,9 @@
 
 # most of ^ can be downloaded through `download_models.py`
 
+# avoid changing the following
+*hf_hub_push.ipynb*
+
 # gradio things
 *.db
 *.db-journal
