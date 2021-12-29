@@ -17,7 +17,7 @@ import warnings
 from datetime import datetime
 from pathlib import Path
 from cleantext import clean
-from utils import print_spacer
+from utils import print_spacer, remove_trailing_punctuation
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
@@ -199,7 +199,7 @@ def query_gpt_model(
         name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose
     )
     bot_resp = ", ".join(bot_dialogue)
-    bot_resp = bot_resp.strip()
+    bot_resp = remove_trailing_punctuation(bot_resp.strip()) # remove trailing punctuation to seem more natural
     # remove the last ',' '.' chars
     bot_resp = bot_resp[:-1] if bot_resp.endswith(".") else bot_resp
     bot_resp = bot_resp[:-1] if bot_resp.endswith(",") else bot_resp 

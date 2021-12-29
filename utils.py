@@ -28,6 +28,18 @@ def print_spacer(n=1):
     print("\n   --------    " * n)
 
 
+def remove_trailing_punctuation(text: str):
+    """
+    remove_trailing_punctuation - remove trailing punctuation from a string
+
+    Args:
+        text (str): [string to be cleaned]
+
+    Returns:
+        [str]: [cleaned string]
+    """
+    return text.strip("?!.,;:")
+
 def correct_phrase_load(my_string: str):
     """
     correct_phrase_load [basic / unoptimized implementation of SymSpell to correct a string]
