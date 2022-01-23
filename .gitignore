@@ -31,4 +31,9 @@ deploy-as-bot/gradio_data
 deploy-as-bot/gradio_queue.db
 
 
-# notebooks containing personal data
+# notebooks in finished state
+
+*hf_hub_push.ipynb*
+*hf_hub_push.ipynb
+notebooks/hf_hub_push.ipynb
+/notebooks/hf_hub_push.ipynb
