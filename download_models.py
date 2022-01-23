@@ -138,5 +138,4 @@ if __name__ == "__main__":
             verbose=verbose,
         )
 
-
     print("finished downloading and checking files {ts}".format(ts=get_timestamp()))
