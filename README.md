@@ -11,13 +11,12 @@ This repo covers the practical use case of building a chatbot that sounds like y
 Primarily relies on the [`aitextgen`](https://github.com/minimaxir/aitextgen) and [`python-telegram-bot`](https://github.com/python-telegram-bot/python-telegram-bot) libraries. Examples on how to train larger models with DeepSpeed are in `notebooks\colab-huggingface-API` directory.
 
 ```bazaar
-$ python ai_single_response.py --prompt "how can I order food?" --temp 0.7
+python ai_single_response.py --model "GPT2_conversational_355M_WoW10k" --prompt "hey, what's up?"
 
 ... generating...
 
 finished!
-
-'what kind of food do you want?'
+"i'm doing a lot of traveling. do you like to travel?"
 ```
 
 Some of the trained models can be interacted with through the HuggingFace spaces and model inference APIs on the [ETHZ Analytics Organization](https://huggingface.co/ethzanalytics) page on huggingface.co.
