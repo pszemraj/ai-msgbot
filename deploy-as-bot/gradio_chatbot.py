@@ -56,7 +56,8 @@ def gramformer_correct(corrector, qphrase: str):
 
 def ask_gpt(message: str, sender: str = ""):
     """
-    ask_gpt - queries the relevant model with a prompt message and (optional) speaker name
+    ask_gpt - queries the relevant model with a prompt message and (optional) speaker name.
+    nnote this version is modified w.r.t gradio local server deploy
 
     Args:
         message (str): prompt message to respond to
@@ -83,9 +84,9 @@ def ask_gpt(message: str, sender: str = ""):
         folder_path=model_loc,
         prompt_msg=prompt,
         speaker=prompt_speaker,
-        kparam=150,
-        temp=0.75,
-        top_p=0.65,  # optimize this with hyperparam search
+        kparam=150, # top k responses
+        temp=0.75, # temperature
+        top_p=0.65,  # nucleus sampling
     )
     bot_resp = gramformer_correct(corrector, qphrase=resp["out_text"]) # correct grammar
     rt = round(time.time() - st, 2)
@@ -132,7 +133,6 @@ def get_parser():
         "--model",
         required=False,
         type=str,
-        # "gp2_DDandPeterTexts_774M_73Ksteps", - from GPT-Peter
         default="GPT2_trivNatQAdailydia_774M_175Ksteps", # folder name of model
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
         "config.json). No models? Run the script download_models.py",
