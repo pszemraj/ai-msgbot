@@ -88,7 +88,7 @@ def converse_w_ai(
         p_list.append("\n")
         p_list.append(responder.lower() + ":" + "\n")
         this_prompt = "".join(p_list)
-        # TODO: add safeguard vs. max input length / token length
+        # TODO: add safeguard vs. max input length / token length for specific models
         pr_len = len(this_prompt)
 
         # query loaded model
@@ -152,7 +152,8 @@ def get_parser():
     )
     parser.add_argument(
         "--prompt",
-        required=True,  # MUST HAVE A PROMPT
+        required=False,
+        default=None,
         type=str,
         help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder.",
     )
