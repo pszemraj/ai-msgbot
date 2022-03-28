@@ -87,6 +87,7 @@ def get_bot_response(
             break_safe = True  # know the line is from bot as this line starts with the name of the bot
             continue
         if name_spk is not None and name_spk.lower() in resline.lower():
+            # TODO: fix this
             break
         if ":" in resline and name_counter > 0:
             if break_safe:
