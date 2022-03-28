@@ -10,6 +10,7 @@ import shutil  # zipfile formats
 from datetime import datetime
 from os.path import basename
 from os.path import getsize, join
+import warnings
 
 import requests
 from cleantext import clean
@@ -282,14 +283,10 @@ def download_URL(url: str, file=None, dlpath=None, verbose=False):
 
     Parameters
     ----------
-    url : str
-        URL to download
-    file : [type], optional
-        [description], by default None
-    dlpath : [type], optional
-        [description], by default None
-    verbose : bool, optional
-        [description], by default False
+    url : str,        URL to download
+    file : str, optional, default None, name of file to save to. If None, will use the filename from the URL
+    dlpath : str, optional, default None, path to save the file to. If None, will save to the current working directory
+    verbose : bool, optional, default False, print progress bar
 
     Returns
     -------
@@ -376,9 +373,8 @@ def dl_extract_zip(
     try:
         os.remove(save_loc)
         del save_loc
-    except Exception:
-        print("unable to delete original zipfile - check if exists", datetime.now())
-
+    except Exception as e:
+        warnings.warn(message=f"unable to delete original zipfile due to {e}")
     if verbose:
         print("finished extracting zip - ", datetime.now())
 
