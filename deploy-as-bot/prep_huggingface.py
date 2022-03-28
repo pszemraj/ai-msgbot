@@ -9,6 +9,10 @@ from os.path import dirname
 
 # add the path to the script to the sys.path
 sys.path.append(dirname(dirname(os.path.abspath(__file__))))
+import warnings
+
+warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
+
 import argparse
 from pathlib import Path
 
@@ -51,26 +55,32 @@ def get_parser():
     return parser
 
 
-if "__name__" == "__main__":
+if __name__ == "__main__":
+
     # Set up the parsing of command-line arguments
     parser = get_parser()
     args = parser.parse_args()
     want_verbose = args.verbose
-    if want_verbose: print(f"args: {args}")
+    if want_verbose:
+        print(f"args: {args}")
     model_dir = str(args.model_dir)
     model_path = Path(os.path.abspath(model_dir))
-    hf_name = str(args.hf_name) if args.hf_name is not None else str(model_path.name) # model_path.name is the backup name
+    hf_name = (
+        str(args.hf_name) if args.hf_name is not None else str(model_path.name)
+    )  # model_path.name is the backup name
     hf_name = hf_name.replace(" ", "_")
     hf_name = hf_name.lower().strip()
 
     # load the model
-    print("Loading model...")
+    if want_verbose:
+        print("Loading model...")
     ai = aitextgen(
         model_folder=model_path.resolve(),
         to_gpu=False,
     )
     # get the model config and save it
-    print("saving model config...")
+    if want_verbose:
+        print("saving model config...")
     ai.save_for_upload(hf_name)
 
     print(f"created {hf_name} for uploading to huggingface - {get_timestamp()}")
