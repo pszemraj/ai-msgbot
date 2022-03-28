@@ -22,6 +22,9 @@ from tqdm.auto import tqdm
 def get_timestamp():
     return datetime.now().strftime("%b-%d-%Y_t-%H")
 
+def print_spacer(n=1):
+    """print_spacer - print a spacer line"""
+    print("\n" * n)
 
 def correct_phrase_load(my_string: str):
     """
@@ -61,11 +64,6 @@ def fast_scandir(dirname: str):
     """
     fast_scandir [an os.path-based means to return all subfolders in a given filepath]
 
-    Args:
-        dirname (str): [description]
-
-    Returns:
-        [list]: [description]
     """
 
     subfolders = [f.path for f in os.scandir(dirname) if f.is_dir()]
@@ -82,12 +80,9 @@ def create_folder(directory: str):
 def chunks(lst: list, n: int):
     """
     chunks   -  Yield successive n-sized chunks from lst
-    Args:
-        lst (list): [description]
-        n (int): [description]
+    Args:   lst (list): list to be chunked
+    n (int): size of chunks
 
-    Yields:
-        [type]: [description]
     """
 
     for i in range(0, len(lst), n):
@@ -99,11 +94,11 @@ def chunky_pandas(my_df, num_chunks: int = 4):
     chunky_pandas [split dataframe into `num_chunks` equal chunks, return each inside a list]
 
     Args:
-        my_df (pd.DataFrame): [description]
-        num_chunks (int, optional): [description]. Defaults to 4.
+        my_df (pd.DataFrame)
+        num_chunks (int, optional): Defaults to 4.
 
     Returns:
-        [type]: [description]
+        list: a list of dataframes
     """
     n = int(len(my_df) // num_chunks)
     list_df = [my_df[i : i + n] for i in range(0, my_df.shape[0], n)]
@@ -118,10 +113,7 @@ def load_dir_files(
     load_dir_files - an os.path based method of returning all files with extension `req_extension` in a given directory and subdirectories
 
     Args:
-        directory (str): [description]
-        req_extension (str, optional): [description]. Defaults to ".txt".
-        return_type (str, optional): [description]. Defaults to "list".
-        verbose (bool, optional): [description]. Defaults to False.
+
 
     Returns:
         list or dict: an iterable of filepaths or a dict of filepaths and their respective filenames
@@ -161,11 +153,6 @@ def URL_string_filter(text):
     """
     URL_string_filter - filter out nonstandard "text" characters
 
-    Args:
-        text ([type]): [description]
-
-    Returns:
-        [str]: the filtered string
     """
     custom_printable = (
         "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._"
@@ -197,18 +184,6 @@ def get_zip_URL(
     file_header: str = "dropboxexport_",
     verbose: bool = False,
 ):
-    """
-    get_zip_URL [summary]
-
-    Args:
-        URLtoget (str): [description]
-        extract_loc (str, optional): [description]. Defaults to None.
-        file_header (str, optional): [description]. Defaults to "dropboxexport_".
-        verbose (bool, optional): [description]. Defaults to False.
-
-    Returns:
-        [type]: [description]
-    """
     r = requests.get(URLtoget, allow_redirects=True)
     names = getFilename_fromCd(r.headers.get("content-disposition"))
     fixed_fnames = names.split(";")  # split the multiple results

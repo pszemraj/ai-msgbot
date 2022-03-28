@@ -34,6 +34,8 @@ def extract_response(full_resp:list, plist:list, verbose:bool=False):
 
         verbose (bool, optional): 4 debug. Defaults to False.
     """
+    full_resp = [clean(ele) for ele in full_resp]
+    plist = [clean(pr) for pr in plist]
     p_len = len(plist)
     assert len(full_resp) >= p_len, "model output should have as many lines or longer as the input."
 
@@ -41,6 +43,10 @@ def extract_response(full_resp:list, plist:list, verbose:bool=False):
 
         del full_resp[:p_len] # remove the prompts from the responses
     else:
+        print("the isolated responses are:\n")
+        print("\n".join(full_resp))
+        print("the input prompt was:\n")
+        print("\n".join(plist))
         sys.exit("WARNING: some prompts not found in the responses")
     # for line in full_resp:
         # iso_resp.append(line) if line not in plist else None
@@ -50,7 +56,7 @@ def extract_response(full_resp:list, plist:list, verbose:bool=False):
         #     iso_resp.append(line)
     if verbose:
         print("the isolated responses are:\n")
-        print("\n".join(iso_resp))
+        print("\n".join(full_resp))
         print("the input prompt was:\n")
         print("\n".join(plist))
     return full_resp  # list of only the model generated responses
