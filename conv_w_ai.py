@@ -12,126 +12,9 @@ import time
 import warnings
 from datetime import datetime
 from pathlib import Path
-from cleantext import clean
 from utils import get_timestamp
-
+from ai_single_response import extract_response, get_bot_response
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-
-
-def query_gpt_model(
-    folder_path,
-    prompt_msg: str,
-    speaker=None,
-    responder="person beta",
-    kparam=150,
-    temp=0.75,
-    top_p=0.65,
-    verbose=False,
-    use_gpu=False,
-):
-    """
-    query_gpt_model [pass a prompt in to model, get a response. Does NOT "remember" past conversation]
-
-    Args:
-        folder_path ([type]): [description]
-        prompt_msg (str): [description]
-        speaker ([type], optional): [description]. Defaults to None.
-        responder (str, optional): [description]. Defaults to "person beta".
-        kparam (int, optional): [description]. Defaults to 125.
-        temp (float, optional): [description]. Defaults to 0.75.
-        top_p (float, optional): [description]. Defaults to 0.65.
-        verbose (bool, optional): [description]. Defaults to False.
-        use_gpu (bool, optional): [description]. Defaults to False.
-
-    Returns:
-        [dict]: [returns a dict with A) just model response as str B) total conversation]
-    """
-
-    ai = aitextgen(
-        model_folder=folder_path,
-        to_gpu=use_gpu,
-    )
-    p_list = []
-    mod_ids = ["natqa", "dd", "trivqa", "wow"]
-    if any(substring in str(folder_path).lower() for substring in mod_ids):
-        speaker = "person alpha" if speaker is None else speaker
-        responder = "person beta" if responder is None else responder
-
-    if speaker is not None:
-        # only if speaker is not None
-        p_list.append(speaker.lower() + ":" + "\n")
-
-    p_list.append(prompt_msg)
-    p_list.append("\n")
-    p_list.append(responder.lower() + ":" + "\n")
-    this_prompt = "".join(p_list)
-    if verbose:
-        print("overall prompt:\n")
-        pp.pprint(this_prompt, indent=4)
-    print("\n... generating... \n")
-    this_result = ai.generate(
-        n=1,
-        top_k=kparam,
-        batch_size=128,  # attempt to run generate on one batch in default
-        max_length=128,
-        min_length=16,
-        prompt=this_prompt,
-        temperature=temp,
-        top_p=top_p,
-        do_sample=True,
-        return_as_list=True,
-        use_cache=True,
-    )
-    if verbose:
-        pp.pprint(this_result)  # to see what is going on
-    try:
-        this_result = str(this_result[0]).split("\n")
-        res_out = [clean(ele) for ele in this_result]
-        p_out = [clean(ele) for ele in p_list]
-        if verbose:
-            pp.pprint(res_out)  # to see what is going on
-            pp.pprint(p_out)  # to see what is going on
-
-        diff_list = []
-        name_counter = 0
-        break_safe = False
-        for resline in res_out:
-
-            if (responder + ":") in resline:
-                name_counter += 1
-                break_safe = True  # next line a response from bot
-                continue
-            if ":" in resline and name_counter > 0:
-                if break_safe:
-                    diff_list.append(resline)
-                    break_safe = False
-                else:
-                    break
-            if resline in p_out:
-                break_safe = False
-                continue
-
-            else:
-                diff_list.append(resline)
-                break_safe = False
-
-        if verbose:
-            print("------------------------diff list: ")
-            pp.pprint(diff_list)  # to see what is going on
-            print("---------------------------------")
-
-        output = ", ".join(diff_list)
-
-    except Exception:
-        output = "oops, there was an error. try again"
-
-    p_list.append(output + "\n")
-    p_list.append("\n")
-
-    model_responses = {"out_text": output, "full_conv": p_list}
-    print("finished!\n")
-
-    return model_responses
 
 
 def converse_w_ai(
@@ -189,21 +72,22 @@ def converse_w_ai(
             if prompt_msg is not None
             else input("enter a message to start the conversation: ")
         )
-        if prompt_msg.lower() == "exit":
+        if prompt_msg.lower().strip() == "exit":
+            print(f"exiting conversation loop based on {prompt_msg} input - {get_timestamp()}")
             break
         p_list.append(speaker.lower() + ":" + "\n")
         p_list.append(prompt_msg)
         p_list.append("\n")
         p_list.append(responder.lower() + ":" + "\n")
         p_instance = "".join(p_list)
-        input_len = len(p_instance)
+        input_len = len(p_instance) # TODO: add safeguard vs. max input length / token length
 
         # query loaded model
         if verbose:
             print("overall prompt:\n")
             pp.pprint(p_instance, indent=4)
         print("\n... generating response...")
-        this_result = ai.generate(
+        chat_resp = ai.generate(
             n=1,
             prompt=p_instance,
             batch_size=128,  # attempt to run generate in ~1 batch in default case
@@ -218,7 +102,25 @@ def converse_w_ai(
             use_cache=True,
         )
 
-    return p_list
+        # process the full result to get the ~bot response~ piece
+        chat_resp = str(chat_resp[0]).split(
+            "\n"
+        )  # TODO: adjust hardcoded value for index to dynamic (if n>1)
+        resp = chat_resp.copy()
+        list_p = p_list.copy()
+        # isolate the responses from the prompts
+        diff_list = extract_response(resp, list_p, verbose=verbose)
+        # extract the bot response from the model generated text
+        bot_dialogue = get_bot_response(
+            name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose)
+        bot_resp = ", ".join(bot_dialogue)
+
+        p_list.append(bot_resp + "\n")
+        p_list.append("\n")
+        
+        prompt_msg = None
+
+    return p_list # note that here it is exported as a list of strings
 
 
 # Set up the parsing of command-line arguments
@@ -313,21 +215,9 @@ if __name__ == "__main__":
     want_verbose = args.verbose
     want_rt = args.time
 
-    # force-update the speaker+responder params for the generic model case
-    if "dailydialogue" in model_dir.lower():
-        spkr = "john smith"
-        rspndr = "nancy sellers"
-        # ^ arbitrary people created when parsing Daily Dialogue dataset
-        # # force-update the speaker+responder params
-        # for the generic model case
-    if "natqa" in model_dir.lower():
-        spkr = "person alpha"
-        rspndr = "person beta"
-        # ^ arbitrary people created when parsing NatQA + TriviaQA + Daily Dialogue datasets
-
     st = time.perf_counter()
 
-    resp = query_gpt_model(
+    my_conv = converse_w_ai(
         folder_path=model_loc,
         prompt_msg=query,
         speaker=spkr,
@@ -338,20 +228,11 @@ if __name__ == "__main__":
         verbose=want_verbose,
         use_gpu=False,
     )
+    print("\nA transcript of the conversation:")
+    pp.pprint(my_conv, indent=4)
 
-    output = resp["out_text"]
-    pp.pprint(output, indent=4)
-
-    # pp.pprint(this_result[3].strip(), indent=4)
     rt = round(time.perf_counter() - st, 1)
 
     if want_rt:
         print("took {runtime} seconds to generate. \n".format(runtime=rt))
 
-    if want_verbose:
-        print("finished - ", datetime.now())
-    if want_verbose:
-        p_list = resp["full_conv"]
-        print("A transcript of your chat is as follows: \n")
-        p_list = [item.strip() for item in p_list]
-        pp.pprint(p_list)

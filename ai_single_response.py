@@ -50,9 +50,11 @@ def extract_response(full_resp:list, plist:list, verbose:bool=False):
         sys.exit("Exiting: some prompts not found in the responses")
     if verbose:
         print("the isolated responses are:\n")
-        print("\n".join(full_resp))
+        pp.pprint(full_resp)
+        print_spacer()
         print("the input prompt was:\n")
-        print("\n".join(plist))
+        pp.pprint(plist)
+        print_spacer()
     return full_resp  # list of only the model generated responses
 
 
@@ -275,6 +277,7 @@ def get_parser():
 
 
 if __name__ == "__main__":
+    # parse the command line arguments
     args = get_parser().parse_args()
     query = args.prompt
     model_dir = str(args.model)
