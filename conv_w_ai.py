@@ -50,7 +50,7 @@ def query_gpt_model(
         to_gpu=use_gpu,
     )
     p_list = []
-    if any("natqa", "dd", "trivqa", "wow") in str(folder_path).lower():
+    if any(["natqa", "dd", "trivqa", "wow"]) in str(folder_path).lower():
         speaker = "person alpha"  # manual correction
         responder = "person beta"
     if speaker is not None:
