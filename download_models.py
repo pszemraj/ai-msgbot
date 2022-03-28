@@ -31,7 +31,9 @@ dbx_links = {
 }
 
 
-def download_model(model_name:str, model_links:dict=dbx_links, extr_loc=None, verbose=False):
+def download_model(
+    model_name: str, model_links: dict = dbx_links, extr_loc=None, verbose=False
+):
     """
     Downloads a model file from a link
     """

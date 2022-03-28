@@ -128,7 +128,9 @@ def converse_w_ai(
         bot_dialogue = get_bot_response(
             name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose
         )
-        bot_resp = remove_trailing_punctuation(", ".join(bot_dialogue)) # remove trailing punctuation from bot response to seem more natural
+        bot_resp = remove_trailing_punctuation(
+            ", ".join(bot_dialogue)
+        )  # remove trailing punctuation from bot response to seem more natural
         pp.pprint(bot_resp, indent=4)
         p_list.append(bot_resp + "\n")
         p_list.append("\n")

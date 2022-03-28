@@ -189,7 +189,9 @@ def query_gpt_model(
         name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose
     )
     bot_resp = ", ".join(bot_dialogue)
-    bot_resp = remove_trailing_punctuation(bot_resp.strip()) # remove trailing punctuation to seem more natural
+    bot_resp = remove_trailing_punctuation(
+        bot_resp.strip()
+    )  # remove trailing punctuation to seem more natural
     # remove the last ',' '.' chars
     bot_resp = bot_resp[:-1] if bot_resp.endswith(".") else bot_resp
     bot_resp = bot_resp[:-1] if bot_resp.endswith(",") else bot_resp

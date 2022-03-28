@@ -41,6 +41,7 @@ def remove_trailing_punctuation(text: str):
     """
     return text.strip("?!.,;:")
 
+
 def correct_phrase_load(my_string: str):
     """
     correct_phrase_load [basic / unoptimized implementation of SymSpell to correct a string]
@@ -199,8 +200,7 @@ def get_zip_URL(
     file_header: str = "dropboxexport_",
     verbose: bool = False,
 ):
-    """	get_zip_URL - download a zip file from a given URL and extract it to a given location
-    """
+    """get_zip_URL - download a zip file from a given URL and extract it to a given location"""
 
     r = requests.get(URLtoget, allow_redirects=True)
     names = getFilename_fromCd(r.headers.get("content-disposition"))
@@ -342,14 +342,10 @@ def dl_extract_zip(
 
     Parameters
     ----------
-    URLtoget : str
-        zip file URL to download
-    extract_loc : str, optional
-        directory to extract zip to , by default None
-    file_header : str, optional
-        [description], by default "TEMP_archive_dl_"
-    verbose : bool, optional
-        [description], by default False
+    URLtoget : str, URL to download,
+    extract_loc : str, optional, default None, path to save the file to. If None, will save to the current working directory
+    file_header : str, optional, default 'TEMP_archive_dl_', prefix for the filename
+    verbose : bool, optional, default False, print progress bar
 
     Returns
     -------
