@@ -31,7 +31,7 @@ dbx_links = {
 }
 
 
-def download_model(model_name, model_links=dbx_links, extr_loc=None, verbose=False):
+def download_model(model_name:str, model_links:dict=dbx_links, extr_loc=None, verbose=False):
     """
     Downloads a model file from a link
     """
@@ -53,12 +53,14 @@ def get_parser():
         description="downloads model files if not found in local working directory"
     )
     parser.add_argument(
+        "-m",
         "--hf-model",
         default=None,
         required=False,
         help="the name of the model to be downloaded from huggingface.co/models/ and saved to current working directory (CWD)",
     )
     parser.add_argument(
+        "-a",
         "--download-all",
         default=False,
         action="store_true",
@@ -68,7 +70,7 @@ def get_parser():
         "--gpt-whatsapp",
         default=False,
         action="store_true",
-        help="pass this argument if you want a model trained on a WhatsApp dataset",
+        help="pass this argument to download the Whatsapp model (chatbot-esque) as well",
     )
     parser.add_argument(
         "--verbose",
@@ -86,6 +88,7 @@ if __name__ == "__main__":
     get_all = args.download_all
     get_whatsapp_example = args.gpt_whatsapp
     verbose = args.verbose
+    _root = Path(__file__).parent
     cwd = Path.cwd()
     my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
     print(f"using {my_cwd} as the working directory to store/check models\n")
@@ -94,15 +97,17 @@ if __name__ == "__main__":
 
     if args.hf_model is not None:
         hf_model_name = args.hf_model
-        ai = aitextgen(hf_model_name, use_gpu=False)
-        save_name = hf_model_name.split("/")[-1]
-        save_name = save_name.replace(".", "_")
-        hf_save_path = cwd / save_name
-        ai.save(target_folder=hf_save_path)
-        print(f"saved {hf_model_name} to {hf_save_path}")
+        base_model_name = hf_model_name.split("/")[-1]
+        base_model_name = base_model_name.replace(".", "_")
+
+        hf_cache_dir = _root / base_model_name
+        hf_cache_dir.mkdir(exist_ok=True)
+        ai = aitextgen(hf_model_name, use_gpu=False, cache_dir=hf_cache_dir)
+        ai.save(target_folder=hf_cache_dir)
+        print(f"saved {hf_model_name} to {hf_cache_dir}")
 
     # download the model files from the links if not found in cwd
-    folder_names = [str(p.resolve()) for p in cwd.iterdir() if p.is_dir()]
+    folder_names = [p.name for p in cwd.iterdir() if p.exists() and p.is_dir()]
     if verbose:
         print("folder names are as follows: \n")
         pp.pprint(folder_names, compact=True, indent=4)
