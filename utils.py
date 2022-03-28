@@ -24,7 +24,7 @@ def get_timestamp():
 
 def print_spacer(n=1):
     """print_spacer - print a spacer line"""
-    print("\n" * n)
+    print("\n   --------    " * n)
 
 def correct_phrase_load(my_string: str):
     """
