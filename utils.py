@@ -22,9 +22,11 @@ from tqdm.auto import tqdm
 def get_timestamp():
     return datetime.now().strftime("%b-%d-%Y_t-%H")
 
+
 def print_spacer(n=1):
     """print_spacer - print a spacer line"""
     print("\n   --------    " * n)
+
 
 def correct_phrase_load(my_string: str):
     """
@@ -184,6 +186,9 @@ def get_zip_URL(
     file_header: str = "dropboxexport_",
     verbose: bool = False,
 ):
+    """	get_zip_URL - download a zip file from a given URL and extract it to a given location
+    """
+
     r = requests.get(URLtoget, allow_redirects=True)
     names = getFilename_fromCd(r.headers.get("content-disposition"))
     fixed_fnames = names.split(";")  # split the multiple results

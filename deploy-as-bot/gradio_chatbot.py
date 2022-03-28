@@ -11,6 +11,7 @@ Set the working directory to */deploy-as-bot in terminal before running.
 import os
 import sys
 from os.path import dirname
+
 # add the path to the script to the sys.path
 sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 
@@ -51,7 +52,9 @@ def gramformer_correct(corrector, qphrase: str):
         return corrected[0]["generated_text"]
     except:
         print("NOTE - failed to correct with gramformer")
-        return clean(qphrase) # fallback is to return the cleaned up version of the message
+        return clean(
+            qphrase
+        )  # fallback is to return the cleaned up version of the message
 
 
 def ask_gpt(message: str, sender: str = ""):
@@ -76,19 +79,21 @@ def ask_gpt(message: str, sender: str = ""):
         try:
             prompt_speaker = clean(sender)
         except:
-            prompt_speaker = None # fallback
+            prompt_speaker = None  # fallback
     else:
-        prompt_speaker = None # fallback
+        prompt_speaker = None  # fallback
 
     resp = query_gpt_model(
         folder_path=model_loc,
         prompt_msg=prompt,
         speaker=prompt_speaker,
-        kparam=150, # top k responses
-        temp=0.75, # temperature
+        kparam=150,  # top k responses
+        temp=0.75,  # temperature
         top_p=0.65,  # nucleus sampling
     )
-    bot_resp = gramformer_correct(corrector, qphrase=resp["out_text"]) # correct grammar
+    bot_resp = gramformer_correct(
+        corrector, qphrase=resp["out_text"]
+    )  # correct grammar
     rt = round(time.time() - st, 2)
     print(f"took {rt} sec to respond")
 
@@ -109,7 +114,7 @@ def chat(first_and_last_name, message):
     history = gr.get_state() or []
     response = ask_gpt(message, sender=first_and_last_name)
     history.append(("You: " + message, " GPT-Model: " + response + " [end] "))
-    gr.set_state(history) # save the history
+    gr.set_state(history)  # save the history
     html = ""
     for user_msg, resp_msg in history:
         html += f"{user_msg}"
@@ -133,7 +138,7 @@ def get_parser():
         "--model",
         required=False,
         type=str,
-        default="GPT2_trivNatQAdailydia_774M_175Ksteps", # folder name of model
+        default="GPT2_trivNatQAdailydia_774M_175Ksteps",  # folder name of model
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
         "config.json). No models? Run the script download_models.py",
     )
@@ -142,7 +147,7 @@ def get_parser():
         "--gram-model",
         required=False,
         type=str,
-        default="prithivida/grammar_error_correcter_v1", # huggingface model
+        default="prithivida/grammar_error_correcter_v1",  # huggingface model
         help="text2text generation model ID from huggingface for the model to correct grammar",
     )
 
@@ -155,7 +160,7 @@ if __name__ == "__main__":
     model_loc = cwd.parent / default_model
     model_loc = str(model_loc.resolve())
     gram_model = args.gram_model
-    
+
     # init items for the pipeline
     iface = gr.Interface(
         chat,
@@ -174,7 +179,7 @@ if __name__ == "__main__":
         .resp_msg {background-color:lightgray;align-self:self-end}
     """,
         allow_screenshot=True,
-        allow_flagging=True, # allow users to flag responses as inappropriate
+        allow_flagging=True,  # allow users to flag responses as inappropriate
         flagging_dir="gradio_data",
         flagging_options=[
             "great response",
@@ -184,7 +189,7 @@ if __name__ == "__main__":
         enable_queue=True,  # allows for dealing with multiple users simultaneously
         theme="darkhuggingface",
     )
-    
+
     corrector = pipeline("text2text-generation", model=gram_model, device=-1)
     print("Finished loading the gramformer model - ", datetime.now())
     print(f"using model stored here: \n {model_loc} \n")

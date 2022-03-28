@@ -1,10 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-NOTE- WIP
+conv_w_ai.py - a script to run a conversation with a GPT-2 model
 
-conv_w_ai.py
+Insteading of taking a prompt, pass it in, get a response, and return that response + end, the querying of the model is done in a while loop. Similar to how results are handled in the ai_single_respose.py script, the results are returned as a list of strings. Instead of these strings being discarded, they are appended to a list, and the next prompt/response pair is appended to the list, etc. This then allows the transformer model to "see" the conversational context. from earlier in the conversation.
 
-Instead of calling the model in one instance, call it in a loop.
 """
+
 from aitextgen import aitextgen
 import argparse
 import pprint as pp
@@ -13,6 +15,7 @@ import warnings
 from pathlib import Path
 from utils import get_timestamp
 from ai_single_response import extract_response, get_bot_response
+
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 
@@ -72,12 +75,13 @@ def converse_w_ai(
 
         if prompt_msg is not None:
             # inherit prompt from argparse
-            pp.pprint(f'You started off with: {prompt_msg}')
+            pp.pprint(f"You started off with: {prompt_msg}")
         else:
-            prompt_msg = str(
-                input("enter a message to start/continue the chat: "))
+            prompt_msg = str(input("enter a message to start/continue the chat: "))
         if prompt_msg.lower().strip() == "exit":
-            print(f"exiting conversation loop based on {prompt_msg} input - {get_timestamp()}")
+            print(
+                f"exiting conversation loop based on {prompt_msg} input - {get_timestamp()}"
+            )
             break
         p_list.append(speaker.lower() + ":" + "\n")
         p_list.append(prompt_msg.lower() + "\n")
@@ -92,7 +96,6 @@ def converse_w_ai(
             print("overall prompt:\n")
             pp.pprint(this_prompt, indent=4)
         print("\n... generating response...")
-
 
         chat_resp = ai.generate(
             n=1,
@@ -123,7 +126,8 @@ def converse_w_ai(
         diff_list = extract_response(resp, list_p, verbose=verbose)
         # extract the bot response from the model generated text
         bot_dialogue = get_bot_response(
-            name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose)
+            name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose
+        )
         bot_resp = ", ".join(bot_dialogue)
         pp.pprint(bot_resp, indent=4)
         p_list.append(bot_resp + "\n")
@@ -131,7 +135,7 @@ def converse_w_ai(
 
         prompt_msg = None
 
-    return p_list # note that here it is exported as a list of strings
+    return p_list  # note that here it is exported as a list of strings
 
 
 # Set up the parsing of command-line arguments
@@ -214,6 +218,7 @@ def get_parser():
 
 
 if __name__ == "__main__":
+    # parse the command line arguments
     args = get_parser().parse_args()
     query = args.prompt
     model_dir = str(args.model)
@@ -228,6 +233,7 @@ if __name__ == "__main__":
 
     st = time.perf_counter()
 
+    # run the chat
     my_conv = converse_w_ai(
         folder_path=model_loc,
         start_msg=query,
@@ -239,6 +245,8 @@ if __name__ == "__main__":
         verbose=want_verbose,
         use_gpu=False,
     )
+
+    # print the runtime / transcript
     print("\nA transcript of the conversation:")
     pp.pprint(my_conv, indent=4)
 
