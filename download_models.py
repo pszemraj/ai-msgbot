@@ -34,10 +34,11 @@ def download_model(model_name, model_links=dbx_links, extr_loc=None, verbose=Fal
         print(f"Downloading {model_name}")
 
     model_dest = str(extr_loc.resolve())
-    dl_extract_zip(URLtoget=model_links[model_name], extract_loc=model_dest, verbose=verbose)
+    dl_extract_zip(
+        URLtoget=model_links[model_name], extract_loc=model_dest, verbose=verbose
+    )
     if verbose:
         print(f"finished downloading {model_name}\n")
-
 
 
 # Set up the parsing of command-line arguments
@@ -65,7 +66,8 @@ def get_parser():
     )
 
     return parser
-    
+
+
 if __name__ == "__main__":
 
     args = get_parser().parse_args()

@@ -1,6 +1,7 @@
 """
-general utility functions for loading, saving, etc
+general utility functions for loading, saving, and manipulating data
 """
+
 import os
 from pathlib import Path
 import pprint as pp
@@ -176,7 +177,7 @@ def URL_string_filter(text):
 
 
 def getFilename_fromCd(cd):
-    """ getFilename_fromCd - get the filename from a given cd str """
+    """getFilename_fromCd - get the filename from a given cd str"""
     if not cd:
         return None
     fname = re.findall("filename=(.+)", cd)
@@ -302,21 +303,21 @@ def download_URL(url: str, file=None, dlpath=None, verbose=False):
     -------
     str - path to the downloaded file
     """
-    
+
     if file is None:
-        if '?dl=' in url:
+        if "?dl=" in url:
             # is a dropbox link
             prefile = url.split("/")[-1]
             filename = str(prefile).split("?dl=")[0]
         else:
             filename = url.split("/")[-1]
-            
+
         file = clean(filename)
     if dlpath is None:
-        dlpath = Path.cwd() # save to current working directory
+        dlpath = Path.cwd()  # save to current working directory
     else:
-        dlpath = Path(dlpath) # make a path object
-        
+        dlpath = Path(dlpath)  # make a path object
+
     r = requests.get(url, stream=True, allow_redirects=True)
     total_size = int(r.headers.get("content-length"))
     initial_pos = 0
@@ -324,7 +325,7 @@ def download_URL(url: str, file=None, dlpath=None, verbose=False):
     with open(str(dl_loc.resolve()), "wb") as f:
         with tqdm(
             total=total_size,
-            unit='B',
+            unit="B",
             unit_scale=True,
             desc=file,
             initial=initial_pos,
@@ -334,11 +335,11 @@ def download_URL(url: str, file=None, dlpath=None, verbose=False):
                 if ch:
                     f.write(ch)
                     pbar.update(len(ch))
-                    
-    if verbose: print(f"\ndownloaded {file} to {dlpath}\n")
-    
-    return str(dl_loc.resolve())
 
+    if verbose:
+        print(f"\ndownloaded {file} to {dlpath}\n")
+
+    return str(dl_loc.resolve())
 
 
 def dl_extract_zip(
@@ -368,12 +369,13 @@ def dl_extract_zip(
 
     extract_loc = Path(extract_loc)
     extract_loc.mkdir(parents=True, exist_ok=True)
-    
+
     save_loc = download_URL(
-        url=URLtoget, file=f'{file_header}.zip', dlpath=None, verbose=verbose)
-    
+        url=URLtoget, file=f"{file_header}.zip", dlpath=None, verbose=verbose
+    )
+
     shutil.unpack_archive(save_loc, extract_dir=extract_loc)
-    
+
     if verbose:
         print("extracted zip file - ", datetime.now())
         x = load_dir_files(extract_loc, req_extension="", verbose=verbose)
@@ -384,9 +386,8 @@ def dl_extract_zip(
         del save_loc
     except Exception:
         print("unable to delete original zipfile - check if exists", datetime.now())
-    
-    if verbose: print("finished extracting zip - ", datetime.now())
-    
+
+    if verbose:
+        print("finished extracting zip - ", datetime.now())
+
     return extract_loc
-
-
