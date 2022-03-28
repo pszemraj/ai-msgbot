@@ -72,7 +72,7 @@ def query_gpt_model(
     this_result = ai.generate(
         n=1,
         top_k=kparam,
-        batch_size=128, # attempt to run generate on one batch in default
+        batch_size=128,  # attempt to run generate on one batch in default
         max_length=128,
         min_length=16,
         prompt=this_prompt,
@@ -136,7 +136,7 @@ def query_gpt_model(
 
 def converse_w_ai(
     folder_path,
-    start_msg: str=None,
+    start_msg: str = None,
     speaker=None,
     responder="person beta",
     resp_length=128,
@@ -147,33 +147,49 @@ def converse_w_ai(
     use_gpu=False,
 ):
     # initialise pre while-loop variables
-    
+
     if verbose:
-        print(f'initializing conversation... {get_timestamp()}')
-    start_msg = str(input('enter a message to start the conversation: ')) if start_msg is None else start_msg
-    mod_ids = ["natqa", "dd", "trivqa", "wow"] # these models used person alpha and person beta in training
+        print(f"initializing conversation... {get_timestamp()}")
+    start_msg = (
+        str(input("enter a message to start the conversation: "))
+        if start_msg is None
+        else start_msg
+    )
+    mod_ids = [
+        "natqa",
+        "dd",
+        "trivqa",
+        "wow",
+    ]  # these models used person alpha and person beta in training
     if any(substring in str(folder_path).lower() for substring in mod_ids):
         speaker = "person alpha" if speaker is None else speaker
         responder = "person beta" if responder is None else responder
     else:
-        if verbose: print("speaker and responder not set - using default") 
+        if verbose:
+            print("speaker and responder not set - using default")
         speaker = "person" if speaker is None else speaker
         responder = "person" if responder is None else responder
     p_list = []  # track conversation
     p_list.append(speaker.lower() + ":" + "\n")
-    
+
     ai = aitextgen(
         model_folder=folder_path,
         to_gpu=use_gpu,
     )
-    prompt_msg=start_msg if start_msg is not None else None
-    
+    prompt_msg = start_msg if start_msg is not None else None
+
     # start conversation
-    print("Entering conversation loop with GPT Model. CTRL+C to exit, or type 'exit' to end conversation")
-    
+    print(
+        "Entering conversation loop with GPT Model. CTRL+C to exit, or type 'exit' to end conversation"
+    )
+
     while True:
-        prompt_msg = prompt_msg if prompt_msg is not None else input('enter a message to start the conversation: ')
-        if prompt_msg.lower() == 'exit':
+        prompt_msg = (
+            prompt_msg
+            if prompt_msg is not None
+            else input("enter a message to start the conversation: ")
+        )
+        if prompt_msg.lower() == "exit":
             break
         p_list.append(speaker.lower() + ":" + "\n")
         p_list.append(prompt_msg)
@@ -181,7 +197,7 @@ def converse_w_ai(
         p_list.append(responder.lower() + ":" + "\n")
         p_instance = "".join(p_list)
         input_len = len(p_instance)
-        
+
         # query loaded model
         if verbose:
             print("overall prompt:\n")
@@ -190,9 +206,10 @@ def converse_w_ai(
         this_result = ai.generate(
             n=1,
             prompt=p_instance,
-            batch_size=128, # attempt to run generate in ~1 batch in default case
-            max_length=resp_length+input_len,
-            min_length=16+input_len, # the prompt input counts for text length constraints
+            batch_size=128,  # attempt to run generate in ~1 batch in default case
+            max_length=resp_length + input_len,
+            min_length=16
+            + input_len,  # the prompt input counts for text length constraints
             top_k=kparam,
             temperature=temp,
             top_p=top_p,
@@ -200,7 +217,7 @@ def converse_w_ai(
             return_as_list=True,
             use_cache=True,
         )
-    
+
     return p_list
 
 
