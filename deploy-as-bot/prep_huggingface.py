@@ -32,14 +32,14 @@ def get_parser():
         description="convert a model to a format that can be uploaded to huggingface"
     )
     parser.add_argument(
-        "--model-dir",
+        "-m", "--model-dir",
         required=True,  # model_dir is needed to find the model files
         type=str,
         help="filepath to directory that contains the model files (pytorch.bin + config.json)",
     )
 
     parser.add_argument(
-        "--hf-name",
+        "-n", "--hf-name",
         required=False,
         type=str,
         help="the name of the model to be uploaded to huggingface",
