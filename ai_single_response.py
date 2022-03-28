@@ -84,22 +84,11 @@ def get_bot_response(
     for resline in model_resp:
         if resline.startswith(name_resp):
             name_counter += 1
-            break_safe = True  # know the line is from bot as this line starts with the name of the bot
             continue
-        if name_spk is not None and name_spk.lower() in resline.lower():
-            # TODO: fix this
+        if ":" in resline and name_resp.lower() not in resline.lower():
             break
-        if ":" in resline and name_counter > 0:
-            if break_safe:
-                # we know this is a response from the bot even tho ':' is in the line
-                fn_resp.append(resline)
-                break_safe = False
-            else:
-                # we do not know this is a response from the bot. could be name of another person.. bot is "finished" response
-                break
         else:
             fn_resp.append(resline)
-            break_safe = False
     if verbose:
         print("the full response is:\n")
         print("\n".join(fn_resp))
