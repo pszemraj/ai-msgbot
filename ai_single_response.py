@@ -88,6 +88,7 @@ def query_gpt_model(
     if verbose:
         pp.pprint(this_result)  # to see what is going on
     try:
+        
         this_result = str(this_result[0]).split("\n")
         res_out = [clean(ele) for ele in this_result]
         p_out = [clean(ele) for ele in p_list]
