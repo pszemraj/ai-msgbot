@@ -199,11 +199,18 @@ def query_gpt_model(
         name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose
     )
     bot_resp = ", ".join(bot_dialogue)
-
+    bot_resp = bot_resp.strip()
+    # remove the last ',' '.' chars
+    bot_resp = bot_resp[:-1] if bot_resp.endswith(".") else bot_resp
+    bot_resp = bot_resp[:-1] if bot_resp.endswith(",") else bot_resp 
+    if verbose:
+        print("\n... bot response:\n")
+        pp.pprint(bot_resp)
     og_prompt.append(bot_resp + "\n")
     og_prompt.append("\n")
 
     print("\nfinished!")
+    # return the bot response and the full conversation
 
     return {"out_text": bot_resp, "full_conv": og_prompt}  # model responses
 
