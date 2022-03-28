@@ -203,7 +203,7 @@ def query_gpt_model(
     bot_resp = remove_trailing_punctuation(bot_resp.strip()) # remove trailing punctuation to seem more natural
     # remove the last ',' '.' chars
     bot_resp = bot_resp[:-1] if bot_resp.endswith(".") else bot_resp
-    bot_resp = bot_resp[:-1] if bot_resp.endswith(",") else bot_resp 
+    bot_resp = bot_resp[:-1] if bot_resp.endswith(",") else bot_resp
     if verbose:
         print("\n... bot response:\n")
         pp.pprint(bot_resp)
