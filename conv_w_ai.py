@@ -159,25 +159,49 @@ def converse_w_ai(
         if verbose: print("speaker and responder not set - using default") 
         speaker = "person" if speaker is None else speaker
         responder = "person" if responder is None else responder
-
-    if speaker is not None:
-        # only if speaker is not None
-        p_list.append(speaker.lower() + ":" + "\n")
+    p_list = []  # track conversation
+    p_list.append(speaker.lower() + ":" + "\n")
     
     ai = aitextgen(
         model_folder=folder_path,
         to_gpu=use_gpu,
     )
+    prompt_msg=start_msg if start_msg is not None else None
     
-    p_list = [] # track conversation
+    # start conversation
+    print("Entering conversation loop with GPT Model. CTRL+C to exit, or type 'exit' to end conversation")
+    
     while True:
+        prompt_msg = prompt_msg if prompt_msg is not None else input('enter a message to start the conversation: ')
+        if prompt_msg.lower() == 'exit':
+            break
+        p_list.append(speaker.lower() + ":" + "\n")
         p_list.append(prompt_msg)
         p_list.append("\n")
         p_list.append(responder.lower() + ":" + "\n")
-        this_prompt = "".join(p_list)
+        p_instance = "".join(p_list)
+        input_len = len(p_instance)
         
-        
-    pass
+        # query loaded model
+        if verbose:
+            print("overall prompt:\n")
+            pp.pprint(p_instance, indent=4)
+        print("\n... generating response...")
+        this_result = ai.generate(
+            n=1,
+            prompt=p_instance,
+            batch_size=128, # attempt to run generate on ~1 batch in default case
+            max_length=resp_length+input_len,
+            min_length=16+input_len, # the prompt input counts for text length constraints
+            top_k=kparam,
+            temperature=temp,
+            top_p=top_p,
+            do_sample=True,
+            return_as_list=True,
+            use_cache=True,
+        )
+    
+    return p_list
 
 
 # Set up the parsing of command-line arguments
