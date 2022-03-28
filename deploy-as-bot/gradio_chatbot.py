@@ -8,6 +8,7 @@ Note that the URL is displayed once the script is run.
 Set the working directory to */deploy-as-bot in terminal before running.
 
 """
+from utils import remove_trailing_punctuation
 import os
 import sys
 from os.path import dirname
@@ -94,6 +95,7 @@ def ask_gpt(message: str, sender: str = ""):
     bot_resp = gramformer_correct(
         corrector, qphrase=resp["out_text"]
     )  # correct grammar
+    bot_resp = remove_trailing_punctuation(bot_resp)  # remove trailing punctuation to seem more natural
     rt = round(time.time() - st, 2)
     print(f"took {rt} sec to respond")
 
