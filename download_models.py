@@ -41,7 +41,9 @@ def download_model(model_name, model_links=dbx_links, extr_loc=None, verbose=Fal
         print(f"Downloading {model_name}")
 
     model_dest = str(extr_loc.resolve())
-    dl_extract_zip(URLtoget=model_links[model_name], extract_loc=model_dest, verbose=verbose)
+    dl_extract_zip(
+        URLtoget=model_links[model_name], extract_loc=model_dest, verbose=verbose
+    )
     if verbose:
         print(f"finished downloading {model_name}\n")
 
@@ -77,6 +79,7 @@ def get_parser():
 
     return parser
 
+
 if __name__ == "__main__":
     ## get args
     args = get_parser().parse_args()
@@ -98,7 +101,7 @@ if __name__ == "__main__":
         ai.save(target_folder=hf_save_path)
         print(f"saved {hf_model_name} to {hf_save_path}")
 
-    # download the model files
+    # download the model files from the links if not found in cwd
     folder_names = [str(p.resolve()) for p in cwd.iterdir() if p.is_dir()]
     if verbose:
         print("folder names are as follows: \n")
