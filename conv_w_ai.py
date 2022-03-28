@@ -7,14 +7,16 @@ Insteading of taking a prompt, pass it in, get a response, and return that respo
 
 """
 
-from aitextgen import aitextgen
 import argparse
 import pprint as pp
 import time
 import warnings
 from pathlib import Path
-from utils import get_timestamp, remove_trailing_punctuation
+
+from aitextgen import aitextgen
+
 from ai_single_response import extract_response, get_bot_response
+from utils import get_timestamp, remove_trailing_punctuation
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 

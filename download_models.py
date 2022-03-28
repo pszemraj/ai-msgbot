@@ -15,10 +15,12 @@ https://huggingface.co/ethzanalytics
 """
 
 import argparse
-from pathlib import Path
 import pprint as pp
-from utils import get_timestamp, dl_extract_zip
+from pathlib import Path
+
 from aitextgen import aitextgen
+
+from utils import dl_extract_zip, get_timestamp
 
 dbx_links = {
     "gpt2_dailydialogue_355M_75Ksteps": "https://www.dropbox.com/sh/ahx3teywshods41/AACrGhc_Qntw6GuX7ww-3pbBa?dl=1",
