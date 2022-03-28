@@ -1,8 +1,9 @@
 """
-WIP
+NOTE- WIP
 
-convert ai_single_response to now respond to the whole conversation
+conv_w_ai.py
 
+Instead of calling the model in one instance, call it in a loop.
 """
 from aitextgen import aitextgen
 import argparse
@@ -12,6 +13,7 @@ import warnings
 from datetime import datetime
 from pathlib import Path
 from cleantext import clean
+from utils import get_timestamp
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
@@ -54,14 +56,12 @@ def query_gpt_model(
     if any(substring in str(folder_path).lower() for substring in mod_ids):
         speaker = "person alpha" if speaker is None else speaker
         responder = "person beta" if responder is None else responder
-    if "peter" in str(folder_path).lower():
-        speaker = "person" if speaker is None else speaker
-        responder = "peter szemraj" if responder is None else responder
 
     if speaker is not None:
         # only if speaker is not None
         p_list.append(speaker.lower() + ":" + "\n")
 
+    p_list.append(prompt_msg)
     p_list.append("\n")
     p_list.append(responder.lower() + ":" + "\n")
     this_prompt = "".join(p_list)
@@ -72,7 +72,7 @@ def query_gpt_model(
     this_result = ai.generate(
         n=1,
         top_k=kparam,
-        batch_size=256,
+        batch_size=128, # attempt to run generate on one batch in default
         max_length=128,
         min_length=16,
         prompt=this_prompt,
@@ -122,7 +122,7 @@ def query_gpt_model(
 
         output = ", ".join(diff_list)
 
-    except:
+    except Exception:
         output = "oops, there was an error. try again"
 
     p_list.append(output + "\n")
@@ -134,21 +134,49 @@ def query_gpt_model(
     return model_responses
 
 
-def query_gpt_model_conversation(
+def converse_w_ai(
     folder_path,
-    prompt_msg: str,
-    prior_conv: str,
+    start_msg: str=None,
     speaker=None,
     responder="person beta",
+    resp_length=128,
     kparam=150,
     temp=0.75,
     top_p=0.65,
     verbose=False,
     use_gpu=False,
 ):
-    # WORK IN PROGRESS
-    # need to figure out the code for multi-response opt before this can be used
+    # initialise pre while-loop variables
+    
+    if verbose:
+        print(f'initializing conversation... {get_timestamp()}')
+    start_msg = str(input('enter a message to start the conversation: ')) if start_msg is None else start_msg
+    mod_ids = ["natqa", "dd", "trivqa", "wow"] # these models used person alpha and person beta in training
+    if any(substring in str(folder_path).lower() for substring in mod_ids):
+        speaker = "person alpha" if speaker is None else speaker
+        responder = "person beta" if responder is None else responder
+    else:
+        if verbose: print("speaker and responder not set - using default") 
+        speaker = "person" if speaker is None else speaker
+        responder = "person" if responder is None else responder
 
+    if speaker is not None:
+        # only if speaker is not None
+        p_list.append(speaker.lower() + ":" + "\n")
+    
+    ai = aitextgen(
+        model_folder=folder_path,
+        to_gpu=use_gpu,
+    )
+    
+    p_list = [] # track conversation
+    while True:
+        p_list.append(prompt_msg)
+        p_list.append("\n")
+        p_list.append(responder.lower() + ":" + "\n")
+        this_prompt = "".join(p_list)
+        
+        
     pass
 
 
@@ -256,7 +284,7 @@ if __name__ == "__main__":
         rspndr = "person beta"
         # ^ arbitrary people created when parsing NatQA + TriviaQA + Daily Dialogue datasets
 
-    st = time.time()
+    st = time.perf_counter()
 
     resp = query_gpt_model(
         folder_path=model_loc,
@@ -274,7 +302,7 @@ if __name__ == "__main__":
     pp.pprint(output, indent=4)
 
     # pp.pprint(this_result[3].strip(), indent=4)
-    rt = round(time.time() - st, 1)
+    rt = round(time.perf_counter() - st, 1)
 
     if want_rt:
         print("took {runtime} seconds to generate. \n".format(runtime=rt))
