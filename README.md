@@ -184,7 +184,7 @@ _What we plan to add to this repo in the foreseeable future._
 -   > examine if any basic ML approaches can model the harmonic/geometric mean response scores with [Pycaret](http://www.pycaret.org/tutorials/html/REG102.html)
 
 3. ~~investigate whatsapp bot potential and utility~~
-> unable to reliably host a local whatsapp web interface to connect to at all as whatsapp does not have an API.
+   > unable to reliably host a local whatsapp web interface to connect to at all as whatsapp does not have an API.
 4. ~~evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint~~
 
 -   > ~~in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`~~
@@ -192,11 +192,11 @@ _What we plan to add to this repo in the foreseeable future._
 
 5. ~~evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot~~
 
-    -   > ~~this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot~~
-    -   > **using Trivia/CoCaQA did help model responses**
+   - > ~~this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot~~
+   - > **using Trivia/CoCaQA did help model responses**
 
 6. ~~try gradio deployment~~
-    - _implemented_
+   - _implemented_
 7. try huggingface spaces deployment
 8. Auto_ML based approach to see if multi dimensional hyperparameter search/model reveals anything
 
