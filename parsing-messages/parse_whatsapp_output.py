@@ -70,12 +70,12 @@ def get_parser():
         description="convert whatsapp chat exports to GPT-2 input"
     )
     parser.add_argument(
-        "--datadir",
+        "-i", "--datadir",
         required=True,
         help="Path to input directory containing txt whatsapp exports",
     )
     parser.add_argument(
-        "--outdir",
+        "-o", "--outdir",
         required=False,
         default=str(Path.cwd().resolve()),
         help="Path to the output directory, where the output file will be created",
