@@ -53,14 +53,15 @@ def query_gpt_model(
         to_gpu=use_gpu,
     )
     p_list = []
-    if any("natqa", 'dd', "trivqa", "wow") in str(folder_path).lower():
+    if any("natqa", "dd", "trivqa", "wow") in str(folder_path).lower():
         speaker = "person alpha"  # manual correction
         responder = "person beta"
     if "peter" in str(folder_path).lower():
         speaker = None  # manual correction
         responder = "peter szemraj"
-    if speaker is not None:        p_list.append(speaker.lower() + ":" + "\n")  # add speaker to prompt
-   
+    if speaker is not None:
+        p_list.append(speaker.lower() + ":" + "\n")  # add speaker to prompt
+
     p_list.append(prompt_msg.lower() + "\n")
     p_list.append("\n")
     p_list.append(responder.lower() + ":" + "\n")
