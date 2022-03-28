@@ -6,11 +6,14 @@ ai_single_response.py
 An executable way to call the model. example:
 *\gpt2_chatbot> python .\ai_single_response.py --prompt "where is the grocery store?" --time
 
-this will return a response to the prompt.
+extended-summary:
+
+    A system and method for interacting with a virtual machine using a series of messages , each message having associated otherwise one or more actions to be taken by the machine. The speaker participates in a chat with a responder , and the response from the responder is returned.
 
 """
 import argparse
 import pprint as pp
+import sys
 import time
 import warnings
 from datetime import datetime
@@ -24,19 +27,23 @@ from aitextgen import aitextgen
 def extract_response(full_resp:list, plist:list, verbose:bool=False):
     """
     extract_response - helper fn for ai_single_response.py. By default aitextgen returns the prompt and the response, we just want the response
-    
+
     Args:
         full_resp (list): a list of strings, each string is a response
         plist (list): a list of strings, each string is a prompt
-        
+
         verbose (bool, optional): 4 debug. Defaults to False.
     """
-    
-    plist = [ele for ele in plist]
+    p_len = len(plist)
+    assert len(full_resp) >= p_len, "model output should have as many lines or longer as the input."
 
-    iso_resp = []
-    for line in full_resp:
-        iso_resp.append(line) if line not in plist else None
+    if set(plist).issubset(full_resp):
+
+        del full_resp[:p_len] # remove the prompts from the responses
+    else:
+        sys.exit("WARNING: some prompts not found in the responses")
+    # for line in full_resp:
+        # iso_resp.append(line) if line not in plist else None
         # if line in plist:
         #     continue
         # else:
@@ -46,7 +53,47 @@ def extract_response(full_resp:list, plist:list, verbose:bool=False):
         print("\n".join(iso_resp))
         print("the input prompt was:\n")
         print("\n".join(plist))
-    return iso_resp # list of only the model gnerated responses
+    return full_resp  # list of only the model generated responses
+
+def get_bot_response(name_resp:str, model_resp:str, verbose:bool=False):
+
+    """
+
+    get_bot_response  - from the model response, extract the bot response. This is needed because depending on the generation length the model may return more than one response.
+
+    Args:   name_resp (str): the name of the responder
+    model_resp (str): the model response
+    verbose (bool, optional): 4 debug. Defaults to False.
+
+    returns: fn_resp (list of str)
+    """
+
+    fn_resp = []
+
+    name_counter = 0
+    break_safe = False
+    for resline in model_resp:
+        if resline.startswith(name_resp):
+            name_counter += 1
+            break_safe = True # know the line is from bot as this line starts with the name of the bot
+            continue
+        if ":" in resline and name_counter > 0:
+            if break_safe:
+                # we know this is a response from the bot even tho ':' is in the line
+                fn_resp.append(resline)
+                break_safe = False
+            else:
+                # we do not know this is a response from the bot. could be name of another person.. bot is "finished" response
+                break
+        else:
+            fn_resp.append(resline)
+            break_safe = False
+    if verbose:
+        print("the full response is:\n")
+        print("\n".join(fn_resp))
+
+    return fn_resp
+
 
 def query_gpt_model(
     folder_path,
@@ -108,6 +155,7 @@ def query_gpt_model(
     if verbose:
         print("overall prompt:\n")
         pp.pprint(this_prompt, indent=4)
+    # call the model
     print("\n... generating...")
     this_result = ai.generate(
         n=1,
@@ -124,62 +172,24 @@ def query_gpt_model(
         use_cache=True,
     )
     if verbose:
+        print("\n... generated:\n")
         pp.pprint(this_result)  # for debugging
-    try:
+    # process the full result to get the ~bot response~ piece
+    this_result = str(this_result[0]).split(
+        "\n"
+    )  # TODO: adjust hardcoded value for index to dynamic (if n>1)
+    og_res = this_result.copy()
+    og_prompt = p_list.copy()
+    diff_list = extract_response(this_result, p_list, verbose=verbose) # isolate the responses from the prompts
+    bot_dialogue = get_bot_response(name_resp=responder, model_resp = diff_list, verbose=verbose) # extract the bot response from the model generated text
+    bot_resp = ", ".join(bot_dialogue)
 
-        this_result = str(this_result[0]).split(
-            "\n"
-        )  # TODO: adjust hardcoded value for index to dynamic (if n>1)
-        res_out = [clean(ele) for ele in this_result]
-        p_out = [clean(ele) for ele in p_list]
-        if verbose:
-
-            pp.pprint(res_out)  # for debugging
-            print("the original prompt:\n")
-            pp.pprint(p_out)  # for debugging
-
-        diff_list = []
-        name_counter = 0
-        break_safe = False
-        for resline in res_out:
-
-            if (responder + ":") in resline:
-                name_counter += 1
-                break_safe = True  # next line a response from bot
-                continue
-            if ":" in resline and name_counter > 0:
-                if break_safe:
-                    diff_list.append(resline)
-                    break_safe = False
-                else:
-                    break
-            if resline in p_out:
-                break_safe = False
-                continue
-
-            else:
-                diff_list.append(resline)
-                break_safe = False
-
-        if verbose:
-            print("------------------------diff list: ")
-            pp.pprint(
-                diff_list
-            )  # where diff_list is only the text generated by the model
-            print("---------------------------------")
-
-        output = ", ".join(diff_list)
-
-    except Exception:
-        output = "oops, there was an error. try again"
-
-    p_list.append(output + "\n")
-    p_list.append("\n")
+    og_prompt.append(bot_resp + "\n")
+    og_prompt.append("\n")
 
     print("\nfinished!")
 
-    return {"out_text": output, "full_conv": p_list}  # model responses
-
+    return {"out_text": bot_resp, "full_conv": og_prompt}  # model responses
 
 # Set up the parsing of command-line arguments
 def get_parser():
