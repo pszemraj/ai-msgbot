@@ -12,9 +12,9 @@ import argparse
 import utils
 from pathlib import Path
 import pprint as pp
-from utils import get_timestamp
+from utils import get_timestamp, dl_extract_zip
 
-model_links = {
+dbx_links = {
     "gpt2_dailydialogue_355M_75Ksteps": "https://www.dropbox.com/sh/ahx3teywshods41/AACrGhc_Qntw6GuX7ww-3pbBa?dl=1",
     "GPT2_dailydialogue_355M_150Ksteps": "https://www.dropbox.com/sh/nzcgavha8i11mvw/AACZXMoJuSfI3d3vGRrT_cp5a?dl=1",
     "GPT2_trivNatQAdailydia_774M_175Ksteps": "https://www.dropbox.com/sh/vs848vw311l04ah/AAAuQCyuTEfjaLKo7ipybEZRa?dl=1",
@@ -22,6 +22,23 @@ model_links = {
     "GPT2_WoW_100k_genconv_355M": "https://www.dropbox.com/sh/5hvgjgmpy5ucq4t/AAAITp8gTjiilla1Q7lvX_2ua?dl=1",
     "GPTneo_conv_33kWoW_18kDD": "https://www.dropbox.com/sh/dfb3v40dn2ubgqq/AADeRBZ1agCOy4SNcGBfiP2fa?dl=1",
 }
+
+
+def download_model(model_name, model_links=dbx_links, extr_loc=None, verbose=False):
+    """
+    Downloads a model file from a link
+    """
+    if extr_loc is None:
+        extr_loc = cwd / model_name
+    if verbose:
+        print(f"Downloading {model_name}")
+
+    model_dest = str(extr_loc.resolve())
+    dl_extract_zip(URLtoget=model_links[model_name], extract_loc=model_dest, verbose=verbose)
+    if verbose:
+        print(f"finished downloading {model_name}\n")
+
+
 
 # Set up the parsing of command-line arguments
 def get_parser():
@@ -48,8 +65,7 @@ def get_parser():
     )
 
     return parser
-
-
+    
 if __name__ == "__main__":
 
     args = get_parser().parse_args()
@@ -65,44 +81,24 @@ if __name__ == "__main__":
         pp.pprint(folder_names, compact=True, indent=4)
     if get_all:
         # download model files not as important (skipped by default to reduce D/L time)
-
         m_name = "GPT2_dailydialogue_355M_150Ksteps"
         if not any(m_name in dir for dir in folder_names):
             # "DailyDialogues 355M parameter model - to be trained further with custom data or used directly
             print(f"did not find {m_name} in folders, downloading..")
-            extr_loc = cwd / m_name
-            model_dest = str(extr_loc.resolve())
-
-            utils.get_zip_URL(
-                model_links[m_name],
-                extract_loc=model_dest,
-                verbose=verbose,
-            )
+            download_model(m_name, verbose=verbose)
 
         m_name = "GPT2_WoW_100k_genconv_355M"
         if not any(m_name in dir for dir in folder_names):
             # GPT2_WoW_100k_genconv_355M: pretrained GPT-2 fine-tuned on wizard of wikipedia dataset for 100k steps
             print(f"did not find {m_name} in folders, downloading..")
-            extr_loc = cwd / m_name
-            model_dest = str(extr_loc.resolve())
-            utils.get_zip_URL(
-                model_links[m_name],
-                extract_loc=model_dest,
-                verbose=verbose,
-            )
+            download_model(m_name, verbose=verbose)
 
         m_name = "GPTneo_conv_33kWoW_18kDD"
         if not any(m_name in dir for dir in folder_names):
             # GPTneo_conv_33kWoW_18kDD: GPT-Neo 1.3B finetuned on wizard of wikipedia dataset for 33k steps and 18k steps on daily dialogue
             # this file is ~ 5 GB!
             print(f"did not find {m_name} in folders, downloading..")
-            extr_loc = cwd / m_name
-            model_dest = str(extr_loc.resolve())
-            utils.get_zip_URL(
-                model_links[m_name],
-                extract_loc=model_dest,
-                verbose=verbose,
-            )
+            download_model(m_name, verbose=verbose)
 
         if verbose:
             print(
@@ -111,31 +107,16 @@ if __name__ == "__main__":
                 )
             )
 
-    if get_whatsapp_example:
+    m_name = "gp2_DDandPeterTexts_774M_73Ksteps"
+    if get_whatsapp_example and not any(m_name in dir for dir in folder_names):
+        # GPT-Peter: trained on 73,000 steps of Peter's messages in addition to same items as GPT2_trivNatQAdailydia_774M_175Ksteps (below)
+        print(f"did not find {m_name} in folders, downloading..")
+        download_model(m_name, verbose=verbose)
 
-        m_name = "gp2_DDandPeterTexts_774M_73Ksteps"
-        if not any(m_name in dir for dir in folder_names):
-            # GPT-Peter: trained on 73,000 steps of Peter's messages in addition to same items as GPT2_trivNatQAdailydia_774M_175Ksteps
-            print(f"did not find {m_name} in folders, downloading..")
-            extr_loc = cwd / m_name
-            model_dest = str(extr_loc.resolve())
-            utils.get_zip_URL(
-                model_links[m_name],
-                extract_loc=model_dest,
-                verbose=verbose,
-            )
-
-    # TODO: turn these into functions
     m_name = "GPT2_trivNatQAdailydia_774M_175Ksteps"
     if not any(m_name in dir for dir in folder_names):
         # base "advanced" 774M param GPT-2 model trained on: Trivia, Natural Questions, Daily Dialogues for a total of 175,000 steps
         print(f"did not find {m_name} in folders, downloading..")
-        extr_loc = cwd / m_name
-        model_dest = str(extr_loc.resolve())
-        utils.get_zip_URL(
-            model_links[m_name],
-            extract_loc=model_dest,
-            verbose=verbose,
-        )
+        download_model(m_name, verbose=verbose)
 
     print("finished downloading and checking files {ts}".format(ts=get_timestamp()))
