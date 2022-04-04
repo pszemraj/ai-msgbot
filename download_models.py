@@ -15,23 +15,27 @@ https://huggingface.co/ethzanalytics
 """
 
 import argparse
-from pathlib import Path
 import pprint as pp
-from utils import get_timestamp, dl_extract_zip
+from pathlib import Path
+
 from aitextgen import aitextgen
+
+from utils import dl_extract_zip, get_timestamp
 
 dbx_links = {
     "gpt2_dailydialogue_355M_75Ksteps": "https://www.dropbox.com/sh/ahx3teywshods41/AACrGhc_Qntw6GuX7ww-3pbBa?dl=1",
     "GPT2_dailydialogue_355M_150Ksteps": "https://www.dropbox.com/sh/nzcgavha8i11mvw/AACZXMoJuSfI3d3vGRrT_cp5a?dl=1",
     "GPT2_trivNatQAdailydia_774M_175Ksteps": "https://www.dropbox.com/sh/vs848vw311l04ah/AAAuQCyuTEfjaLKo7ipybEZRa?dl=1",
-    "gp2_DDandPeterTexts_774M_73Ksteps": "https://www.dropbox.com/sh/bnrwpqqh34s2bea/AAAfuPTJ0A5FgHeOJ0cMlUFha?dl=1",
+    "gp2_DDandPeterTexts_774M_100ksteps": "https://www.dropbox.com/sh/08hlmr1neyrb8eg/AAD1UbddmGYWdS-QX7aM8bk8a?dl=1",
     "GPT2_WoW_100k_genconv_355M": "https://www.dropbox.com/sh/5hvgjgmpy5ucq4t/AAAITp8gTjiilla1Q7lvX_2ua?dl=1",
     "GPTneo_conv_33kWoW_18kDD": "https://www.dropbox.com/sh/dfb3v40dn2ubgqq/AADeRBZ1agCOy4SNcGBfiP2fa?dl=1",
     "GPT2_conversational_355M_WoW10k": "https://www.dropbox.com/sh/mbhrv4vf2d2vs67/AAB14F2ovAAxzwM-W3Bkl0sRa?dl=1",
 }
 
 
-def download_model(model_name, model_links=dbx_links, extr_loc=None, verbose=False):
+def download_model(
+    model_name: str, model_links: dict = dbx_links, extr_loc=None, verbose=False
+):
     """
     Downloads a model file from a link
     """
@@ -53,12 +57,14 @@ def get_parser():
         description="downloads model files if not found in local working directory"
     )
     parser.add_argument(
+        "-m",
         "--hf-model",
         default=None,
         required=False,
         help="the name of the model to be downloaded from huggingface.co/models/ and saved to current working directory (CWD)",
     )
     parser.add_argument(
+        "-a",
         "--download-all",
         default=False,
         action="store_true",
@@ -68,7 +74,7 @@ def get_parser():
         "--gpt-whatsapp",
         default=False,
         action="store_true",
-        help="pass this argument if you want a model trained on a WhatsApp dataset",
+        help="pass this argument to download the Whatsapp model (chatbot-esque) as well",
     )
     parser.add_argument(
         "--verbose",
@@ -86,6 +92,7 @@ if __name__ == "__main__":
     get_all = args.download_all
     get_whatsapp_example = args.gpt_whatsapp
     verbose = args.verbose
+    _root = Path(__file__).parent
     cwd = Path.cwd()
     my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
     print(f"using {my_cwd} as the working directory to store/check models\n")
@@ -94,15 +101,17 @@ if __name__ == "__main__":
 
     if args.hf_model is not None:
         hf_model_name = args.hf_model
-        ai = aitextgen(hf_model_name, use_gpu=False)
-        save_name = hf_model_name.split("/")[-1]
-        save_name = save_name.replace(".", "_")
-        hf_save_path = cwd / save_name
-        ai.save(target_folder=hf_save_path)
-        print(f"saved {hf_model_name} to {hf_save_path}")
+        base_model_name = hf_model_name.split("/")[-1]
+        base_model_name = base_model_name.replace(".", "_")
+
+        hf_cache_dir = _root / base_model_name
+        hf_cache_dir.mkdir(exist_ok=True)
+        ai = aitextgen(hf_model_name, use_gpu=False, cache_dir=hf_cache_dir)
+        ai.save(target_folder=hf_cache_dir)
+        print(f"saved {hf_model_name} to {hf_cache_dir}")
 
     # download the model files from the links if not found in cwd
-    folder_names = [str(p.resolve()) for p in cwd.iterdir() if p.is_dir()]
+    folder_names = [p.name for p in cwd.iterdir() if p.exists() and p.is_dir()]
     if verbose:
         print("folder names are as follows: \n")
         pp.pprint(folder_names, compact=True, indent=4)

@@ -30,8 +30,37 @@ _more deployment ideas / options to come_
 - quickstart [here](https://www.gradio.app/getting_started)
 - [documentation page](https://gradio.app/docs)
 
-### permanent gradio 
-https://abidlabs.medium.com/quickly-deploying-gradio-on-aws-242af2374784
+### permanent gradio
+<https://abidlabs.medium.com/quickly-deploying-gradio-on-aws-242af2374784>
 
 ### hosting on huggingface spaces
-https://huggingface.co/docs/hub/spaces
+<https://huggingface.co/docs/hub/spaces>
+
+### preparing VPS
+
+- ssh root@
+- swapon --show
+- free -h
+- df -h
+- fallocate -l 38G /swapfile
+- ls -lh /swapfile
+- chmod 600 /swapfile
+- ls -lh /swapfile
+- mkswap /swapfile
+- swapon /swapfile
+- swapon --show
+- free -h
+- cp /etc/fstab /etc/fstab.bak
+- echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+- git clone git clone <https://github.com/pszemraj/ai-msgbot>
+- cd ai-msgbot
+- apt update
+- apt install pipenv
+- pipenv shell
+- pip install -r requirements.txt
+- cd deploy-as-bot
+- scp -r ../GPTneo_conv_33kWoW_18kDD root@ :/root/ai-msgbot
+- python
+- import nltk
+- nltk.download('stopwords')
+- nohup python gradio_chatbot_DO.py --model GPTneo_conv_33kWoW_18kDD &

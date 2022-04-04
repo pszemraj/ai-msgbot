@@ -7,14 +7,16 @@ Insteading of taking a prompt, pass it in, get a response, and return that respo
 
 """
 
-from aitextgen import aitextgen
 import argparse
 import pprint as pp
 import time
 import warnings
 from pathlib import Path
-from utils import get_timestamp, remove_trailing_punctuation
+
+from aitextgen import aitextgen
+
 from ai_single_response import extract_response, get_bot_response
+from utils import get_timestamp, remove_trailing_punctuation
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
@@ -128,7 +130,9 @@ def converse_w_ai(
         bot_dialogue = get_bot_response(
             name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose
         )
-        bot_resp = remove_trailing_punctuation(", ".join(bot_dialogue)) # remove trailing punctuation from bot response to seem more natural
+        bot_resp = remove_trailing_punctuation(
+            ", ".join(bot_dialogue)
+        )  # remove trailing punctuation from bot response to seem more natural
         pp.pprint(bot_resp, indent=4)
         p_list.append(bot_resp + "\n")
         p_list.append("\n")

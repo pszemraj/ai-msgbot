@@ -2,9 +2,13 @@
 
 ![ACE-newsletter-workshop-img-cropped](https://user-images.githubusercontent.com/74869040/141669429-6bfd3e3f-2436-482b-b7b3-367bee6c23d3.png)
 
-This repo covers the practical use case of building a chatbot that sounds like you (or some dataset / persona you choose) by training a GPT-based model (either GPT2 or GPT-neo). Primarily relies on the [`aitextgen`](https://github.com/minimaxir/aitextgen) and [`python-telegram-bot`](https://github.com/python-telegram-bot/python-telegram-bot) libraries.
+This repo covers the practical use case of building a chatbot that sounds like you (or some dataset / persona you choose) by training a GPT-based model to generate text in a conversational manner. There are three primary components to this project:
 
-> **Note** that most model training was done on Colab to leverage the GPU.
+1. parsing a dataset of conversation-like data
+2. training a GPT-based model. This repo is designed around Colab environment for model training.
+3. deploying the model to a chatbot interface, either locally or on a cloud service.
+
+Primarily relies on the [`aitextgen`](https://github.com/minimaxir/aitextgen) and [`python-telegram-bot`](https://github.com/python-telegram-bot/python-telegram-bot) libraries. Examples on how to train larger models with DeepSpeed are in `notebooks\colab-huggingface-API` directory.
 
 ```bazaar
 python ai_single_response.py --model "GPT2_conversational_355M_WoW10k" --prompt "hey, what's up?"
@@ -15,10 +19,9 @@ finished!
 "i'm doing a lot of traveling. do you like to travel?"
 ```
 
-- some example trained models for usage as a chatbot can be found on the [ETHZ Analytics Organization on Huggingface](https://huggingface.co/ethzanalytics) with some limited testing abilities in the inference API
-- you can message an example bot on **Telegram** by clicking [this link](https://t.me/GPTfriend_bot). Please note that at present this bot is run locally on a machine, and may not be online 24/7.
+Some of the trained models can be interacted with through the HuggingFace spaces and model inference APIs on the [ETHZ Analytics Organization](https://huggingface.co/ethzanalytics) page on huggingface.co.
 
----
+* * *
 
 **Table of Contents**
 
@@ -44,7 +47,7 @@ finished!
 
 <!-- /TOC -->
 
----
+* * *
 
 ## Quick outline of repo
 
@@ -75,9 +78,9 @@ _Note: the bot in the image of question was trained on the author's text message
 - then it will respond!
 - other models are available / will be downloaded, to change the model that generates a response you can pass the argument `--model` for example:
 
-  `python ai_single_response.py --model "GPT2_dailydialogue_355M_150Ksteps" --prompt "are you free tomorrow?"`
+    `python ai_single_response.py --model "GPT2_dailydialogue_355M_150Ksteps" --prompt "are you free tomorrow?"`
 
----
+* * *
 
 ## Repo Overview and Usage
 
@@ -197,7 +200,7 @@ _What we plan to add to this repo in the foreseeable future._
 7. try huggingface spaces deployment
 8. Auto_ML based approach to see if multi dimensional hyperparameter search/model reveals anything
 
----
+* * *
 
 ## Extras, Asides, and Examples
 

@@ -3,19 +3,19 @@ general utility functions for loading, saving, and manipulating data
 """
 
 import os
-from pathlib import Path
 import pprint as pp
 import re
 import shutil  # zipfile formats
+import warnings
 from datetime import datetime
-from os.path import basename
-from os.path import getsize, join
+from os.path import basename, getsize, join
+from pathlib import Path
 
+import pandas as pd
 import requests
 from cleantext import clean
 from natsort import natsorted
 from symspellpy import SymSpell
-import pandas as pd
 from tqdm.auto import tqdm
 
 
@@ -198,8 +198,7 @@ def get_zip_URL(
     file_header: str = "dropboxexport_",
     verbose: bool = False,
 ):
-    """	get_zip_URL - download a zip file from a given URL and extract it to a given location
-    """
+    """get_zip_URL - download a zip file from a given URL and extract it to a given location"""
 
     r = requests.get(URLtoget, allow_redirects=True)
     names = getFilename_fromCd(r.headers.get("content-disposition"))
@@ -282,14 +281,10 @@ def download_URL(url: str, file=None, dlpath=None, verbose=False):
 
     Parameters
     ----------
-    url : str
-        URL to download
-    file : [type], optional
-        [description], by default None
-    dlpath : [type], optional
-        [description], by default None
-    verbose : bool, optional
-        [description], by default False
+    url : str,        URL to download
+    file : str, optional, default None, name of file to save to. If None, will use the filename from the URL
+    dlpath : str, optional, default None, path to save the file to. If None, will save to the current working directory
+    verbose : bool, optional, default False, print progress bar
 
     Returns
     -------
@@ -345,14 +340,10 @@ def dl_extract_zip(
 
     Parameters
     ----------
-    URLtoget : str
-        zip file URL to download
-    extract_loc : str, optional
-        directory to extract zip to , by default None
-    file_header : str, optional
-        [description], by default "TEMP_archive_dl_"
-    verbose : bool, optional
-        [description], by default False
+    URLtoget : str, zip file URL to download
+    extract_loc : str, optional, default None, path to save the zip file to. If None, will save to the current working directory
+    file_header : str, optional, default 'TEMP_archive_dl_', prefix for the zip file name
+    verbose : bool, optional, default False, print progress bar
 
     Returns
     -------
@@ -376,9 +367,8 @@ def dl_extract_zip(
     try:
         os.remove(save_loc)
         del save_loc
-    except Exception:
-        print("unable to delete original zipfile - check if exists", datetime.now())
-
+    except Exception as e:
+        warnings.warn(message=f"unable to delete original zipfile due to {e}")
     if verbose:
         print("finished extracting zip - ", datetime.now())
 

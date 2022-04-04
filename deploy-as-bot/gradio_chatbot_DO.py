@@ -3,7 +3,7 @@
 deploy-as-bot\gradio_chatbot.py
 
 A system, method for deploying to Gradio. Gradio is a basic "deploy" interface which allows for other users to test your model from a web URL. It also enables some basic functionality like user flagging for weird responses.
-Note that the URL is displayed once the script is run. 
+Note that the URL is displayed once the script is run.
 
 Set the working directory to */deploy-as-bot in terminal before running.
 
@@ -24,6 +24,8 @@ from cleantext import clean
 from transformers import pipeline
 from datetime import datetime
 from ai_single_response import query_gpt_model
+#from gradio.networking import get_state, set_state
+from flask import Flask, request, session, jsonify, abort, send_file, render_template, redirect
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
@@ -68,8 +70,8 @@ def ask_gpt(message: str, sender: str = ""):
     st = time.time()
     prompt = clean(message)  # clean user input
     prompt = prompt.strip()  # get rid of any extra whitespace
-    if len(prompt) > 100:
-        prompt = prompt[:100]  # truncate
+    if len(prompt) > 200:
+        prompt = prompt[-200:]  # truncate
     sender = clean(sender.strip())
     if len(sender) > 2:
         try:
@@ -106,15 +108,16 @@ def chat(first_and_last_name, message):
     Returns:
         [str]: [returns an html string to display]
     """
-    history = gr.get_state() or []
+    history = session.get("my_state") or []
     response = ask_gpt(message, sender=first_and_last_name)
-    history.append(("You: " + message, " GPT-Model: " + response + " [end] "))
-    gr.set_state(history)
-    html = ""
+    history.append((f"{first_and_last_name}: " + message, " GPT-Model: " + response)) #+ " [end] "))
+    session["my_state"] = history
+    session.modified = True
+    html = "<div class='chatbot'>"
     for user_msg, resp_msg in history:
-        html += f"{user_msg}"
-        html += f"{resp_msg}"
-    html += ""
+        html += f"<div class='user_msg'>{user_msg}</div>"
+        html += f"<div class='resp_msg' style='color: black'>{resp_msg}</div>"
+    html += "</div>"
     return html
 
 
@@ -163,12 +166,12 @@ if __name__ == "__main__":
         chat,
         inputs=["text", "text"],
         outputs="html",
-        title="GPT-Chatbot Demo: 774M Parameter Model",
-        description="A basic interface with a 774M parameter model trained on general Q&A and conversation. Treat it like a friend!",
-        article="**Important Notes & About:**\n"
-        "1. the model can take up to 60 seconds to respond sometimes, patience is a virtue.\n"
-        "2. entering a username is completely optional.\n"
-        "3. the model started from a pretrained checkpoint, and was trained on several different datasets. Anything it says sshould be fact-checked before being regarded as a true statement.\n ",
+        title="Real-Impact English Chat Demo 英语聊天演示",
+        description="A basic interface with a 774M parameter model trained on general Q&A and conversation. Treat it like a friend! 带有 774M 参数模型的基本界面，进行了一般问答和对话训练。 请像朋友一样与他对话！ \n first and last name 姓名 \n message 信息 \n Clear 清除 \nSubmit 确认 \n Screenshot 截屏",
+        article="**Important Notes & About: 重要说明 & 关于我们**\n"
+        "1. the model can take up to 200 seconds to respond sometimes, patience is a virtue. 该模型有时可能需要长达 60 秒的响应时间，请耐心等待。\n"
+        "2. entering a username is completely optional. 姓名输入是可选的。\n "
+        "3. the model was trained on several different datasets. Anything it says should be fact-checked before being regarded as a true statement. 该模型在几个不同的数据集上训练而成，它所说的任何内容都应该经过事实核查，然后才能被视为真实陈述。\n ",
         css="""
         .chatbox {display:flex;flex-direction:column}
         .user_msg, .resp_msg {padding:4px;margin-bottom:4px;border-radius:4px;width:80%}
@@ -176,7 +179,7 @@ if __name__ == "__main__":
         .resp_msg {background-color:lightgray;align-self:self-end}
     """,
         allow_screenshot=True,
-        allow_flagging=True,
+        allow_flagging=False,
         flagging_dir="gradio_data",
         flagging_options=[
             "great response",
