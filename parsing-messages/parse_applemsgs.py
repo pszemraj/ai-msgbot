@@ -8,8 +8,9 @@ Note that this script was geared towards data in the iMazing export format/struc
 """
 
 import os
+import random
 import sys
-from os.path import dirname, join, basename
+from os.path import basename, dirname, join
 
 sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 
@@ -22,7 +23,6 @@ import pandas as pd
 from cleantext import clean
 from natsort import natsort_keygen
 from tqdm import tqdm
-
 from utils import load_dir_files
 
 
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     if len(csv_files) < 1:
         print("Did not find any CSV files in: \n {}".format(input_path))
         sys.exit()
-
+    random.shuffle(csv_files)
     train_data = []
 
     for txtf in tqdm(csv_files, total=len(csv_files), desc="parsing msg .CSV files.."):

@@ -8,6 +8,7 @@ import os
 import sys
 from os.path import dirname, join, basename
 import warnings
+import random
 
 sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 
@@ -186,7 +187,7 @@ if __name__ == "__main__":
         sys.exit()
     if verbose:
         print("Found {} text files in: \n {}".format(len(txt_files), input_path))
-
+    random.shuffle(txt_files)
     train_data = []
 
     for txtf in tqdm(txt_files, total=len(txt_files), desc="parsing whatsapp files.."):
