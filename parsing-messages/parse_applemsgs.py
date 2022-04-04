@@ -38,19 +38,20 @@ def clean_message_apple(text: str, lang: str = "en"):
         [str]: [the cleaned message text]
     """
 
-    clean_text = clean(text,
-        fix_unicode=True,               # fix various unicode errors
-        to_ascii=True,                  # transliterate to closest ASCII representation
-        lower=True,                     # lowercase text
-        no_line_breaks=True,           # fully strip line breaks as opposed to only normalizing them
-        no_urls=True,                  # replace all URLs with a special token
-        no_emails=True,                # replace all email addresses with a special token
-        no_phone_numbers=False,         # replace all phone numbers with a special token
-        no_numbers=False,               # replace all numbers with a special token
-        no_digits=False,                # replace all digits with a special token
-        no_currency_symbols=False,      # replace all currency symbols with a special token
-        no_punct=False,                 # remove punctuations
-        replace_with_punct="",          # instead of removing punctuations you may replace them
+    clean_text = clean(
+        text,
+        fix_unicode=True,  # fix various unicode errors
+        to_ascii=True,  # transliterate to closest ASCII representation
+        lower=True,  # lowercase text
+        no_line_breaks=True,  # fully strip line breaks as opposed to only normalizing them
+        no_urls=True,  # replace all URLs with a special token
+        no_emails=True,  # replace all email addresses with a special token
+        no_phone_numbers=False,  # replace all phone numbers with a special token
+        no_numbers=False,  # replace all numbers with a special token
+        no_digits=False,  # replace all digits with a special token
+        no_currency_symbols=False,  # replace all currency symbols with a special token
+        no_punct=False,  # remove punctuations
+        replace_with_punct="",  # instead of removing punctuations you may replace them
         replace_with_url="",
         replace_with_email="",
         replace_with_phone_number="",
@@ -61,10 +62,10 @@ def clean_message_apple(text: str, lang: str = "en"):
     )
     return clean_text
 
-def parse_apple_msg(csv_path: str,
-                    lang: str = "en",
-                    sender_name: str = "peter szemraj",
-                    verbose=False):
+
+def parse_apple_msg(
+    csv_path: str, lang: str = "en", sender_name: str = "peter szemraj", verbose=False
+):
     """
     parse_apple_msg - parses a csv of messages exported from a device, in Apple format (i.e. has specific apple columns and/or artifacts in messages)
 
@@ -154,7 +155,8 @@ def get_parser():
         help="Path to the output directory, where the output file will be created",
     )
     parser.add_argument(
-        "-l", "--lang",
+        "-l",
+        "--lang",
         required=False,
         default="en",
         help="The language of the messages. Defaults to 'en'",

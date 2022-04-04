@@ -34,19 +34,20 @@ def clean_message_whatsapp(text: str, lang: str = "en"):
         [str]: [the cleaned message text]
     """
 
-    clean_text = clean(text,
-        fix_unicode=True,               # fix various unicode errors
-        to_ascii=True,                  # transliterate to closest ASCII representation
-        lower=True,                     # lowercase text
-        no_line_breaks=True,           # fully strip line breaks as opposed to only normalizing them
-        no_urls=True,                  # replace all URLs with a special token
-        no_emails=True,                # replace all email addresses with a special token
-        no_phone_numbers=True,         # replace all phone numbers with a special token
-        no_numbers=False,               # replace all numbers with a special token
-        no_digits=False,                # replace all digits with a special token
-        no_currency_symbols=False,      # replace all currency symbols with a special token
-        no_punct=False,                 # remove punctuations
-        replace_with_punct="",          # instead of removing punctuations you may replace them
+    clean_text = clean(
+        text,
+        fix_unicode=True,  # fix various unicode errors
+        to_ascii=True,  # transliterate to closest ASCII representation
+        lower=True,  # lowercase text
+        no_line_breaks=True,  # fully strip line breaks as opposed to only normalizing them
+        no_urls=True,  # replace all URLs with a special token
+        no_emails=True,  # replace all email addresses with a special token
+        no_phone_numbers=True,  # replace all phone numbers with a special token
+        no_numbers=False,  # replace all numbers with a special token
+        no_digits=False,  # replace all digits with a special token
+        no_currency_symbols=False,  # replace all currency symbols with a special token
+        no_punct=False,  # remove punctuations
+        replace_with_punct="",  # instead of removing punctuations you may replace them
         replace_with_url="",
         replace_with_email="",
         replace_with_phone_number="",
@@ -56,6 +57,7 @@ def clean_message_whatsapp(text: str, lang: str = "en"):
         lang=lang,
     )
     return clean_text
+
 
 def get_omission_criteria(**args):
     """
@@ -77,6 +79,7 @@ def get_omission_criteria(**args):
         omission_criteria.extend(args)
     return omission_criteria
 
+
 def parse_whatsapp(text_path: str, lang: str = "en", verbose: bool = False):
     """
     parse_whatsapp - main function to parse a single conversation exported with whatsapp
@@ -96,15 +99,17 @@ def parse_whatsapp(text_path: str, lang: str = "en", verbose: bool = False):
 
     re_string = "\[([0-9]+(\.[0-9]+)+), ([0-9]+(:[0-9]+)+)\] "
     no_time_textlines = [re.sub(re_string, "", line) for line in textlines]
-    sub_textlines = [clean_message_whatsapp(line, lang=lang) for line in no_time_textlines]
+    sub_textlines = [
+        clean_message_whatsapp(line, lang=lang) for line in no_time_textlines
+    ]
     if verbose:
-        print(f'The first 2 processed lines are:\n{sub_textlines[:2]}')
+        print(f"The first 2 processed lines are:\n{sub_textlines[:2]}")
     fin_text = []
 
     for line in sub_textlines:
         line = line.strip() if isinstance(line, str) else line[0].strip()
         if any(x.lower() in line.lower() for x in omission_criteria):
-            continue # omit this line
+            continue  # omit this line
         else:
             # split the line into two parts, before and after the first colon
             message_parts = line.split(":", 1)
@@ -135,24 +140,28 @@ def get_parser():
         description="convert whatsapp chat exports to a single text file",
     )
     parser.add_argument(
-        "-i", "--datadir",
+        "-i",
+        "--datadir",
         required=True,
         help="Path to input directory containing txt whatsapp exports",
     )
     parser.add_argument(
-        "-o", "--outdir",
+        "-o",
+        "--outdir",
         required=False,
         default=str(Path.cwd().resolve()),
         help="Path to the output directory, where the output file will be created",
     )
     parser.add_argument(
-        "-l", "--lang",
+        "-l",
+        "--lang",
         required=False,
         default="en",
         help="The language of the messages. Defaults to 'en'",
     )
     parser.add_argument(
-        "-v", "--verbose",
+        "-v",
+        "--verbose",
         required=False,
         action="store_true",
         help="Print additional outputs for debugging",
