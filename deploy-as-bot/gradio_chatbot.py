@@ -95,7 +95,9 @@ def ask_gpt(message: str, sender: str = ""):
     bot_resp = gramformer_correct(
         corrector, qphrase=resp["out_text"]
     )  # correct grammar
-    bot_resp = remove_trailing_punctuation(bot_resp)  # remove trailing punctuation to seem more natural
+    bot_resp = remove_trailing_punctuation(
+        bot_resp
+    )  # remove trailing punctuation to seem more natural
     rt = round(time.time() - st, 2)
     print(f"took {rt} sec to respond")
 

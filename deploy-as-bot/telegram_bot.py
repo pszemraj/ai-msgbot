@@ -143,7 +143,9 @@ def ask_gpt(update, context):
         bot_resp = gramformer_correct(corrector, qphrase=resp["out_text"])
     else:
         bot_resp = symspell_correct(sym_spell, qphrase=resp["out_text"])
-    bot_resp = remove_trailing_punctuation(bot_resp) # remove trailing punctuation to seem more natural
+    bot_resp = remove_trailing_punctuation(
+        bot_resp
+    )  # remove trailing punctuation to seem more natural
     rt = round(time.time() - st, 2)
     print(f"took {rt} sec to respond")
     context.bot.send_message(chat_id=update.effective_chat.id, text=bot_resp)

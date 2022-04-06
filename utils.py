@@ -40,6 +40,7 @@ def remove_trailing_punctuation(text: str):
     """
     return text.strip("?!.,;:")
 
+
 def correct_phrase_load(my_string: str):
     """
     correct_phrase_load [basic / unoptimized implementation of SymSpell to correct a string]

@@ -24,8 +24,18 @@ from cleantext import clean
 from transformers import pipeline
 from datetime import datetime
 from ai_single_response import query_gpt_model
-#from gradio.networking import get_state, set_state
-from flask import Flask, request, session, jsonify, abort, send_file, render_template, redirect
+
+# from gradio.networking import get_state, set_state
+from flask import (
+    Flask,
+    request,
+    session,
+    jsonify,
+    abort,
+    send_file,
+    render_template,
+    redirect,
+)
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
@@ -110,7 +120,9 @@ def chat(first_and_last_name, message):
     """
     history = session.get("my_state") or []
     response = ask_gpt(message, sender=first_and_last_name)
-    history.append((f"{first_and_last_name}: " + message, " GPT-Model: " + response)) #+ " [end] "))
+    history.append(
+        (f"{first_and_last_name}: " + message, " GPT-Model: " + response)
+    )  # + " [end] "))
     session["my_state"] = history
     session.modified = True
     html = "<div class='chatbot'>"
