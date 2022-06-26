@@ -97,6 +97,7 @@ def converse_w_ai(
             kparam=kparam,
             temp=temp,
             top_p=top_p,
+            aitextgen_obj=ai,
             verbose=verbose,
             use_gpu=use_gpu,
         )

@@ -99,6 +99,7 @@ def query_gpt_model(
     kparam=150,
     temp=0.75,
     top_p=0.65,
+    aitextgen_obj=None,
     verbose=False,
     use_gpu=False,
 ):
@@ -114,13 +115,14 @@ def query_gpt_model(
         kparam (int, optional): [description]. Defaults to 50.
         temp (float, optional): [description]. Defaults to 0.75.
         top_p (float, optional): [description]. Defaults to 0.65.
+        aitextgen_obj (aitextgen, optional): [description]. Defaults to None.
         verbose (bool, optional): [description]. Defaults to False.
         use_gpu (bool, optional): [description]. Defaults to False.
 
     Returns:
-        [dict]: [returns a dict with A) just model response as str B) total conversation]
+        dict: returns a dict with A) just model response as str B) total conversation history as a dict
     """
-    ai = aitextgen(
+    ai = aitextgen_obj if aitextgen_obj else aitextgen(
         model_folder=folder_path,
         to_gpu=use_gpu,
     )
