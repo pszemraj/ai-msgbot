@@ -115,11 +115,7 @@ _Note: the bot in the image of question was trained on the author's text message
     speaker b:
     she loves to nit-pick and criticizes everything that i do. i can never do anything right when she's around.
 
-    speaker a:
-    for example?
-
-    speaker b:
-    well, last week i invited her over to dinner. my husband and i had no problem with the food, but if you listened to her, then it would seem like i fed her old meat and rotten vegetables. there's just nothing can please her.
+    ..._Continued_...
 
 - then, you leverage the text-generative model to reply to messages. This is done by "behind the scenes" parsing/presenting the query with either a real or artificial speaker name, and having the response be from `target_name` and in the case of GPT-Peter, is me.
 - depending on compute resources and so forth, it is possible to keep track of the conversation in a helper script/loop, and then feed in the prior conversation and _then_ the prompt so the model can use the context as part of the generation sequence, with of course the [attention mechanism](https://arxiv.org/abs/1706.03762) ultimately focusing on the last text past to it (the actual prompt)
@@ -159,48 +155,28 @@ _Note: the bot in the image of question was trained on the author's text message
 - two methods of doing this are currently added:
   - **symspell** (via the pysymspell library) _NOTE: while this is fast and works, it sometimes corrects out common text abbreviations to random other short words that are hard to understand, i.e. **tues** and **idk** and so forth_
   - **gramformer** (via transformers `pipeline()`object). a pretrained NN that corrects grammar and (to be tested) hopefully does not have the issue described above. Links: [model page](https://huggingface.co/prithivida/grammar_error_correcter_v1), [the models github](https://github.com/PrithivirajDamodaran/Gramformer/) (\_note: not using this because it isnt a pypy package, so i just use the hosted model on huggingface), [hf docs on pipelines() object](https://huggingface.co/transformers/main_classes/pipelines.html?highlight=textgeneration)
+- **WIP Grammar Synthesis** (via transformers `pipeline()`object). a pretrained NN that corrects grammar and (to be tested) hopefully does not have the issue described above. You can see an initial version [here](https://huggingface.co/pszemraj/t5-v1_1-base-ft-jflAUG).
 
 ## Work and Idea Lists
 
-_What we plan to add to this repo in the foreseeable future._
-
 ### worklist
 
-1. finish out `conv_w_ai.py` that is capable of being fed a whole conversation (or at least, the last several messages) to prime response and "remember" things.
-2. add-in option of generating multiple responses to user prompt and automatically applying sentence scoring to them and returning the one with the highest mean sentence score.
-3. assess generalization of hyperparameters for "text-message-esque" bots
-4. provide more parsed datasets to be used for training models
+[x] finish out `conv_w_ai.py` that is capable of being fed a whole conversation (or at least, the last several messages) to prime response and "remember" things.
+[ ] better text generation
+
+- add-in option of generating multiple responses to user prompt and automatically applying sentence scoring to them and returning the one with the highest mean sentence score.
+- constrained textgen
+[x] assess generalization of hyperparameters for "text-message-esque" bots
+  [ ] add write-up with hyperparameter optimization results/learnings
 
 ### idea list
 
-1. try generating 5-10 responses at once instead of n=1, and return the one with the highest [harmonic mean sentence score](https://github.com/simonepri/lm-scorer). **IN PROGRESS**
+1. Various means to improve the model's ability to generalize to new data.
 
-- > **Rationale**: based on _UNVALIDATED AND UNQUANTIFIED_ trends in the grid search data (see [gridsearch v1](https://www.dropbox.com/s/uanhf2kuyoybo4x/GPT-Peter%20Hyperparam%20Analysis%20w%20Metrics%20-%20Oct-20-2021_15-49.xlsx?dl=0) and [gridsearch v2](https://www.dropbox.com/s/r2xv66wdfyalwyi/GPT-Peter%20Hyperparam%20Analysis%20w%20Metrics%20-%20Oct-21-2021_02-01.xlsx?dl=0)), the responses that rank high on the harmonic mean score also seem the most coherent and responsive to the question at hand \*this is anecdotal
-- > jury is still out as to what the intuition / reason behind that is. The _product score_ results being useful makes sense, but these are even better
-- > therefore, generating 5-10 reponses at once, scoring them all at once (_check docs for function_) and returning the corresponding highest-scoring prompt should have the bot behaving more realistically.
+- Generate multiple responses to a user prompt, and then apply sentence scoring to them and return the one with the highest mean sentence score.
+- constrained text generation with beam search.
 
-2. continue with hyperparameter optimization on fine-tuned models. Status of hyperparameter "search" is kept (_and will be updated_) [here](https://ai-msgbot-gptneo-1pt3b.netlify.app/) for a **general** chatbot that is a fine-tuned version of GPT-Neo 1.3B. Data related to hyperparamter optimization for GPT-Peter (on personal whatsapp messages ) will be further made available if useful. **IN PROGRESS**
-
-- > examine if any basic ML approaches can model the harmonic/geometric mean response scores with [Pycaret](http://www.pycaret.org/tutorials/html/REG102.html)
-
-3. ~~investigate whatsapp bot potential and utility~~
-   > unable to reliably host a local whatsapp web interface to connect to at all as whatsapp does not have an API.
-4. ~~evaluate if pretrained on the _Daily Dialogues_ data set and then training for other purposes helps with the "transfer learning" of teaching the GPT model that it is now a chatbot vs. just directly training the "standard" checkpoint~~
-
-- > ~~in short, `355M checkpoint -> daily dialogues -> message data` vs. `355M checkpoint -> message data`~~
-- > **yes, it does improve things a lot\_ TODO: writeup theory**
-
-5. ~~evaluate whether pretraining on other datasets, such as [CoQA (Conversational Question Answering Challenge)](https://paperswithcode.com/dataset/coqa) or [TriviaQA](https://paperswithcode.com/dataset/triviaqa) improves transfer learning to being a chatbot~~
-
-   - > ~~this applies for a text message chat bot _and_ also the "resources for learning english in a safer environment" bot~~
-   - > **using Trivia/CoCaQA did help model responses**
-
-6. ~~try gradio deployment~~
-   - _implemented_
-7. try huggingface spaces deployment
-8. Auto_ML based approach to see if multi dimensional hyperparameter search/model reveals anything
-
-* * *
+2. Explore model size in relation to "human-ness"
 
 ## Extras, Asides, and Examples
 
