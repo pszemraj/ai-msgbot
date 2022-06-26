@@ -15,8 +15,8 @@ from pathlib import Path
 
 from aitextgen import aitextgen
 
-from ai_single_response import extract_response, get_bot_response, query_gpt_model
-from utils import get_timestamp, remove_trailing_punctuation
+from ai_single_response import query_gpt_model
+from utils import get_timestamp
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
@@ -46,21 +46,21 @@ def converse_w_ai(
     mpath_base = (
         mpath.stem
     )  # only want the base name of the model folder for check below
-    mod_ids = [
-        "natqa",
-        "dd",
-        "trivqa",
-        "wow",
-        "conversational",
-    ]  # these models used person alpha and person beta in training
-    if any(substring in str(mpath_base).lower() for substring in mod_ids):
-        speaker = "person alpha" if speaker is None else speaker
-        responder = "person beta" if responder is None else responder
-    else:
-        if verbose:
-            print("speaker and responder not set - using default")
-        speaker = "person" if speaker is None else speaker
-        responder = "person" if responder is None else responder
+    # mod_ids = [
+    #     "natqa",
+    #     "dd",
+    #     "trivqa",
+    #     "wow",
+    #     "conversational",
+    # ]  # these models used person alpha and person beta in training
+    # if any(substring in str(mpath_base).lower() for substring in mod_ids):
+    #     speaker = "person alpha" if speaker is None else speaker
+    #     responder = "person beta" if responder is None else responder
+    # else:
+    #     if verbose:
+    #         print("speaker and responder not set - using default")
+    #     speaker = "person" if speaker is None else speaker
+    #     responder = "person" if responder is None else responder
 
     ai = aitextgen(
         model_folder=folder_path,
