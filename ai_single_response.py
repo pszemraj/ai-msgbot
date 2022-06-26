@@ -40,9 +40,10 @@ def extract_response(full_resp: list, plist: list, verbose: bool = False):
     bot_response = []
     for line in full_resp:
         if line.lower() in plist and len(bot_response) < len(plist):
+            first_loc = plist.index(line)
+            del plist[first_loc]
             continue
-        else:
-            bot_response.append(line)
+        bot_response.append(line)
     full_resp = [clean(ele, lower=False) for ele in bot_response]
 
     if verbose:
@@ -56,7 +57,7 @@ def extract_response(full_resp: list, plist: list, verbose: bool = False):
 
 
 def get_bot_response(
-    name_resp: str, model_resp: str, name_spk: str, verbose: bool = False
+    name_resp: str, model_resp:list, name_spk: str, verbose: bool = False
 ):
 
     """
@@ -77,8 +78,11 @@ def get_bot_response(
     for resline in model_resp:
         if name_resp.lower() in resline.lower():
             name_counter += 1
+            break_safe=True
             continue
         if ":" in resline and name_resp.lower() not in resline.lower():
+            break
+        if name_spk.lower() in resline.lower() and not break_safe:
             break
         else:
             fn_resp.append(resline)
@@ -132,7 +136,7 @@ def query_gpt_model(
         mpath.stem
     )  # only want the base name of the model folder for check below
     # these models used person alpha and person beta in training
-    mod_ids = ["natqa", "dd", "trivqa", "wow", "conversational",]
+    mod_ids = ["natqa", "dd", "trivqa", "wow", "conversational"]
     if any(substring in str(mpath_base).lower() for substring in mod_ids):
         speaker = "person alpha" if speaker is None else speaker
         responder = "person beta" if responder is None else responder
