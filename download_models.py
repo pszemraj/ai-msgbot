@@ -26,7 +26,7 @@ dbx_links = {
     "GPT2_dailydialogue_355M_150Ksteps": "https://www.dropbox.com/sh/nzcgavha8i11mvw/AACZXMoJuSfI3d3vGRrT_cp5a?dl=1",
     "GPT2_trivNatQAdailydia_774M_175Ksteps": "https://www.dropbox.com/sh/vs848vw311l04ah/AAAuQCyuTEfjaLKo7ipybEZRa?dl=1",
     "GPTneo_1pt3B_conv_33kWoW_18kDD": "https://www.dropbox.com/sh/dfb3v40dn2ubgqq/AADeRBZ1agCOy4SNcGBfiP2fa?dl=1",
-    "distilgpt2-tiny-conversational": "https://www.dropbox.com/sh/wrhzmi25fo9uym9/AADW28kElXsFCLFNATJ1j_oua?dl=1"
+    "distilgpt2-tiny-conversational": "https://www.dropbox.com/sh/wrhzmi25fo9uym9/AADW28kElXsFCLFNATJ1j_oua?dl=1",
 }
 
 
@@ -146,7 +146,5 @@ if __name__ == "__main__":
         # distilgpt2-tiny-conversational: DistilGPT-2 model trained for 30 epochs
         # see https://huggingface.co/ethzanalytics/distilgpt2-tiny-conversational for more info
         download_model(m_name, verbose=verbose)
-
-
 
     print(f"finished downloading and checking files {get_timestamp()}")

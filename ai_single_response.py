@@ -95,18 +95,18 @@ def get_bot_response(
 
 
 def query_gpt_model(
-    folder_path:str or Path,
+    folder_path: str or Path,
     prompt_msg: str,
     conversation_history: list = None,
-    speaker:str=None,
-    responder:str=None,
-    resp_length:int=48,
-    kparam:int=40,
-    temp:float=0.7,
-    top_p:float=0.9,
+    speaker: str = None,
+    responder: str = None,
+    resp_length: int = 48,
+    kparam: int = 40,
+    temp: float = 0.7,
+    top_p: float = 0.9,
     aitextgen_obj=None,
-    verbose:bool=False,
-    use_gpu:bool=False,
+    verbose: bool = False,
+    use_gpu: bool = False,
 ):
     """
     query_gpt_model - queries the GPT model and returns the first response by <responder>

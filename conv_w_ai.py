@@ -22,16 +22,16 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 
 def converse_w_ai(
-    folder_path:str,
+    folder_path: str,
     start_msg: str,
-    speaker:str=None,
-    responder:str=None,
-    resp_length:int=48,
-    kparam:int=40,
-    temp:float=0.7,
-    top_p:float=0.9,
-    verbose:bool=False,
-    use_gpu:bool=False,
+    speaker: str = None,
+    responder: str = None,
+    resp_length: int = 48,
+    kparam: int = 40,
+    temp: float = 0.7,
+    top_p: float = 0.9,
+    verbose: bool = False,
+    use_gpu: bool = False,
 ):
     """
     converse_w_ai - a helper function for the aitextgen module calling query_gpt_model
