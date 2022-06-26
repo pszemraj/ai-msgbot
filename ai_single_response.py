@@ -37,24 +37,14 @@ def extract_response(full_resp: list, plist: list, verbose: bool = False):
 
         verbose (bool, optional): 4 debug. Defaults to False.
     """
-    full_resp = [clean(ele) for ele in full_resp]
-    plist = [clean(pr) for pr in plist]
-    p_len = len(plist)
-    assert (
-        len(full_resp) >= p_len
-    ), "model output should have as many lines or longer as the input."
+    bot_response = []
+    for line in full_resp:
+        if line.lower() in plist and len(bot_response) < len(plist):
+            continue
+        else:
+            bot_response.append(line)
+    full_resp = [clean(ele, lower=False) for ele in bot_response]
 
-    if set(plist).issubset(full_resp):
-
-        del full_resp[:p_len]  # remove the prompts from the responses
-    else:
-        print("the isolated responses are:\n")
-        pp.pprint(full_resp)
-        print_spacer()
-        print("the input prompt was:\n")
-        pp.pprint(plist)
-        print_spacer()
-        sys.exit("Exiting: some prompts not found in the responses")
     if verbose:
         print("the isolated responses are:\n")
         pp.pprint(full_resp)
@@ -85,7 +75,7 @@ def get_bot_response(
     name_counter = 0
     break_safe = False
     for resline in model_resp:
-        if resline.startswith(name_resp):
+        if name_resp.lower() in resline.lower():
             name_counter += 1
             continue
         if ":" in resline and name_resp.lower() not in resline.lower():
@@ -149,16 +139,16 @@ def query_gpt_model(
         speaker = "person" if speaker is None else speaker
         responder = "george robot" if responder is None else responder
 
-    p_list = []  # track conversation
-    p_list.append(speaker.lower() + ":" + "\n")
-    p_list.append(prompt_msg.lower() + "\n")
-    p_list.append("\n")
-    p_list.append(responder.lower() + ":" + "\n")
-    this_prompt = "".join(p_list)
+    prompt_list = []  # track conversation
+    prompt_list.append(speaker.lower() + ":" + "\n")
+    prompt_list.append(prompt_msg.lower() + "\n")
+    prompt_list.append("\n")
+    prompt_list.append(responder.lower() + ":" + "\n")
+    this_prompt = "".join(prompt_list)
     pr_len = len(this_prompt)
     if verbose:
         print("overall prompt:\n")
-        pp.pprint(this_prompt, indent=4)
+        pp.pprint(prompt_list)
     # call the model
     print("\n... generating...")
     this_result = ai.generate(
@@ -179,13 +169,11 @@ def query_gpt_model(
         print("\n... generated:\n")
         pp.pprint(this_result)  # for debugging
     # process the full result to get the ~bot response~ piece
-    this_result = str(this_result[0]).split(
-        "\n"
-    )  # TODO: adjust hardcoded value for index to dynamic (if n>1)
-    og_res = this_result.copy()
-    og_prompt = p_list.copy()
+    this_result = str(this_result[0]).split("\n")
+    input_prompt = this_prompt.split("\n")
+
     diff_list = extract_response(
-        this_result, p_list, verbose=verbose
+        this_result, input_prompt, verbose=verbose
     )  # isolate the responses from the prompts
     # extract the bot response from the model generated text
     bot_dialogue = get_bot_response(
@@ -195,19 +183,16 @@ def query_gpt_model(
     bot_resp = remove_trailing_punctuation(
         bot_resp.strip()
     )  # remove trailing punctuation to seem more natural
-    # remove the last ',' '.' chars
-    bot_resp = bot_resp[:-1] if bot_resp.endswith(".") else bot_resp
-    bot_resp = bot_resp[:-1] if bot_resp.endswith(",") else bot_resp
     if verbose:
         print("\n... bot response:\n")
         pp.pprint(bot_resp)
-    og_prompt.append(bot_resp + "\n")
-    og_prompt.append("\n")
+    prompt_list.append(bot_resp + "\n")
+    prompt_list.append("\n")
 
     print("\nfinished!")
-    # return the bot response and the full conversation
 
-    return {"out_text": bot_resp, "full_conv": og_prompt}  # model responses
+    # return the bot response and the full conversation
+    return {"out_text": bot_resp, "full_conv": prompt_list}
 
 
 # Set up the parsing of command-line arguments
