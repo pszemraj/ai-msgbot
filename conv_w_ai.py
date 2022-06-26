@@ -15,7 +15,7 @@ from pathlib import Path
 
 from aitextgen import aitextgen
 
-from ai_single_response import extract_response, get_bot_response
+from ai_single_response import extract_response, get_bot_response, query_gpt_model
 from utils import get_timestamp, remove_trailing_punctuation
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
@@ -60,14 +60,13 @@ def converse_w_ai(
             print("speaker and responder not set - using default")
         speaker = "person" if speaker is None else speaker
         responder = "person" if responder is None else responder
-    p_list = []  # track conversation
 
     ai = aitextgen(
         model_folder=folder_path,
         to_gpu=use_gpu,
     )
     prompt_msg = start_msg if start_msg is not None else None
-
+    conversation = {}
     # start conversation
     print(
         f"Entering chat room with GPT Model {mpath_base}. CTRL+C to exit, or type 'exit' to end conversation"
@@ -85,62 +84,28 @@ def converse_w_ai(
                 f"exiting conversation loop based on {prompt_msg} input - {get_timestamp()}"
             )
             break
-        p_list.append(speaker.lower() + ":" + "\n")
-        p_list.append(prompt_msg.lower() + "\n")
-        p_list.append("\n")
-        p_list.append(responder.lower() + ":" + "\n")
-        this_prompt = "".join(p_list)
-        # TODO: add safeguard vs. max input length / token length for specific models
-        pr_len = len(this_prompt)
+        # # TODO: add safeguard vs. max input length / token length for specific models
 
-        # query loaded model
-        if verbose:
-            print("overall prompt:\n")
-            pp.pprint(this_prompt, indent=4)
-        print("\n... generating response...")
-
-        chat_resp = ai.generate(
-            n=1,
-            top_k=kparam,
-            batch_size=128,
-            # the prompt input counts for text length constraints
-            max_length=resp_length + pr_len,
-            min_length=16 + pr_len,
-            prompt=this_prompt,
-            temperature=temp,
+        model_outputs = query_gpt_model(
+            folder_path=folder_path,
+            prompt_msg=prompt_msg,
+            conversation_history=list(conversation.values()) if len(conversation) > 0 else None,
+            speaker=speaker,
+            responder=responder,
+            resp_length=resp_length,
+            kparam=kparam,
+            temp=temp,
             top_p=top_p,
-            do_sample=True,
-            return_as_list=True,
-            use_cache=True,
+            verbose=verbose,
+            use_gpu=use_gpu,
         )
-
-        # process the full result to get the ~bot response~ piece
-        chat_resp = str(chat_resp[0]).split(
-            "\n"
-        )  # TODO: adjust hardcoded value for index to dynamic (if n>1)
-
-        if verbose:
-            print("chat response:\n")
-            pp.pprint(chat_resp, indent=4)
-        resp = chat_resp.copy()
-        list_p = p_list.copy()
-        # isolate the responses from the prompts
-        diff_list = extract_response(resp, list_p, verbose=verbose)
-        # extract the bot response from the model generated text
-        bot_dialogue = get_bot_response(
-            name_resp=responder, model_resp=diff_list, name_spk=speaker, verbose=verbose
-        )
-        bot_resp = remove_trailing_punctuation(
-            ", ".join(bot_dialogue)
-        )  # remove trailing punctuation from bot response to seem more natural
+        bot_resp = model_outputs['out_text']
+        conversation = model_outputs['full_conv']
         pp.pprint(bot_resp, indent=4)
-        p_list.append(bot_resp + "\n")
-        p_list.append("\n")
 
         prompt_msg = None
 
-    return p_list  # note that here it is exported as a list of strings
-
+    return list(conversation.values())
 
 # Set up the parsing of command-line arguments
 def get_parser():
