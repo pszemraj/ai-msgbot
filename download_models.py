@@ -68,12 +68,6 @@ def get_parser():
         help="pass this argument if you want most of the model files instead of just the 'primary' ones",
     )
     parser.add_argument(
-        "--gpt-whatsapp",
-        default=False,
-        action="store_true",
-        help="pass this argument to download the Whatsapp model (chatbot-esque) as well",
-    )
-    parser.add_argument(
         "-v",
         "--verbose",
         default=False,
@@ -142,7 +136,7 @@ if __name__ == "__main__":
             )
 
     m_name = "distilgpt2-tiny-conversational"
-    if get_whatsapp_example and not any(m_name in dir for dir in folder_names):
+    if not any(m_name in dir for dir in folder_names):
         # distilgpt2-tiny-conversational: DistilGPT-2 model trained for 30 epochs
         # see https://huggingface.co/ethzanalytics/distilgpt2-tiny-conversational for more info
         download_model(m_name, verbose=verbose)
