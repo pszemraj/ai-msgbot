@@ -82,7 +82,6 @@ if __name__ == "__main__":
     ## get args
     args = get_parser().parse_args()
     get_all = args.download_all
-    get_whatsapp_example = args.gpt_whatsapp
     verbose = args.verbose
     _root = Path(__file__).parent
     cwd = Path.cwd()
