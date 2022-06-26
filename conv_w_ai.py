@@ -46,21 +46,6 @@ def converse_w_ai(
     mpath_base = (
         mpath.stem
     )  # only want the base name of the model folder for check below
-    # mod_ids = [
-    #     "natqa",
-    #     "dd",
-    #     "trivqa",
-    #     "wow",
-    #     "conversational",
-    # ]  # these models used person alpha and person beta in training
-    # if any(substring in str(mpath_base).lower() for substring in mod_ids):
-    #     speaker = "person alpha" if speaker is None else speaker
-    #     responder = "person beta" if responder is None else responder
-    # else:
-    #     if verbose:
-    #         print("speaker and responder not set - using default")
-    #     speaker = "person" if speaker is None else speaker
-    #     responder = "person" if responder is None else responder
 
     ai = aitextgen(
         model_folder=folder_path,
@@ -90,7 +75,9 @@ def converse_w_ai(
         model_outputs = query_gpt_model(
             folder_path=folder_path,
             prompt_msg=prompt_msg,
-            conversation_history=list(conversation.values()) if len(conversation) > 0 else None,
+            conversation_history=list(conversation.values())
+            if len(conversation) > 0
+            else None,
             speaker=speaker,
             responder=responder,
             resp_length=resp_length,
@@ -101,13 +88,14 @@ def converse_w_ai(
             verbose=verbose,
             use_gpu=use_gpu,
         )
-        bot_resp = model_outputs['out_text']
-        conversation = model_outputs['full_conv']
+        bot_resp = model_outputs["out_text"]
+        conversation = model_outputs["full_conv"]
         pp.pprint(bot_resp, indent=4)
 
         prompt_msg = None
 
     return list(conversation.values())
+
 
 # Set up the parsing of command-line arguments
 def get_parser():

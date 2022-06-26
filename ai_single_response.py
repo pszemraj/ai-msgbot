@@ -11,14 +11,12 @@ query_gpt_model is used throughout the code, and is the "fundamental" building b
 """
 import argparse
 import pprint as pp
-import sys
 import time
 import warnings
 from datetime import datetime
 from pathlib import Path
 
 from cleantext import clean
-from utils import print_spacer, remove_trailing_punctuation
 
 from utils import print_spacer, remove_trailing_punctuation
 
@@ -57,7 +55,7 @@ def extract_response(full_resp: list, plist: list, verbose: bool = False):
 
 
 def get_bot_response(
-    name_resp: str, model_resp:list, name_spk: str, verbose: bool = False
+    name_resp: str, model_resp: list, name_spk: str, verbose: bool = False
 ):
 
     """
@@ -78,7 +76,7 @@ def get_bot_response(
     for resline in model_resp:
         if name_resp.lower() in resline.lower():
             name_counter += 1
-            break_safe=True
+            break_safe = True
             continue
         if ":" in resline and name_resp.lower() not in resline.lower():
             break
@@ -126,9 +124,13 @@ def query_gpt_model(
     Returns:
         dict: returns a dict with A) just model response as str B) total conversation history as a dict
     """
-    ai = aitextgen_obj if aitextgen_obj else aitextgen(
-        model_folder=folder_path,
-        to_gpu=use_gpu,
+    ai = (
+        aitextgen_obj
+        if aitextgen_obj
+        else aitextgen(
+            model_folder=folder_path,
+            to_gpu=use_gpu,
+        )
     )
 
     mpath = Path(folder_path)
@@ -146,7 +148,9 @@ def query_gpt_model(
         speaker = "person" if speaker is None else speaker
         responder = "george robot" if responder is None else responder
 
-    prompt_list = conversation_history if conversation_history is not None else []  # track conversation
+    prompt_list = (
+        conversation_history if conversation_history is not None else []
+    )  # track conversation
     prompt_list.append(speaker.lower() + ":" + "\n")
     prompt_list.append(prompt_msg.lower() + "\n")
     prompt_list.append("\n")
