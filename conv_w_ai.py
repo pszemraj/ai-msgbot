@@ -3,7 +3,7 @@
 """
 conv_w_ai.py - a script to run a conversation with a GPT-2 model
 
-Insteading of taking a prompt, pass it in, get a response, and return that response + end, the querying of the model is done in a while loop. Similar to how results are handled in the ai_single_respose.py script, the results are returned as a list of strings. Instead of these strings being discarded, they are appended to a list, and the next prompt/response pair is appended to the list, etc. This then allows the transformer model to "see" the conversational context. from earlier in the conversation.
+Instead of taking a prompt, pass it in, get a response, and return that response + end, the querying of the model is done in a while loop. Similar to how results are handled in the ai_single_respose.py script, the results are returned as a list of strings. Instead of these strings being discarded, they are appended to a list, and the next prompt/response pair is appended to the list, etc. This then allows the transformer model to "see" the conversational context. from earlier in the conversation.
 
 """
 
@@ -22,18 +22,35 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 
 def converse_w_ai(
-    folder_path,
+    folder_path:str,
     start_msg: str,
-    speaker=None,
-    responder=None,
-    resp_length=48,
-    kparam=40,
-    temp=0.7,
-    top_p=0.9,
-    verbose=False,
-    use_gpu=False,
+    speaker:str=None,
+    responder:str=None,
+    resp_length:int=48,
+    kparam:int=40,
+    temp:float=0.7,
+    top_p:float=0.9,
+    verbose:bool=False,
+    use_gpu:bool=False,
 ):
-    # initialise pre while-loop variables
+    """
+    converse_w_ai - a helper function for the aitextgen module calling query_gpt_model
+
+    Args:
+        folder_path (str): the path to the folder containing the model files
+        start_msg (str): the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder.
+        speaker (str, optional): Who the prompt is from (to the bot). Primarily relevant to bots trained on multi-individual chat data. Defaults to None.
+        responder (str, optional): who the responder is. Primarily relevant to bots trained on multi-individual chat data. Defaults to "person beta".
+        resp_length (int, optional): the length of the response in tokens. Defaults to 48.
+        kparam (int, optional): the k parameter for the top_k. Defaults to 40.
+        temp (float, optional): the temperature for the softmax. Defaults to 0.7.
+        top_p (float, optional): the top_p parameter for nucleus sampling. Defaults to 0.9.
+        verbose (bool, optional): Defaults to False.
+        use_gpu (bool, optional): Defaults to False.
+
+    Returns:
+        [list]: [a list of strings, each string is a response]
+    """
 
     if verbose:
         print(f"initializing conversation... {get_timestamp()}")

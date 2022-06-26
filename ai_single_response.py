@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ai_single_response.py
+ai_single_response.py - a script to generate a response to a prompt from a pretrained GPT model
 
-An executable way to call the model. example:
+example:
 *\gpt2_chatbot> python ai_single_response.py --model "GPT2_conversational_355M_WoW10k" --prompt "hey, what's up?" --time
 
 query_gpt_model is used throughout the code, and is the "fundamental" building block of the bot and how everything works. I would recommend testing this function with a few different models.
@@ -30,10 +30,12 @@ def extract_response(full_resp: list, plist: list, verbose: bool = False):
     extract_response - helper fn for ai_single_response.py. By default aitextgen returns the prompt and the response, we just want the response
 
     Args:
-        full_resp (list): a list of strings, each string is a response
-        plist (list): a list of strings, each string is a prompt
+        full_resp (list): the full response from aitextgen
+        plist (list): the prompt list
+        verbose (bool, optional): Defaults to False.
 
-        verbose (bool, optional): 4 debug. Defaults to False.
+    Returns:
+        response (str): the response, without the prompt
     """
     bot_response = []
     for line in full_resp:
@@ -57,16 +59,17 @@ def extract_response(full_resp: list, plist: list, verbose: bool = False):
 def get_bot_response(
     name_resp: str, model_resp: list, name_spk: str, verbose: bool = False
 ):
-
     """
+    get_bot_response - gets the bot response to a prompt, checking to ensure that additional statements by the "speaker" are not included in the response.
 
-    get_bot_response  - from the model response, extract the bot response. This is needed because depending on the generation length the model may return more than one response.
+    Args:
+        name_resp (str): the name of the responder
+        model_resp (list): the model response
+        name_spk (str): the name of the speaker
+        verbose (bool, optional): Defaults to False.
 
-    Args:   name_resp (str): the name of the responder
-    model_resp (str): the model response
-    verbose (bool, optional): 4 debug. Defaults to False.
-
-    returns: fn_resp (list of str)
+    Returns:
+        bot_response (str): the bot response, isolated down to just text without the "name tokens" or further messages from the speaker.
     """
 
     fn_resp = []
@@ -92,37 +95,38 @@ def get_bot_response(
 
 
 def query_gpt_model(
-    folder_path,
+    folder_path:str or Path,
     prompt_msg: str,
     conversation_history: list = None,
-    speaker=None,
-    responder=None,
-    resp_length=48,
-    kparam=40,
-    temp=0.7,
-    top_p=0.9,
+    speaker:str=None,
+    responder:str=None,
+    resp_length:int=48,
+    kparam:int=40,
+    temp:float=0.7,
+    top_p:float=0.9,
     aitextgen_obj=None,
-    verbose=False,
-    use_gpu=False,
+    verbose:bool=False,
+    use_gpu:bool=False,
 ):
     """
-    query_gpt_model [pass a prompt in to model, get a response. Does NOT "remember" past conversation]
+    query_gpt_model - queries the GPT model and returns the first response by <responder>
 
     Args:
-        folder_path ([type]): [description]
-        prompt_msg (str): [description]
-        speaker ([type], optional): [description]. Defaults to None.
-        responder (str, optional): [description]. Defaults to None.
-        resp_length (int, optional): [description]. Defaults to 128.
-        kparam (int, optional): [description]. Defaults to 50.
-        temp (float, optional): [description]. Defaults to 0.75.
-        top_p (float, optional): [description]. Defaults to 0.65.
-        aitextgen_obj (aitextgen, optional): [description]. Defaults to None.
-        verbose (bool, optional): [description]. Defaults to False.
-        use_gpu (bool, optional): [description]. Defaults to False.
+        folder_path (str or Path): the path to the model folder
+        prompt_msg (str): the prompt message
+        conversation_history (list, optional): the conversation history. Defaults to None.
+        speaker (str, optional): the name of the speaker. Defaults to None.
+        responder (str, optional): the name of the responder. Defaults to None.
+        resp_length (int, optional): the length of the response in tokens. Defaults to 48.
+        kparam (int, optional): the k parameter for the top_k. Defaults to 40.
+        temp (float, optional): the temperature for the softmax. Defaults to 0.7.
+        top_p (float, optional): the top_p parameter for nucleus sampling. Defaults to 0.9.
+        aitextgen_obj (_type_, optional): a pre-loaded aitextgen object. Defaults to None.
+        verbose (bool, optional): Defaults to False.
+        use_gpu (bool, optional): Defaults to False.
 
     Returns:
-        dict: returns a dict with A) just model response as str B) total conversation history as a dict
+        model_resp (dict): the model response, as a dict with the following keys: out_text (str) the generated text and full_conv (dict) the conversation history
     """
     ai = (
         aitextgen_obj
