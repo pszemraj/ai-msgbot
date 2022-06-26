@@ -130,7 +130,7 @@ def query_gpt_model(
         mpath.stem
     )  # only want the base name of the model folder for check below
     # these models used person alpha and person beta in training
-    mod_ids = ["natqa", "dd", "trivqa", "wow"]
+    mod_ids = ["natqa", "dd", "trivqa", "wow", "conversational",]
     if any(substring in str(mpath_base).lower() for substring in mod_ids):
         speaker = "person alpha" if speaker is None else speaker
         responder = "person beta" if responder is None else responder

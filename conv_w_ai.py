@@ -51,6 +51,7 @@ def converse_w_ai(
         "dd",
         "trivqa",
         "wow",
+        "conversational",
     ]  # these models used person alpha and person beta in training
     if any(substring in str(mpath_base).lower() for substring in mod_ids):
         speaker = "person alpha" if speaker is None else speaker
