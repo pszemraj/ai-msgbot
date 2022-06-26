@@ -92,6 +92,7 @@ def get_bot_response(
 def query_gpt_model(
     folder_path,
     prompt_msg: str,
+    conversation_history: list = None,
     speaker=None,
     responder=None,
     resp_length=128,
@@ -139,7 +140,7 @@ def query_gpt_model(
         speaker = "person" if speaker is None else speaker
         responder = "george robot" if responder is None else responder
 
-    prompt_list = []  # track conversation
+    prompt_list = conversation_history if conversation_history is not None else []  # track conversation
     prompt_list.append(speaker.lower() + ":" + "\n")
     prompt_list.append(prompt_msg.lower() + "\n")
     prompt_list.append("\n")
@@ -188,11 +189,17 @@ def query_gpt_model(
         pp.pprint(bot_resp)
     prompt_list.append(bot_resp + "\n")
     prompt_list.append("\n")
-
+    conv_history = {}
+    for i, line in enumerate(prompt_list):
+        if i not in conv_history.keys():
+            conv_history[i] = line
+    if verbose:
+        print("\n... conversation history:\n")
+        pp.pprint(conv_history)
     print("\nfinished!")
 
     # return the bot response and the full conversation
-    return {"out_text": bot_resp, "full_conv": prompt_list}
+    return {"out_text": bot_resp, "full_conv": conv_history}
 
 
 # Set up the parsing of command-line arguments
