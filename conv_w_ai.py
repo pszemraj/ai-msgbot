@@ -127,6 +127,7 @@ def get_parser():
         description="submit a message and have a custom fine-tuned GPT model respond"
     )
     parser.add_argument(
+        "-p",
         "--prompt",
         required=False,
         default=None,
@@ -134,6 +135,7 @@ def get_parser():
         help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder.",
     )
     parser.add_argument(
+        "-m",
         "--model",
         required=False,
         type=str,
@@ -143,12 +145,14 @@ def get_parser():
     )
 
     parser.add_argument(
+        "-s",
         "--speaker",
         required=False,
         default=None,
         help="Who the prompt is from (to the bot). Primarily relevant to bots trained on multi-individual chat data",
     )
     parser.add_argument(
+        "-r",
         "--responder",
         required=False,
         default="person beta",
@@ -180,12 +184,14 @@ def get_parser():
     )
 
     parser.add_argument(
+        "-v",
         "--verbose",
         default=False,
         action="store_true",
         help="pass this argument if you want all the printouts",
     )
     parser.add_argument(
+        "-rt",
         "--time",
         default=False,
         action="store_true",

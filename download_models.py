@@ -74,6 +74,7 @@ def get_parser():
         help="pass this argument to download the Whatsapp model (chatbot-esque) as well",
     )
     parser.add_argument(
+        "-v",
         "--verbose",
         default=False,
         action="store_true",

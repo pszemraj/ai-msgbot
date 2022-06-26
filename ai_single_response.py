@@ -228,27 +228,31 @@ def get_parser():
         description="submit a message and have a pretrained GPT model respond"
     )
     parser.add_argument(
+        "-p",
         "--prompt",
         required=True,  # MUST HAVE A PROMPT
         type=str,
         help="the message the bot is supposed to respond to. Prompt is said by speaker, answered by responder.",
     )
     parser.add_argument(
+        "-m",
         "--model",
         required=False,
         type=str,
         default="distilgpt2-tiny-conversational",
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
-        "config.json). No models? Run the script download_models.py",
+        "config.json). You can also pass the huggingface model name (e.g. distilgpt2)",
     )
 
     parser.add_argument(
+        "-s",
         "--speaker",
         required=False,
         default=None,
         help="Who the prompt is from (to the bot). Primarily relevant to bots trained on multi-individual chat data",
     )
     parser.add_argument(
+        "-r",
         "--responder",
         required=False,
         default="person beta",
@@ -280,12 +284,14 @@ def get_parser():
     )
 
     parser.add_argument(
+        "-v",
         "--verbose",
         default=False,
         action="store_true",
         help="pass this argument if you want all the printouts",
     )
     parser.add_argument(
+        "-rt",
         "--time",
         default=False,
         action="store_true",
@@ -299,7 +305,7 @@ if __name__ == "__main__":
     args = get_parser().parse_args()
     query = args.prompt
     model_dir = str(args.model)
-    model_loc = Path.cwd() / model_dir
+    model_loc = Path.cwd() / model_dir if "/" not in model_dir else model_dir
     spkr = args.speaker
     rspndr = args.responder
     k_results = args.topk
