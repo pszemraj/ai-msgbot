@@ -23,13 +23,10 @@ from aitextgen import aitextgen
 from utils import dl_extract_zip, get_timestamp
 
 dbx_links = {
-    "gpt2_dailydialogue_355M_75Ksteps": "https://www.dropbox.com/sh/ahx3teywshods41/AACrGhc_Qntw6GuX7ww-3pbBa?dl=1",
     "GPT2_dailydialogue_355M_150Ksteps": "https://www.dropbox.com/sh/nzcgavha8i11mvw/AACZXMoJuSfI3d3vGRrT_cp5a?dl=1",
     "GPT2_trivNatQAdailydia_774M_175Ksteps": "https://www.dropbox.com/sh/vs848vw311l04ah/AAAuQCyuTEfjaLKo7ipybEZRa?dl=1",
-    "gp2_DDandPeterTexts_774M_100ksteps": "https://www.dropbox.com/sh/08hlmr1neyrb8eg/AAD1UbddmGYWdS-QX7aM8bk8a?dl=1",
-    "GPT2_WoW_100k_genconv_355M": "https://www.dropbox.com/sh/5hvgjgmpy5ucq4t/AAAITp8gTjiilla1Q7lvX_2ua?dl=1",
-    "GPTneo_conv_33kWoW_18kDD": "https://www.dropbox.com/sh/dfb3v40dn2ubgqq/AADeRBZ1agCOy4SNcGBfiP2fa?dl=1",
-    "GPT2_conversational_355M_WoW10k": "https://www.dropbox.com/sh/mbhrv4vf2d2vs67/AAB14F2ovAAxzwM-W3Bkl0sRa?dl=1",
+    "GPTneo_1pt3B_conv_33kWoW_18kDD": "https://www.dropbox.com/sh/dfb3v40dn2ubgqq/AADeRBZ1agCOy4SNcGBfiP2fa?dl=1",
+    "distilgpt2-tiny-conversational": "https://www.dropbox.com/sh/wrhzmi25fo9uym9/AADW28kElXsFCLFNATJ1j_oua?dl=1"
 }
 
 
@@ -119,20 +116,20 @@ if __name__ == "__main__":
         # download model files not as important (skipped by default to reduce D/L time)
         m_name = "GPT2_dailydialogue_355M_150Ksteps"
         if not any(m_name in dir for dir in folder_names):
-            # "DailyDialogues 355M parameter model - to be trained further with custom data or used directly
+            # "DailyDialogues 355M parameter GPT2 model - to be trained further with custom data or used directly
             print(f"did not find {m_name} in folders, downloading..")
             download_model(m_name, verbose=verbose)
 
-        m_name = "GPT2_WoW_100k_genconv_355M"
+        m_name = "GPTneo_1pt3B_conv_33kWoW_18kDD"
         if not any(m_name in dir for dir in folder_names):
-            # GPT2_WoW_100k_genconv_355M: pretrained GPT-2 fine-tuned on wizard of wikipedia dataset for 100k steps
-            print(f"did not find {m_name} in folders, downloading..")
-            download_model(m_name, verbose=verbose)
-
-        m_name = "GPTneo_conv_33kWoW_18kDD"
-        if not any(m_name in dir for dir in folder_names):
-            # GPTneo_conv_33kWoW_18kDD: GPT-Neo 1.3B finetuned on wizard of wikipedia dataset for 33k steps and 18k steps on daily dialogue
+            # GPTneo_1pt3B_conv_33kWoW_18kDD: GPT-Neo 1.3B finetuned on wizard of wikipedia dataset for 33k steps and 18k steps on daily dialogue
             # this file is ~ 5 GB!
+            print(f"did not find {m_name} in folders, downloading..")
+            download_model(m_name, verbose=verbose)
+
+        m_name = "GPT2_trivNatQAdailydia_774M_175Ksteps"
+        if not any(m_name in dir for dir in folder_names):
+            # base "advanced" 774M param GPT-2 model trained on: Trivia, Natural Questions, Daily Dialogues for a total of 175,000 steps
             print(f"did not find {m_name} in folders, downloading..")
             download_model(m_name, verbose=verbose)
 
@@ -143,17 +140,12 @@ if __name__ == "__main__":
                 )
             )
 
-    m_name = "GPT2_conversational_355M_WoW10k"
+    m_name = "distilgpt2-tiny-conversational"
     if get_whatsapp_example and not any(m_name in dir for dir in folder_names):
-        # GPT2_conversational_355M_WoW10k: GPT-2 fine-tuned on wizard of wikipedia dataset for 10k steps
-        # despite this model only having 355M parameters, it is fairly cohesive. This is because we recently
-        # learned that aitextgen does not freeze any of the layers on the pretrained model by default during fine-tuning.Therefore, basically none of the other models were trained with freezing layers, but this model was trained with freezing layers (approx 16/24). Will be looking into this more in the next week or two
+        # distilgpt2-tiny-conversational: DistilGPT-2 model trained for 30 epochs
+        # see https://huggingface.co/ethzanalytics/distilgpt2-tiny-conversational for more info
         download_model(m_name, verbose=verbose)
 
-    m_name = "GPT2_trivNatQAdailydia_774M_175Ksteps"
-    if not any(m_name in dir for dir in folder_names):
-        # base "advanced" 774M param GPT-2 model trained on: Trivia, Natural Questions, Daily Dialogues for a total of 175,000 steps
-        print(f"did not find {m_name} in folders, downloading..")
-        download_model(m_name, verbose=verbose)
+
 
     print(f"finished downloading and checking files {get_timestamp()}")

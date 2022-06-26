@@ -137,7 +137,7 @@ def get_parser():
         "--model",
         required=False,
         type=str,
-        default="GPT2_trivNatQAdailydia_774M_175Ksteps",
+        default="distilgpt2-tiny-conversational",
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
         "config.json). No models? Run the script download_models.py",
     )
