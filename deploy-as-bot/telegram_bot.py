@@ -40,8 +40,6 @@ logging.basicConfig(
     filename=f"LOGFILE-{Path(__file__).stem}.log",
     filemode="a",
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    encoding="utf-8",
-    errors="replace",
     level=logging.INFO,
 )
 
