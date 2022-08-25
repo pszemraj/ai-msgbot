@@ -18,10 +18,6 @@ import argparse
 import logging
 import pprint as pp
 from pathlib import Path
-import warnings
-
-warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*") # cleantext GPL-licensed package reminder is annoying
-
 
 from aitextgen import aitextgen
 

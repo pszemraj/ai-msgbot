@@ -18,8 +18,6 @@ import logging
 import time
 import warnings
 
-warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*") # cleantext GPL-licensed package reminder is annoying
-
 from cleantext import clean
 from symspellpy import SymSpell
 from telegram.ext import CommandHandler

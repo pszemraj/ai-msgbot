@@ -23,7 +23,6 @@ from cleantext import clean
 from utils import clear_loggers, print_spacer, remove_trailing_punctuation
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*")
 
 logging.basicConfig(
     filename=f"LOGFILE-{Path(__file__).stem}.log",

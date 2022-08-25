@@ -21,7 +21,6 @@ from ai_single_response import query_gpt_model
 from utils import clear_loggers, get_timestamp, shorten_list
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*")
 
 clear_loggers()
 logging.basicConfig(
