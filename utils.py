@@ -33,6 +33,10 @@ class DisableLogger():
 with DisableLogger():
     from cleantext import clean
 
+def clear_loggers():
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+
 def get_timestamp():
     return datetime.now().strftime("%b-%d-%Y_t-%H")
 
