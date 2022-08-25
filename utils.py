@@ -3,6 +3,7 @@ general utility functions for loading, saving, and manipulating data
 """
 
 import os
+import logging
 import pprint as pp
 import re
 import shutil  # zipfile formats
@@ -102,6 +103,40 @@ def chunks(lst: list, n: int):
 
     for i in range(0, len(lst), n):
         yield lst[i : i + n]
+
+
+
+def shorten_list(
+    list_of_strings: list, max_chars: int = 512, no_blanks=True, verbose=False
+):
+    """a helper function that iterates through a list backwards, adding to a new list.
+
+        When <max_chars> is met, that list entry is not added.
+    Args:
+        list_of_strings (list): list of strings to be shortened
+        max_chars (int, optional): maximum number of characters in a the list in total. Defaults to 512.
+        no_blanks (bool, optional): if True, blank strings are not added to the new list. Defaults to True.
+        verbose (bool, optional): if True, print the list of strings before and after the shorten. Defaults to False.
+    """
+    list_of_strings = [str(x) for x in list_of_strings] # convert to strings if not already
+    shortened_list = []
+    total_len = 0
+    for i, string in enumerate(list_of_strings[::-1], start=1):
+
+        if len(string.strip()) == 0 and no_blanks:
+            continue
+        if len(string) + total_len >= max_chars:
+            logging.info(f"string # {i} puts total over limit, breaking ")
+            break
+        total_len += len(string)
+        shortened_list.insert(0, string)
+    if len(shortened_list) == 0:
+        logging.info(f"shortened list with max_chars={max_chars} has no entries")
+    if verbose:
+        print(f"total length of list is {total_len} chars")
+    return shortened_list
+
+
 
 
 def chunky_pandas(my_df, num_chunks: int = 4):
@@ -374,3 +409,4 @@ def dl_extract_zip(
         print("finished extracting zip - ", datetime.now())
 
     return extract_loc
+

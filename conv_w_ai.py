@@ -16,7 +16,7 @@ from pathlib import Path
 from aitextgen import aitextgen
 
 from ai_single_response import query_gpt_model
-from utils import get_timestamp
+from utils import get_timestamp, shorten_list
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
@@ -27,6 +27,7 @@ def converse_w_ai(
     speaker: str = None,
     responder: str = None,
     resp_length: int = 48,
+    max_context_length: int = 512,
     kparam: int = 40,
     temp: float = 0.7,
     top_p: float = 0.9,
@@ -42,6 +43,7 @@ def converse_w_ai(
         speaker (str, optional): Who the prompt is from (to the bot). Primarily relevant to bots trained on multi-individual chat data. Defaults to None.
         responder (str, optional): who the responder is. Primarily relevant to bots trained on multi-individual chat data. Defaults to "person beta".
         resp_length (int, optional): the length of the response in tokens. Defaults to 48.
+        max_context_length (int, optional): the maximum length of the context _in characters_. Defaults to 512.
         kparam (int, optional): the k parameter for the top_k. Defaults to 40.
         temp (float, optional): the temperature for the softmax. Defaults to 0.7.
         top_p (float, optional): the top_p parameter for nucleus sampling. Defaults to 0.9.
@@ -87,14 +89,13 @@ def converse_w_ai(
                 f"exiting conversation loop based on {prompt_msg} input - {get_timestamp()}"
             )
             break
-        # # TODO: add safeguard vs. max input length / token length for specific models
-
+        # safeguard against max_input_length (ai-textgen does not support this)
+        current_history = list(conversation.values())
+        conversation_history = shorten_list(current_history, max_length=max_context_length)
         model_outputs = query_gpt_model(
             folder_path=folder_path,
             prompt_msg=prompt_msg,
-            conversation_history=list(conversation.values())
-            if len(conversation) > 0
-            else None,
+            conversation_history=conversation_history if len(conversation_history) > 0 else None,
             speaker=speaker,
             responder=responder,
             resp_length=resp_length,
@@ -189,19 +190,36 @@ def get_parser():
         action="store_true",
         help="use gpu if available",
     )
+
     parser.add_argument(
-        "-v",
-        "--verbose",
-        default=False,
-        action="store_true",
-        help="pass this argument if you want all the printouts",
+        "--max-context-length",
+        required=False,
+        type=int,
+        default=512,
+        help="the maximum length of the context _in characters_. Defaults to 512",
     )
+    parser.add_argument(
+        "--resp-length",
+        required=False,
+        type=int,
+        default=48,
+        help="the length of the response in tokens. Defaults to 48",
+    )
+
     parser.add_argument(
         "-rt",
         "--time",
         default=False,
         action="store_true",
         help="pass this argument if you want to know runtime",
+    )
+
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        default=False,
+        action="store_true",
+        help="pass this argument if you want all the printouts",
     )
     return parser
 
