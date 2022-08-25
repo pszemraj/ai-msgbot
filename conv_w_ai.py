@@ -15,6 +15,13 @@ from pathlib import Path
 import sys
 import logging
 
+logging.basicConfig(
+    filename=f"LOGFILE-{Path(__file__).stem}.log",
+    filemode="a",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+)
+
 from aitextgen import aitextgen
 
 from ai_single_response import query_gpt_model
@@ -22,13 +29,6 @@ from utils import get_timestamp, shorten_list
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
-
-logging.basicConfig(
-    filename=f"LOGFILE-{Path(__file__).stem}.log",
-    filemode="a",
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
-)
 
 def converse_w_ai(
     folder_path: str,

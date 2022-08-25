@@ -18,19 +18,19 @@ from datetime import datetime
 from pathlib import Path
 import logging
 
-from utils import DisableLogger, print_spacer, remove_trailing_punctuation
-
-with DisableLogger():
-    from cleantext import clean
-
-warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
-
 logging.basicConfig(
     filename=f"LOGFILE-{Path(__file__).stem}.log",
     filemode="a",
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
 )
+
+from utils import DisableLogger, print_spacer, remove_trailing_punctuation
+
+with DisableLogger():
+    from cleantext import clean
+
+warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
 from aitextgen import aitextgen
 

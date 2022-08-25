@@ -18,6 +18,14 @@ import logging
 import time
 import warnings
 
+logging.basicConfig(
+    filename=f"LOGFILE-{Path(__file__).stem}.log",
+    filemode="a",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+)
+
+
 from symspellpy import SymSpell
 from telegram.ext import CommandHandler
 from telegram.ext import Filters, MessageHandler
@@ -35,12 +43,6 @@ warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 cwd = Path.cwd()
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
 
-logging.basicConfig(
-    filename=f"LOGFILE-{Path(__file__).stem}.log",
-    filemode="a",
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
-)
 
 
 def symspell_correct(speller, qphrase: str):
