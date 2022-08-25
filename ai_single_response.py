@@ -111,8 +111,8 @@ def query_gpt_model(
     speaker: str = None,
     responder: str = None,
     resp_length: int = 48,
-    kparam: int = 40,
-    temp: float = 0.7,
+    kparam: int = 20,
+    temp: float = 0.4,
     top_p: float = 0.9,
     aitextgen_obj=None,
     verbose: bool = False,
@@ -279,7 +279,7 @@ def get_parser():
         "--topk",
         required=False,
         type=int,
-        default=150,
+        default=20,
         help="how many responses to sample (positive integer). lower = more random responses",
     )
 
@@ -287,7 +287,7 @@ def get_parser():
         "--temp",
         required=False,
         type=float,
-        default=0.75,
+        default=0.4,
         help="specify temperature hyperparam (0-1). roughly considered as 'model creativity'",
     )
 
@@ -295,8 +295,16 @@ def get_parser():
         "--topp",
         required=False,
         type=float,
-        default=0.65,
+        default=0.9,
         help="nucleus sampling frac (0-1). aka: what fraction of possible options are considered?",
+    )
+
+    parser.add_argument(
+        "--resp_length",
+        required=False,
+        type=int,
+        default=50,
+        help="max length of the response (positive integer)",
     )
 
     parser.add_argument(
@@ -336,6 +344,8 @@ if __name__ == "__main__":
     k_results = args.topk
     my_temp = args.temp
     my_top_p = args.topp
+    resp_length = args.resp_length
+    assert resp_length > 0, "response length must be positive"
     want_verbose = args.verbose
     want_rt = args.time
     use_gpu = args.use_gpu
@@ -350,6 +360,7 @@ if __name__ == "__main__":
         kparam=k_results,
         temp=my_temp,
         top_p=my_top_p,
+        resp_length=resp_length,
         verbose=want_verbose,
         use_gpu=use_gpu,
     )

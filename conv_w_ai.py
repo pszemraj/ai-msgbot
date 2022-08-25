@@ -37,8 +37,8 @@ def converse_w_ai(
     responder: str = None,
     resp_length: int = 48,
     max_context_length: int = 512,
-    kparam: int = 40,
-    temp: float = 0.7,
+    kparam: int = 20,
+    temp: float = 0.4,
     top_p: float = 0.9,
     verbose: bool = False,
     use_gpu: bool = False,
@@ -177,7 +177,7 @@ def get_parser():
         "--topk",
         required=False,
         type=int,
-        default=150,
+        default=20,
         help="how many responses to sample (positive integer). lower = more random responses",
     )
 
@@ -185,7 +185,7 @@ def get_parser():
         "--temp",
         required=False,
         type=float,
-        default=0.75,
+        default=0.4,
         help="specify temperature hyperparam (0-1). roughly considered as 'model creativity'",
     )
 
@@ -193,7 +193,7 @@ def get_parser():
         "--topp",
         required=False,
         type=float,
-        default=0.65,
+        default=0.9,
         help="nucleus sampling frac (0-1). aka: what fraction of possible options are considered?",
     )
 
