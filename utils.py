@@ -19,6 +19,9 @@ from natsort import natsorted
 from symspellpy import SymSpell
 from tqdm.auto import tqdm
 
+import warnings
+
+warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*") # cleantext GPL-licensed package reminder is annoying
 
 def get_timestamp():
     return datetime.now().strftime("%b-%d-%Y_t-%H")

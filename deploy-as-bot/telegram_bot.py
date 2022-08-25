@@ -3,7 +3,7 @@ Basic GPT-2 telegram bot
 
 you need to have your own token to create and run one - this script loads and reads the user's environmental variables. This script assumes the API token is stored under "GPTFRIEND_BOT"
 
-creating a bot: https://www.codementor.io/@karandeepbatra/part-1-how-to-create-a-telegram-bot-in-python-in-under-10-minutes-19yfdv4wrq 
+creating a bot: https://www.codementor.io/@karandeepbatra/part-1-how-to-create-a-telegram-bot-in-python-in-under-10-minutes-19yfdv4wrq
 
 # TODO: add conversation flow + context from previous messages
 """
@@ -17,6 +17,8 @@ sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 import logging
 import time
 import warnings
+
+warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*") # cleantext GPL-licensed package reminder is annoying
 
 from cleantext import clean
 from symspellpy import SymSpell
