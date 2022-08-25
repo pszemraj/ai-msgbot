@@ -141,16 +141,18 @@ def query_gpt_model(
 
     try:
         ai = (
-        aitextgen_obj
-        if aitextgen_obj
-        else aitextgen(
-            model_folder=folder_path,
-            to_gpu=use_gpu,
+            aitextgen_obj
+            if aitextgen_obj
+            else aitextgen(
+                model_folder=folder_path,
+                to_gpu=use_gpu,
+            )
         )
-    )
     except Exception as e:
         print(f"Unable to initialize aitextgen model: {e}")
-        print(f"Check model folder: {folder_path}, run the download_models.py script to download the model files")
+        print(
+            f"Check model folder: {folder_path}, run the download_models.py script to download the model files"
+        )
         sys.exit(1)
 
     mpath = Path(folder_path)

@@ -18,7 +18,10 @@ import argparse
 import logging
 import pprint as pp
 from pathlib import Path
-logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
+
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
 
 from aitextgen import aitextgen
 

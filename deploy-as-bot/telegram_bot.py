@@ -44,7 +44,6 @@ cwd = Path.cwd()
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
 
 
-
 def symspell_correct(speller, qphrase: str):
     """
     symspell_correct corrects a string using symspellpy

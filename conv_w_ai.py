@@ -81,7 +81,9 @@ def converse_w_ai(
         )
     except Exception as e:
         print(f"Unable to initialize aitextgen model: {e}")
-        print(f"Check model folder: {folder_path}, run the download_models.py script to download the model files")
+        print(
+            f"Check model folder: {folder_path}, run the download_models.py script to download the model files"
+        )
         sys.exit(1)
     prompt_msg = start_msg if start_msg is not None else None
     conversation = {}
@@ -104,11 +106,15 @@ def converse_w_ai(
             break
         # safeguard against max_input_length (ai-textgen does not support this)
         current_history = list(conversation.values())
-        conversation_history = shorten_list(current_history, max_chars=max_context_length, no_blanks=True)
+        conversation_history = shorten_list(
+            current_history, max_chars=max_context_length, no_blanks=True
+        )
         model_outputs = query_gpt_model(
             folder_path=folder_path,
             prompt_msg=prompt_msg,
-            conversation_history=conversation_history if len(conversation_history) > 0 else None,
+            conversation_history=conversation_history
+            if len(conversation_history) > 0
+            else None,
             speaker=speaker,
             responder=responder,
             resp_length=resp_length,

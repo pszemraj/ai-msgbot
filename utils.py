@@ -21,21 +21,27 @@ from tqdm.auto import tqdm
 
 import warnings
 
-warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*") # cleantext GPL-licensed package reminder is annoying
+warnings.filterwarnings(
+    action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*"
+)  # cleantext GPL-licensed package reminder is annoying
 
 
-class DisableLogger():
+class DisableLogger:
     def __enter__(self):
-       logging.disable(logging.CRITICAL)
+        logging.disable(logging.CRITICAL)
+
     def __exit__(self, exit_type, exit_value, exit_traceback):
-       logging.disable(logging.NOTSET)
+        logging.disable(logging.NOTSET)
+
 
 with DisableLogger():
     from cleantext import clean
 
+
 def clear_loggers():
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
+
 
 def get_timestamp():
     return datetime.now().strftime("%b-%d-%Y_t-%H")
@@ -122,7 +128,6 @@ def chunks(lst: list, n: int):
         yield lst[i : i + n]
 
 
-
 def shorten_list(
     list_of_strings: list, max_chars: int = 512, no_blanks=True, verbose=False
 ):
@@ -135,7 +140,9 @@ def shorten_list(
         no_blanks (bool, optional): if True, blank strings are not added to the new list. Defaults to True.
         verbose (bool, optional): if True, print the list of strings before and after the shorten. Defaults to False.
     """
-    list_of_strings = [str(x) for x in list_of_strings] # convert to strings if not already
+    list_of_strings = [
+        str(x) for x in list_of_strings
+    ]  # convert to strings if not already
     shortened_list = []
     total_len = 0
     for i, string in enumerate(list_of_strings[::-1], start=1):
@@ -152,8 +159,6 @@ def shorten_list(
     if verbose:
         print(f"total length of list is {total_len} chars")
     return shortened_list
-
-
 
 
 def chunky_pandas(my_df, num_chunks: int = 4):
@@ -426,4 +431,3 @@ def dl_extract_zip(
         print("finished extracting zip - ", datetime.now())
 
     return extract_loc
-
