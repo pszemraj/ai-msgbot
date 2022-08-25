@@ -1,5 +1,5 @@
 aitextgen
-clean-text[gpl]
+clean-text
 gradio
 natsort
 pandas
