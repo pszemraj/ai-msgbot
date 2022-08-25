@@ -15,12 +15,13 @@
 It relies on the [`aitextgen`](https://github.com/minimaxir/aitextgen) and [`python-telegram-bot`](https://github.com/python-telegram-bot/python-telegram-bot) libraries. Examples on how to train larger models with DeepSpeed are in `notebooks/colab-huggingface-API` directory.
 
 ```sh
-python ai_single_response.py --model "GPT2_conversational_355M_WoW10k" --prompt "hey, what's up?"
+python ai_single_response.py -p "greetings sir! what is up?"
 
 ... generating...
 
 finished!
-"i'm doing a lot of traveling. do you like to travel?"
+('hello, i am interested in the history of vegetarianism. i do not like the '
+ 'idea of eating meat out of respect for sentient life')
 ```
 
 Some of the trained models can be interacted with through the HuggingFace spaces and model inference APIs on the [ETHZ Analytics Organization](https://huggingface.co/ethzanalytics) page on huggingface.co.
