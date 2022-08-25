@@ -8,7 +8,7 @@ Note that the URL is displayed once the script is run.
 Set the working directory to */deploy-as-bot in terminal before running.
 
 """
-from utils import remove_trailing_punctuation
+from utils import remove_trailing_punctuation, DisableLogger
 import os
 import sys
 from os.path import dirname
@@ -22,10 +22,12 @@ import argparse
 import time
 import warnings
 from pathlib import Path
-from cleantext import clean
 from transformers import pipeline
 from datetime import datetime
 from ai_single_response import query_gpt_model
+
+with DisableLogger():
+    from cleantext import clean
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 

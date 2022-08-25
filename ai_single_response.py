@@ -18,9 +18,10 @@ from datetime import datetime
 from pathlib import Path
 import logging
 
-from cleantext import clean
+from utils import DisableLogger, print_spacer, remove_trailing_punctuation
 
-from utils import clear_loggers, print_spacer, remove_trailing_punctuation
+with DisableLogger():
+    from cleantext import clean
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 

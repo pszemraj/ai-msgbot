@@ -15,7 +15,6 @@ import logging
 
 import pandas as pd
 import requests
-from cleantext import clean
 from natsort import natsorted
 from symspellpy import SymSpell
 from tqdm.auto import tqdm
@@ -25,10 +24,14 @@ import warnings
 warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*") # cleantext GPL-licensed package reminder is annoying
 
 
-def clear_loggers():
-    # Remove all handlers associated with the root logging object.
-    for handler in logging.root.handlers[:]:
-        logging.root.removeHandler(handler)
+class DisableLogger():
+    def __enter__(self):
+       logging.disable(logging.CRITICAL)
+    def __exit__(self, exit_type, exit_value, exit_traceback):
+       logging.disable(logging.NOTSET)
+
+with DisableLogger():
+    from cleantext import clean
 
 def get_timestamp():
     return datetime.now().strftime("%b-%d-%Y_t-%H")

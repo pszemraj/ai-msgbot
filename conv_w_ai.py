@@ -18,11 +18,11 @@ import logging
 from aitextgen import aitextgen
 
 from ai_single_response import query_gpt_model
-from utils import clear_loggers, get_timestamp, shorten_list
+from utils import get_timestamp, shorten_list
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 
-clear_loggers()
+
 logging.basicConfig(
     filename=f"LOGFILE-{Path(__file__).stem}.log",
     filemode="a",

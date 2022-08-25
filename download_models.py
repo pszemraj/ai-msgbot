@@ -21,9 +21,8 @@ from pathlib import Path
 
 from aitextgen import aitextgen
 
-from utils import clear_loggers, dl_extract_zip, get_timestamp
+from utils import dl_extract_zip, get_timestamp
 
-clear_loggers()
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
 dbx_links = {

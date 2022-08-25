@@ -18,7 +18,6 @@ import logging
 import time
 import warnings
 
-from cleantext import clean
 from symspellpy import SymSpell
 from telegram.ext import CommandHandler
 from telegram.ext import Filters, MessageHandler
@@ -27,8 +26,10 @@ from pathlib import Path
 from transformers import pipeline
 
 from ai_single_response import query_gpt_model
-from utils import remove_trailing_punctuation
+from utils import remove_trailing_punctuation, DisableLogger
 
+with DisableLogger():
+    from cleantext import clean
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 cwd = Path.cwd()
