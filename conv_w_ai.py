@@ -91,7 +91,7 @@ def converse_w_ai(
             break
         # safeguard against max_input_length (ai-textgen does not support this)
         current_history = list(conversation.values())
-        conversation_history = shorten_list(current_history, max_length=max_context_length)
+        conversation_history = shorten_list(current_history, max_chars=max_context_length, no_blanks=True)
         model_outputs = query_gpt_model(
             folder_path=folder_path,
             prompt_msg=prompt_msg,
