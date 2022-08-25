@@ -12,6 +12,7 @@ import pprint as pp
 import time
 import warnings
 from pathlib import Path
+import sys
 
 from aitextgen import aitextgen
 
@@ -65,11 +66,15 @@ def converse_w_ai(
     mpath_base = (
         mpath.stem
     )  # only want the base name of the model folder for check below
-
-    ai = aitextgen(
-        model_folder=folder_path,
-        to_gpu=use_gpu,
-    )
+    try:
+        ai = aitextgen(
+            model_folder=folder_path,
+            to_gpu=use_gpu,
+        )
+    except Exception as e:
+        print(f"Unable to initialize aitextgen model: {e}")
+        print(f"Check model folder: {folder_path}, run the download_models.py script to download the model files")
+        sys.exit(1)
     prompt_msg = start_msg if start_msg is not None else None
     conversation = {}
     # start conversation

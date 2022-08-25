@@ -11,6 +11,7 @@ query_gpt_model is used throughout the code, and is the "fundamental" building b
 """
 import argparse
 import pprint as pp
+import sys
 import time
 import warnings
 from datetime import datetime
@@ -128,7 +129,9 @@ def query_gpt_model(
     Returns:
         model_resp (dict): the model response, as a dict with the following keys: out_text (str) the generated text and full_conv (dict) the conversation history
     """
-    ai = (
+
+    try:
+        ai = (
         aitextgen_obj
         if aitextgen_obj
         else aitextgen(
@@ -136,6 +139,10 @@ def query_gpt_model(
             to_gpu=use_gpu,
         )
     )
+    except Exception as e:
+        print(f"Unable to initialize aitextgen model: {e}")
+        print(f"Check model folder: {folder_path}, run the download_models.py script to download the model files")
+        sys.exit(1)
 
     mpath = Path(folder_path)
     mpath_base = (
