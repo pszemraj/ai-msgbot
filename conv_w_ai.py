@@ -13,6 +13,7 @@ import time
 import warnings
 from pathlib import Path
 import sys
+import logging
 
 from aitextgen import aitextgen
 
@@ -22,6 +23,14 @@ from utils import get_timestamp, shorten_list
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*")
 
+logging.basicConfig(
+    filename=f"LOGFILE-{Path(__file__).stem}.log",
+    filemode="a",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    encoding="utf-8",
+    errors="replace",
+    level=logging.INFO,
+)
 
 def converse_w_ai(
     folder_path: str,

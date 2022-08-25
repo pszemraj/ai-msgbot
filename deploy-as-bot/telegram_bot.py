@@ -37,9 +37,13 @@ cwd = Path.cwd()
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
 
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+    filename=f"LOGFILE-{Path(__file__).stem}.log",
+    filemode="a",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    encoding="utf-8",
+    errors="replace",
+    level=logging.INFO,
 )
-logger = logging.getLogger(__name__)
 
 
 def symspell_correct(speller, qphrase: str):

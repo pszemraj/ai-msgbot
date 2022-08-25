@@ -16,6 +16,7 @@ import time
 import warnings
 from datetime import datetime
 from pathlib import Path
+import logging
 
 from cleantext import clean
 
@@ -23,6 +24,15 @@ from utils import print_spacer, remove_trailing_punctuation
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*")
+
+logging.basicConfig(
+    filename=f"LOGFILE-{Path(__file__).stem}.log",
+    filemode="a",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    encoding="utf-8",
+    errors="replace",
+    level=logging.INFO,
+)
 
 from aitextgen import aitextgen
 

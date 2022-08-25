@@ -11,6 +11,7 @@ import warnings
 from datetime import datetime
 from os.path import basename, getsize, join
 from pathlib import Path
+import logging
 
 import pandas as pd
 import requests
@@ -22,6 +23,13 @@ from tqdm.auto import tqdm
 import warnings
 
 warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*") # cleantext GPL-licensed package reminder is annoying
+
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    encoding="utf-8",
+    errors="replace",
+    level=logging.ERROR,
+)
 
 def get_timestamp():
     return datetime.now().strftime("%b-%d-%Y_t-%H")

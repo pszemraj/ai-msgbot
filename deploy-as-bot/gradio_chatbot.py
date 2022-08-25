@@ -30,7 +30,15 @@ from ai_single_response import query_gpt_model
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*") # cleantext GPL-licensed package reminder is annoying
 
-logging.basicConfig()
+logging.basicConfig(
+    filename=f"LOGFILE-{Path(__file__).stem}.log",
+    filemode="a",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    encoding="utf-8",
+    errors="replace",
+    level=logging.INFO,
+)
+
 cwd = Path.cwd()
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
 
