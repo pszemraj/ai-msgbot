@@ -184,6 +184,12 @@ def get_parser():
     )
 
     parser.add_argument(
+        "--use_gpu",
+        required=False,
+        action="store_true",
+        help="use gpu if available",
+    )
+    parser.add_argument(
         "-v",
         "--verbose",
         default=False,
@@ -211,6 +217,7 @@ if __name__ == "__main__":
     k_results = args.topk
     my_temp = args.temp
     my_top_p = args.topp
+    use_gpu = args.use_gpu
     want_verbose = args.verbose
     want_rt = args.time
 
@@ -226,7 +233,7 @@ if __name__ == "__main__":
         temp=my_temp,
         top_p=my_top_p,
         verbose=want_verbose,
-        use_gpu=False,
+        use_gpu=use_gpu,
     )
 
     # print the runtime / transcript

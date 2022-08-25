@@ -290,6 +290,7 @@ def get_parser():
         action="store_true",
         help="pass this argument if you want all the printouts",
     )
+
     parser.add_argument(
         "-rt",
         "--time",
@@ -297,6 +298,14 @@ def get_parser():
         action="store_true",
         help="pass this argument if you want to know runtime",
     )
+
+    parser.add_argument(
+        "--use_gpu",
+        required=False,
+        action="store_true",
+        help="use gpu if available",
+    )
+
     return parser
 
 
@@ -313,6 +322,7 @@ if __name__ == "__main__":
     my_top_p = args.topp
     want_verbose = args.verbose
     want_rt = args.time
+    use_gpu = args.use_gpu
 
     st = time.perf_counter()
 
@@ -325,7 +335,7 @@ if __name__ == "__main__":
         temp=my_temp,
         top_p=my_top_p,
         verbose=want_verbose,
-        use_gpu=False,
+        use_gpu=use_gpu,
     )
 
     output = resp["out_text"]
