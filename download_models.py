@@ -15,6 +15,7 @@ https://huggingface.co/ethzanalytics
 """
 
 import argparse
+import logging
 import pprint as pp
 from pathlib import Path
 import warnings
@@ -24,7 +25,10 @@ warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `un
 
 from aitextgen import aitextgen
 
-from utils import dl_extract_zip, get_timestamp
+from utils import clear_loggers, dl_extract_zip, get_timestamp
+
+clear_loggers()
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
 dbx_links = {
     "GPT2_dailydialogue_355M_150Ksteps": "https://www.dropbox.com/sh/nzcgavha8i11mvw/AACZXMoJuSfI3d3vGRrT_cp5a?dl=1",

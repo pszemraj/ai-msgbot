@@ -24,12 +24,11 @@ import warnings
 
 warnings.filterwarnings(action="ignore", message=".*the GPL-licensed package `unidecode` is not installed*") # cleantext GPL-licensed package reminder is annoying
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    encoding="utf-8",
-    errors="replace",
-    level=logging.ERROR,
-)
+
+def clear_loggers():
+    # Remove all handlers associated with the root logging object.
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
 
 def get_timestamp():
     return datetime.now().strftime("%b-%d-%Y_t-%H")
