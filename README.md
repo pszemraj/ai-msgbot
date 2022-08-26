@@ -2,7 +2,7 @@
 
 > It sure seems like there are a lot of text-generation chatbots out there, but it's hard to find a python package or model that is easy to tune around a simple text file of message data. This repo is a simple attempt to help solve that problem.
 
-![ACE-newsletter-workshop-img-cropped](https://user-images.githubusercontent.com/74869040/141669429-6bfd3e3f-2436-482b-b7b3-367bee6c23d3.png)
+<img src="https://i.imgur.com/aPxUkH7.png" width="384" height="256"/>
 
 `ai-msgbot` covers the practical use case of building a chatbot that sounds like you (or some dataset/persona you choose) by training a text-generation model to generate conversation in a consistent structure. This structure is then leveraged to deploy a chatbot that is a "free-form" model that _consistently_ replies like a human.
 
@@ -63,7 +63,7 @@ Some of the trained models can be interacted with through the HuggingFace spaces
 
 This response is from a [bot on Telegram](https://t.me/GPTPeter_bot), finetuned on the author's messages
 
-<img src="https://i.imgur.com/OJB5EMw.png" max-width="50%" />
+<img src="https://i.imgur.com/OJB5EMw.png" width="550" height="150" />
 
 The model card can be found [here](https://huggingface.co/pszemraj/opt-peter-2.7B).
 
@@ -94,16 +94,9 @@ python ai_single_response.py -p "hey, what's up?"
 
 ## Repo Overview and Usage
 
-![process flow](https://user-images.githubusercontent.com/74869040/144432206-f584d1c1-a890-4a56-8439-ac7542c7af8c.png)
+### A general process-flow
 
-### New to Colab?
-
-`aitextgen` is largely designed around leveraging Colab's free-GPU capabilities to train models. Training a text generation model and most transformer models, _is resource intensive_. If new to the Google Colab environment, check out the below to understand more of what it is and how it works.
-
-- [Google's FAQ](https://research.google.com/colaboratory/faq.html)
-- [Medium Article on Colab + Large Datasets](https://satyajitghana.medium.com/working-with-huge-datasets-800k-files-in-google-colab-and-google-drive-bcb175c79477)
-- [Google's Demo Notebook on I/O](https://colab.research.google.com/notebooks/io.ipynb)
-- [A better Colab Experience](https://towardsdatascience.com/10-tips-for-a-better-google-colab-experience-33f8fe721b82)
+<img src="https://i.imgur.com/9iUEzvV.png" mwidth="872" height="400" />
 
 ### Parsing Data
 
@@ -148,6 +141,15 @@ Then, deploying this pipeline to an endpoint where a user can send in a message,
 - Essentially, a script needs to be parsed and loaded into the notebook as a standard .txt file with formatting as outlined above. Then, the text-generation model will load and train using _aitextgen's_ wrapper around the PyTorch lightning trainer. Essentially, the text is fed into the model, and it self-evaluates for a "test" as to whether a text message chain (somewhere later in the doc) was correctly predicted or not.
 
 <font color="yellow"> TODO: more words </font>
+
+### New to Colab?
+
+`aitextgen` is largely designed around leveraging Colab's free-GPU capabilities to train models. Training a text generation model and most transformer models, _is resource intensive_. If new to the Google Colab environment, check out the below to understand more of what it is and how it works.
+
+- [Google's FAQ](https://research.google.com/colaboratory/faq.html)
+- [Medium Article on Colab + Large Datasets](https://satyajitghana.medium.com/working-with-huge-datasets-800k-files-in-google-colab-and-google-drive-bcb175c79477)
+- [Google's Demo Notebook on I/O](https://colab.research.google.com/notebooks/io.ipynb)
+- [A better Colab Experience](https://towardsdatascience.com/10-tips-for-a-better-google-colab-experience-33f8fe721b82)
 
 ### Interaction with a Trained model
 
