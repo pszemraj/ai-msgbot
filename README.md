@@ -165,16 +165,19 @@ Chatbots have been around for a long time, and are used in many different contex
   - the model implicitly learns the back-and-forth structure of the conversation by "seeing" how text following _Speaker Alpha_ is responded to by text with the other label  _Speaker Beta_, and vice-versa. **It learns interactions between the two speakers**.
     - this is especially important in today's modern messaging world, where a response may be distributed over several messages.
     - Multiple individuals or "personas" are possible with adding unique labels to the training data, i.e. "Speaker Gamma" and "Speaker Delta".
+    - Multiple individuals or "personas" are possible with adding unique labels to the training data, i.e. "Speaker Gamma" and "Speaker Delta".
   - part of "reading the room" in the conversational domain is to simulate empathy, even in cases where the model is not able to respond to the user prompt.
-    - For example, there are many ways to respond to "My dog died.." that would be contextually appropriate.
+    - For example, there are many ways to respond to "My dog died.." that would be contextually correct. See [example](https://pastebin.com/XipcF71F)
     - this is especially important in today's modern messaging world, where a response may be distributed over several messages.
     - Multiple individuals or "personas" are possible with adding unique labels to the training data, i.e. "Speaker Gamma" and "Speaker Delta".
 
 Depending on computing resources, it is possible to keep track of the conversation in a helper script or loop, and then feed in the prior conversation and the prompt. This allows the model to use the context as part of the generation sequence. The [attention mechanism](https://arxiv.org/abs/1706.03762) will primarily focus on the last text = the prompt.
-
+https://pastebin.com/XipcF71F
 #### How?
 
-The bare minimum is to create a `training_data.txt` file in the following structure outlined above. Ideally, create all three of `training_data.txt`, `validation_data.txt`, and `test_data.txt`.
+The bare minimum is to create a `training_data.txt` file in the following structure outlined above. Ideally, create all three of  train/valid/test files.
+
+```sh
 
 Examples and resources:
 
@@ -182,11 +185,11 @@ Examples and resources:
 - Examples of already-parsed datasets can be found in `conversation-data/`.
 - A companion repository for this project is [pszemraj/DailyDialogue-Parser](<https://github.com/pszemraj/DailyDialogue-Parser>) and covers the entire process of converting/parsing the _DailyDialogues_ dataset.
 
-Some specifics on conversational datasets are below in [Training Details](#training-details).
+Some specifics on datasets are below in [Training Details](#training-details).
 
 #### A Chatbot of You
 
-Turns out everyone with a phone has a huge message database. You could use this to train a chatbot to respond to your messages like you would. Messages
+Turns out everyone with a phone has a huge message database. You could use this to train a chatbot to respond to your messages like you would.
 
 Check out `parsing-messages/parse_whatsapp_output.py` for a script that will parse messages exported with the standard [whatsapp chat export feature](https://faq.whatsapp.com/196737011380816/?locale=en_US#:~:text=You%20can%20use%20the%20export,with%20media%20or%20without%20media.). consolidate all the WhatsApp message export folders into a root directory, and pass the root directory to this script.
 
