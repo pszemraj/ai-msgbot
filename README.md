@@ -172,12 +172,10 @@ Chatbots have been around for a long time, and are used in many different contex
     - Multiple individuals or "personas" are possible with adding unique labels to the training data, i.e. "Speaker Gamma" and "Speaker Delta".
 
 Depending on computing resources, it is possible to keep track of the conversation in a helper script or loop, and then feed in the prior conversation and the prompt. This allows the model to use the context as part of the generation sequence. The [attention mechanism](https://arxiv.org/abs/1706.03762) will primarily focus on the last text = the prompt.
-https://pastebin.com/XipcF71F
+
 #### How?
 
 The bare minimum is to create a `training_data.txt` file in the following structure outlined above. Ideally, create all three of  train/valid/test files.
-
-```sh
 
 Examples and resources:
 
