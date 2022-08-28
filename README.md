@@ -96,7 +96,7 @@ python ai_single_response.py -p "hey, what's up?"
 
 This project aims to generate a chatbot from simple text files using the GPT family of models. This easy-to-create structure helps avoid spending too much time on dataset curation and associated questions/trouble (_Can you easily abstract you and your friend's WhatsApp messages into a "persona"?_).
 
-1) acquire & format data 2) train model 3) deploy model with "helper" code to implement a chatbot.
+Three steps: **1)** acquire & format data **2)** train model **3)** deploy model with "helper" code to implement as a chatbot.
 
 ### Consistent Dialogue Structure
 
