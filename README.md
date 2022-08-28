@@ -4,7 +4,7 @@
 
 <img src="https://i.imgur.com/aPxUkH7.png" width="384" height="256"/>
 
-`ai-msgbot` is designed to help you build a chatbot that sounds like you (or some dataset/persona you choose) by training a text-generation model to generate conversation in a consistent structure. This structure is then leveraged to deploy a chatbot that is a "free-form" model that _consistently_ replies like a human.
+`ai-msgbot` is designed to help you build a chatbot that sounds like you (or some dataset/persona you choose) by training a text-generation model to generate conversation in a consistent structure. This structure is then leveraged to deploy a chatbot that is a "free-form" model that replies **consistently**like a human.
 
  There are three primary components to this project:
 
@@ -98,9 +98,9 @@ python ai_single_response.py -p "hey, what's up?"
 
 <img src="https://i.imgur.com/9iUEzvV.png" mwidth="872" height="400" />
 
-The goal of this project is to generate a chatbot from simple text files using the GPT family of models. This easy to create structure helps avoid spending too much time on dataset curation and associated questions/trouble (_Can you easily abstract you and your friend's WhatsApp messages into a "persona"?_).
+This project aims to generate a chatbot from simple text files using the GPT family of models. This easy-to-create structure helps avoid spending too much time on dataset curation and associated questions/trouble (_Can you easily abstract you and your friend's WhatsApp messages into a "persona"?_).
 
-As per earlierL acquire & format data, train model, deploy model with "helper" code to implement a chatbot.
+As per earlierL, acquire & format data, train model, and deploy model with "helper" code to implement a chatbot.
 
 ### Consistent Dialogue Structure
 
@@ -108,16 +108,16 @@ The first step is to find and parse the data into a standard format that can be 
 
 #### What?
 
-The goal is to take a dataset of conversation-like data and parse it into a "script" that can be used for training the model.
+The goal is to take a conversation-like dataset and parse it into a "script" that can be used for training the model.
 
 What a "dialogue script" consists of:
 
-- Simple, repaated formatting for each message or "utterance" in the conversation
+- Simple, repeated formatting for each message or "utterance" in the conversation
   - every **message** is a line in the file. A message can contain multiple sentences (dataset dependent)
   - every message is preceded by a line with the **speaker pseudo-label**
   - every message is followed by an empty blank line (_this is somewhat arbitrary_)
   - messages _by "conversation"_ are in chronological order. Conversations themselves do not have to be in order.
-- when training the model, it is fed text data in this format. The model learns to predict the next N tokens (~words) based on the previous N tokens, and starts to learn the structure.
+- when training the model, it is fed text data in this format. The model learns to predict the next N tokens (~words) based on the previous N tokens and starts to learn the structure.
 - when running the model, it is fed text data in this format. As we know what format the model _should_ be in, we can use this knowledge to extract a single message response to arbitrary input.
 
 Example:
@@ -141,45 +141,45 @@ Example:
 
 #### Why?
 
-In a nutshell, to leverage the strengths of the GPT family of models, while using the structure to 'automate' what would be challenging tasks in an open domain.
+In a nutshell, to leverage the strengths of the GPT family of models while using the structure to 'automate' what would be challenging tasks in an open domain.
 
-Chatbots have been around for a long time, and are used in many different contexts. You can find examples of chatbots on your local massive service-oriented corporation's website. These chatbots are typically scripted around a few likely user inputs, and are able to respond to those inputs. They fail, however, at generating "real" responses to arbitrary inputs, which makes them seem limited.
+Chatbots have been around for a long time and are used in many different contexts. You can find examples of chatbots on your local massive service-oriented corporation's website. These chatbots are typically scripted around a few likely user inputs and can respond to those inputs. They fail, however, at generating "real" responses to arbitrary inputs, which makes them seem limited.
 
 > Ask the next chatbot you find on a website: "A further question of your preferences: straight booling vs. dimensional booling?"
 
 - GPT **is good at generating text** in ways that sound "unique" to humans. This helps to avoid the "common" pitfall above.
-- If the model is trained in a generalizable way, it can be used to generate text in a way that can be useful to humans without the need for specific scripted answers.
+- If the model is trained in a generalizable way, it can be used to generate text in a way that can be useful to humans without needing specific scripted answers.
 - Some caveats:
   - how does the model know how to respond to a given input?
-  - Further, how can the model tailor it's response to a given speaker?
-  - how long is a single "response"? how does the model know when to stop?
+  - Further, how can the model tailor its response to a given speaker?
+  - how long is a single "response"? How does the model know when to stop?
   - how does the model know to stay consistently on topic/with the speaker?
 - Separating the conversational messages with "tokens/labels" helps solve the above concerns.
-  - The model learns to generate these **structure labels** as part of the training process, and generates them as part of inference.
+  - The model learns to generate these **structure labels** as part of the training process and generates them as part of inference.
   - Isolating a single response becomes easy:
     - train with "Speaker Alpha" and "Speaker Beta" labels
     - pass "Speaker Alpha" and the user prompt to the model
     - append a blank line and "Speaker Beta" label to the prompt
-    - model responds as "Speaker Beta" to "Speaker Alpha" prompt!
-    - isolate the "full" response by stopping at 1) first blank line or 2) at the first `Speaker Alpha` token.
+    - model responds as "Speaker Beta" to the "Speaker Alpha" prompt!
+    - isolate the "full" response by stopping at 1) the first blank line or 2) at the first `Speaker Alpha` token.
   - the model implicitly learns the back-and-forth structure of the conversation by "seeing" how text following _Speaker Alpha_ is responded to by text with the other label  _Speaker Beta_, and vice-versa. **It learns interactions between the two speakers**.
     - this is especially important in today's modern messaging world, where a response may be distributed over several messages.
-    - Multiple individuals or "personas" are possible with adding unique labels to the training data, i.e. "Speaker Gamma" and "Speaker Delta".
-    - Multiple individuals or "personas" are possible with adding unique labels to the training data, i.e. "Speaker Gamma" and "Speaker Delta".
-  - part of "reading the room" in the conversational domain is to simulate empathy, even in cases where the model is not able to respond to the user prompt.
+    - Multiple individuals or "personas" are possible by adding unique labels to the training data, i.e., "Speaker Gamma" and "Speaker Delta".
+    - Multiple individuals or "personas" are possible by adding unique labels to the training data, i.e. "Speaker Gamma" and "Speaker Delta".
+  - part of "reading the room" in the conversational domain is to simulate empathy, even in cases where the model cannot respond to the user prompt.
     - For example, there are many ways to respond to "My dog died.." that would be contextually correct. See [example](https://pastebin.com/XipcF71F)
     - this is especially important in today's modern messaging world, where a response may be distributed over several messages.
-    - Multiple individuals or "personas" are possible with adding unique labels to the training data, i.e. "Speaker Gamma" and "Speaker Delta".
+    - Multiple individuals or "personas" are possible by adding unique labels to the training data, i.e. "Speaker Gamma" and "Speaker Delta".
 
-Depending on computing resources, it is possible to keep track of the conversation in a helper script or loop, and then feed in the prior conversation and the prompt. This allows the model to use the context as part of the generation sequence. The [attention mechanism](https://arxiv.org/abs/1706.03762) will primarily focus on the last text = the prompt.
+Depending on computing resources, it is possible to keep track of the conversation in a helper script or loop and then feed in the prior conversation and the prompt. This allows the model to use the context as part of the generation sequence. The [attention mechanism](https://arxiv.org/abs/1706.03762) will primarily focus on the last text = the prompt.
 
 #### How?
 
-The bare minimum is to create a `training_data.txt` file in the following structure outlined above. Ideally, create all three of  train/valid/test files.
+The bare minimum is to create a `training_data.txt` file in the following structure outlined above. Ideally, create all three of the train/valid/test files.
 
 Examples and resources:
 
-- Python scripts to parse WhatsApp messages and/or exported iMessage conversations can be found in `parsing-messages/`.
+- Python scripts to parse WhatsApp messages and exported iMessage conversations can be found in `parsing-messages/`.
 - Examples of already-parsed datasets can be found in `conversation-data/`.
 - A companion repository for this project is [pszemraj/DailyDialogue-Parser](<https://github.com/pszemraj/DailyDialogue-Parser>) and covers the entire process of converting/parsing the _DailyDialogues_ dataset.
 
@@ -187,25 +187,25 @@ Some specifics on datasets are below in [Training Details](#training-details).
 
 #### A Chatbot of You
 
-Turns out everyone with a phone has a huge message database. You could use this to train a chatbot to respond to your messages like you would.
+Turns out everyone with a phone has a huge message database. You could use this to train a chatbot to respond to your messages as you would.
 
-Check out `parsing-messages/parse_whatsapp_output.py` for a script that will parse messages exported with the standard [whatsapp chat export feature](https://faq.whatsapp.com/196737011380816/?locale=en_US#:~:text=You%20can%20use%20the%20export,with%20media%20or%20without%20media.). consolidate all the WhatsApp message export folders into a root directory, and pass the root directory to this script.
+Check out `parsing-messages/parse_whatsapp_output.py` for a script to parse messages exported with the standard [whatsapp chat export feature](https://faq.whatsapp.com/196737011380816/?locale=en_US#:~:text=You%20can%20use%20the%20export,with%20media%20or%20without%20media.). consolidate all the WhatsApp message export folders into a root directory, and pass the root directory to this script.
 
 ### Training a text generation model
 
-> Training is completed the `aitextgen` library (_in the current_state of the repo_), and it's recommended to read through [some of the docs](https://docs.aitextgen.io/tutorials/colab/) and take a look at the _Training your model_ section before continuing.
+> Training is completed in the `aitextgen` library (_in the current_state of the repo_), and it's recommended to read through [some of the docs](https://docs.aitextgen.io/tutorials/colab/) and take a look at the _Training your model_ section before continuing.
 
-The next step is to leverage the text-generative model to reply to messages. This is done by training the model to generate text that is based on previously seen text. Is is also called Causal Language Model modelling. For more detailed info, see [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) or [the huggingface course](https://huggingface.co/course/chapter1/6?fw=pt).
+The next step is to leverage the text-generative model to reply to messages. This is done by training the model to generate text based on previously seen text. It is also called Causal Language Model modeling. For more detailed info, see [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/) or [the huggingface course](https://huggingface.co/course/chapter1/6?fw=pt).
 
 #### Training: Details
 
 A training notebook is provided at this path: `*/notebooks/colab-notebooks/GPT_general_conv_textgen_training_GPU.ipynb` (Alternatively, click [this link to a shared git gist](https://colab.research.google.com/gist/pszemraj/06a95c7801b7b95e387eafdeac6594e7/gpt2-general-conv-textgen-training-gpu.ipynb)).
 
-- The notebook covers training GPT-2 models up to GPT-2 L, A high level overview is:
-  - A _dialogue script_ (parsed from dataset)), formatted as per the above structure is loaded and tokenized.
-  - Then, the text-generation model will load and train using _aitextgen's_ wrapper around the PyTorch lightning trainer.
+- The notebook covers training GPT-2 models up to GPT-2 L; a high-level overview is:
+  - A _dialogue script_ (parsed from the dataset)), formatted as per the above structure, is loaded and tokenized.
+  - Then, the next-generation model will load and train using _aitextgen's_ wrapper around the PyTorch lightning trainer.
   - Essentially, the text is fed into the model, and it self-evaluates for a "test" as to whether a text message chain (somewhere later in the doc) was correctly
-- many more datasets are available online at [PapersWithCode](https://paperswithcode.com/datasets?task=dialogue-generation&mod=texts) and [GoogleResearch](https://research.google/tools/datasets/). _Google Research_has a tool for searching for datasets online as well.
+- many more datasets are available online at [PapersWithCode](https://paperswithcode.com/datasets?task=dialogue-generation&mod=texts) and [GoogleResearch](https://research.google/tools/datasets/). _Google Research_ also has a tool for searching for datasets online.
 
 #### New to Colab?
 
@@ -228,19 +228,19 @@ The last step is deploying this pipeline to an endpoint where a user can send in
   - [GPT-2 XL Conversational Chatbot](https://huggingface.co/spaces/ethzanalytics/dialogue-demo)
 - Gradio - locally hosted runtime with public URL.
   - See: `deploy-as-bot/gradio_chatbot.py`
-  - The UI and interface will look similar to the demos above, but run locally & are more customizable.
+  - The UI and interface will look similar to the demos above but run locally & are more customizable.
 - Telegram bot - Runs locally, and anyone can message the model from the Telegram messenger app(s).
   - See: `deploy-as-bot/telegram_bot.py`
   - An example chatbot by one of the authors is usually online and can be found [here](https://t.me/GPTPeter_bot)
 
 ### Improving Response Quality: Spelling & Grammar Correction
 
-One of this project's primary goals is to train a chatbot/QA bot that can respond to the user without hardcoding to handle questions/edge cases. However, sometimes the model will generate a bunch of strings together. Applying spell correction helps make the model responses as understandable as possible without interfering with the response/semantics.
+One of this project's primary goals is to train a chatbot/QA bot that can respond to the user without hardcoding to handle questions/edge cases. However, sometimes the model will generate a bunch of strings together. Spell correction helps make the model responses understandable without interfering with the response/semantics.
 
 - Implemented methods in code in `deploy-as-bot/`:
   - **symspell** (via the pysymspell library) _corrects out common text abbreviations to random other short words that are hard to understand, i.e., tues and idk._
   - Gramformer is a pretrained NN that corrects grammar and hopefully does not have the issue described above | [Github](<https://github.com/PrithivirajDamodaran/Gramformer/>)
-- **Grammar Synthesis** (WIP) - Evaluating a text2text generation model that, through "pseudo-diffusion," is trained to denoise **heavily** corrupted text while learning to not change the semantics. Checkpoint and usage [here](https://huggingface.co/pszemraj/grammar-synthesis-base) & notebook [here](https://colab.research.google.com/gist/pszemraj/91abb08aa99a14d9fdc59e851e8aed66/demo-for-grammar-synthesis-base.ipynb).
+- **Grammar Synthesis** (WIP) - Evaluating a text2text generation model that, through "pseudo-diffusion," is trained to denoise **heavily** corrupted text while learning not to change the semantics. Checkpoint and usage [here](https://huggingface.co/pszemraj/grammar-synthesis-base) & notebook [here](https://colab.research.google.com/gist/pszemraj/91abb08aa99a14d9fdc59e851e8aed66/demo-for-grammar-synthesis-base.ipynb).
 
 * * *
 
