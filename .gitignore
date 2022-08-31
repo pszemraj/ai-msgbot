@@ -1,39 +1,34 @@
 # python basics
 /__pycache__/
 /.idea/
-/scratch/
+*scratch/
 
 
-# local model folders for testing / running bots / deploy
+# default model folders for testing / running bots / deploy
 
-/gpt2_std_gpu_774M_120ksteps/
-/gpt2_std_gpu_774M_60ksteps/
-/gpt2_dailydialogue_355M_75Ksteps/
-/gp2_DDandPeterTexts_14kPeter_774M/
-/gp2_DDandPeterTexts_41kPeter-774M/
-/gp2_DDandPeterTexts_774M_73Ksteps/
-/gp2_DDandPeterTexts_gpu_774M_175Ksteps/
+*gp2*
 *checkpoint*
+*GPT*
 *GPT2*
 *GPTneo*
 *GPTpeter*
 *1pt3B*
 
-# most of ^ can be downloaded through `download_models.py`
+# Notebooks (must be force-added for git)
+*.ipynb
+*notebooks/
+
+# symspell data files
+*symspell_rsc/
+
+# text data files (must be force-added for git)
+*conversation-data/
 
 # gradio things
 *.db
 *.db-journal
 *gradio_queue*
-gradio_data
+*gradio_data/
 deploy-as-bot/flagged
 deploy-as-bot/gradio_data
 deploy-as-bot/gradio_queue.db
-
-
-# notebooks in finished state
-
-*hf_hub_push.ipynb*
-*hf_hub_push.ipynb
-notebooks/hf_hub_push.ipynb
-/notebooks/hf_hub_push.ipynb

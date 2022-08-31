@@ -32,6 +32,7 @@ def get_parser():
         description="convert a model to a format that can be uploaded to huggingface"
     )
     parser.add_argument(
+        "-m",
         "--model-dir",
         required=True,  # model_dir is needed to find the model files
         type=str,
@@ -39,6 +40,7 @@ def get_parser():
     )
 
     parser.add_argument(
+        "-n",
         "--hf-name",
         required=False,
         type=str,

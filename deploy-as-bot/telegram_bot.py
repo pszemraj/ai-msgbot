@@ -3,8 +3,9 @@ Basic GPT-2 telegram bot
 
 you need to have your own token to create and run one - this script loads and reads the user's environmental variables. This script assumes the API token is stored under "GPTFRIEND_BOT"
 
-creating a bot: https://www.codementor.io/@karandeepbatra/part-1-how-to-create-a-telegram-bot-in-python-in-under-10-minutes-19yfdv4wrq 
+creating a bot: https://www.codementor.io/@karandeepbatra/part-1-how-to-create-a-telegram-bot-in-python-in-under-10-minutes-19yfdv4wrq
 
+# TODO: add conversation flow + context from previous messages
 """
 import argparse
 import os
@@ -17,7 +18,14 @@ import logging
 import time
 import warnings
 
-from cleantext import clean
+logging.basicConfig(
+    filename=f"LOGFILE-{Path(__file__).stem}.log",
+    filemode="a",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+)
+
+
 from symspellpy import SymSpell
 from telegram.ext import CommandHandler
 from telegram.ext import Filters, MessageHandler
@@ -26,15 +34,14 @@ from pathlib import Path
 from transformers import pipeline
 
 from ai_single_response import query_gpt_model
+from utils import remove_trailing_punctuation, DisableLogger
+
+with DisableLogger():
+    from cleantext import clean
 
 warnings.filterwarnings(action="ignore", message=".*gradient_checkpointing*")
 cwd = Path.cwd()
 my_cwd = str(cwd.resolve())  # string so it can be passed to os.path() objects
-
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-logger = logging.getLogger(__name__)
 
 
 def symspell_correct(speller, qphrase: str):
@@ -140,6 +147,9 @@ def ask_gpt(update, context):
         bot_resp = gramformer_correct(corrector, qphrase=resp["out_text"])
     else:
         bot_resp = symspell_correct(sym_spell, qphrase=resp["out_text"])
+    bot_resp = remove_trailing_punctuation(
+        bot_resp
+    )  # remove trailing punctuation to seem more natural
     rt = round(time.time() - st, 2)
     print(f"took {rt} sec to respond")
     context.bot.send_message(chat_id=update.effective_chat.id, text=bot_resp)
@@ -181,7 +191,6 @@ def get_parser():
         "--model",
         required=False,
         type=str,
-        # "gp2_DDandPeterTexts_774M_73Ksteps", - from GPT-Peter
         default="GPT2_trivNatQAdailydia_774M_175Ksteps",
         help="folder - with respect to git directory of your repo that has the model files in it (pytorch.bin + "
         "config.json). No models? Run the script download_models.py",
