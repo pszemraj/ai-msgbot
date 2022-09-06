@@ -23,42 +23,7 @@ from utils import load_dir_files
 from pathlib import Path
 
 
-def clean_message_whatsapp(text: str, lang: str = "en"):
-    """
-    clean_message_whatsapp - clean the message text of any non-ascii characters
-
-    Args:
-        text (str): [the message text to be cleaned]
-        lang (str, optional): [the language of the message]. Defaults to "en". set to 'de' for German special handling
-
-    Returns:
-        [str]: [the cleaned message text]
-    """
-
-    clean_text = clean(
-        text,
-        fix_unicode=True,  # fix various unicode errors
-        to_ascii=True,  # transliterate to closest ASCII representation
-        lower=True,  # lowercase text
-        no_line_breaks=True,  # fully strip line breaks as opposed to only normalizing them
-        no_urls=True,  # replace all URLs with a special token
-        no_emails=True,  # replace all email addresses with a special token
-        no_phone_numbers=True,  # replace all phone numbers with a special token
-        no_numbers=False,  # replace all numbers with a special token
-        no_digits=False,  # replace all digits with a special token
-        no_currency_symbols=False,  # replace all currency symbols with a special token
-        no_punct=False,  # remove punctuations
-        replace_with_punct="",  # instead of removing punctuations you may replace them
-        replace_with_url="",
-        replace_with_email="",
-        replace_with_phone_number="",
-        replace_with_number="<NUMBER>",
-        replace_with_digit="0",
-        replace_with_currency_symbol="<CUR>",
-        lang=lang,
-    )
-    return clean_text
-
+from .parse_applemsgs import clean_msg
 
 def get_omission_criteria(**args):
     """
@@ -81,7 +46,7 @@ def get_omission_criteria(**args):
     return omission_criteria
 
 
-def parse_whatsapp(text_path: str, lang: str = "en", verbose: bool = False):
+def parse_whatsapp(text_path: str, lang: str = "en", lower:bool = False, verbose: bool = False):
     """
     parse_whatsapp - main function to parse a single conversation exported with whatsapp
 
@@ -101,7 +66,7 @@ def parse_whatsapp(text_path: str, lang: str = "en", verbose: bool = False):
     re_string = "\[([0-9]+(\.[0-9]+)+), ([0-9]+(:[0-9]+)+)\] "
     no_time_textlines = [re.sub(re_string, "", line) for line in textlines]
     sub_textlines = [
-        clean_message_whatsapp(line, lang=lang) for line in no_time_textlines
+        clean_msg(line, lower=lower, lang=lang, no_phone_numbers=True) for line in no_time_textlines
     ]
     if verbose:
         print(f"The first 2 processed lines are:\n{sub_textlines[:2]}")
@@ -161,6 +126,12 @@ def get_parser():
         help="The language of the messages. Defaults to 'en'",
     )
     parser.add_argument(
+        "--lower",
+        required=False,
+        action="store_true",
+        help="Whether to lowercase the text. By default not lowered.",
+    )
+    parser.add_argument(
         "-v",
         "--verbose",
         required=False,
@@ -176,6 +147,7 @@ if __name__ == "__main__":
     output_path = args.outdir
     verbose = args.verbose
     lang = args.lang
+    lower = args.lower
     if not os.path.isdir(input_path):
         print("The path specified does not exist")
         sys.exit()
@@ -184,15 +156,15 @@ if __name__ == "__main__":
 
     if len(txt_files) < 1:
         print("Did not find any text files in: \n {}".format(input_path))
-        sys.exit()
+        sys.exit(1)
     if verbose:
         print("Found {} text files in: \n {}".format(len(txt_files), input_path))
     random.shuffle(txt_files)
     train_data = []
 
     for txtf in tqdm(txt_files, total=len(txt_files), desc="parsing whatsapp files.."):
-        reformed = parse_whatsapp(txtf, verbose=verbose, lang=lang)
-        train_data.extend(reformed)
+        parsed_lines = parse_whatsapp(txtf, lower=lower,  lang=lang, verbose=verbose,)
+        train_data.extend(parsed_lines)
 
     print("parsed {} lines of text data".format(len(train_data)))
 

@@ -35,7 +35,7 @@ from tqdm import tqdm
 from utils import load_dir_files
 
 
-def clean_msg(text: str, lang: str = "en", lower=True):
+def clean_msg(text: str, lang: str = "en", lower=True, no_phone_numbers=False):
     """
     clean_message_apple - clean the message text of any non-ascii characters
 
@@ -55,7 +55,7 @@ def clean_msg(text: str, lang: str = "en", lower=True):
         no_line_breaks=True,  # fully strip line breaks as opposed to only normalizing them
         no_urls=True,  # replace all URLs with a special token
         no_emails=True,  # replace all email addresses with a special token
-        no_phone_numbers=False,  # replace all phone numbers with a special token
+        no_phone_numbers=no_phone_numbers,  # replace all phone numbers with a special token
         no_numbers=False,  # replace all numbers with a special token
         no_digits=False,  # replace all digits with a special token
         no_currency_symbols=False,  # replace all currency symbols with a special token
