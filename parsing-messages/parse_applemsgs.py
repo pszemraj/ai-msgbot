@@ -35,7 +35,7 @@ from tqdm import tqdm
 from utils import load_dir_files
 
 
-def clean_message_apple(text: str, lang: str = "en", lower=True):
+def clean_msg(text: str, lang: str = "en", lower=True):
     """
     clean_message_apple - clean the message text of any non-ascii characters
 
@@ -73,8 +73,11 @@ def clean_message_apple(text: str, lang: str = "en", lower=True):
 
 
 def parse_apple_msg(
-    csv_path: str, lang: str = "en", sender_name: str = "peter szemraj", lower: bool = False,
-    verbose=False
+    csv_path: str,
+    lang: str = "en",
+    sender_name: str = "peter szemraj",
+    lower: bool = False,
+    verbose=False,
 ):
     """
     parse_apple_msg - parses a csv of messages exported from a device, in Apple format (i.e. has specific apple columns and/or artifacts in messages)
@@ -126,17 +129,17 @@ def parse_apple_msg(
 
     for index, row in srt_df.iterrows():
 
-        row_text = clean_message_apple(str(row["Text"]), lower=lower, lang=lang).strip()
+        row_text = clean_msg(str(row["Text"]), lower=lower, lang=lang).strip()
 
         if len(row_text) < 2:
             continue
         else:
             if row["Type"] == "Outgoing":
-                conv_words.append(f"{clean_message_apple(sender_name, lower=lower,)}:" + "\n")
+                conv_words.append(f"{clean_msg(sender_name, lower=lower,)}:" + "\n")
             elif pd.notna(row["Sender Name"]):
-                conv_words.append(clean_message_apple(row["Sender Name"], lower=lower) + ":\n")
+                conv_words.append(clean_msg(row["Sender Name"], lower=lower) + ":\n")
             else:
-                conv_words.append(clean_message_apple(row["Sender ID"], lower=lower) + ":\n")
+                conv_words.append(clean_msg(row["Sender ID"], lower=lower) + ":\n")
 
             conv_words.append(row_text + "\n")
             conv_words.append("\n")
@@ -224,7 +227,9 @@ if __name__ == "__main__":
     train_data = []
 
     for txtf in tqdm(csv_files, total=len(csv_files), desc="parsing msg .CSV files.."):
-        reformed = parse_apple_msg(txtf, lang=lang, sender_name=sender_name, lower=lower, verbose=verbose)
+        reformed = parse_apple_msg(
+            txtf, lang=lang, sender_name=sender_name, lower=lower, verbose=verbose
+        )
         if len(reformed) > 0:
             train_data.extend(reformed)
 
@@ -239,4 +244,6 @@ if __name__ == "__main__":
         fo.writelines(train_data)
 
     print("the output file can be found at: \n {}".format(f_out_path))
-    logging.info(f"Finished processing {input_path} successfully, output file: {f_out_path}")
+    logging.info(
+        f"Finished processing {input_path} successfully, output file: {f_out_path}"
+    )
