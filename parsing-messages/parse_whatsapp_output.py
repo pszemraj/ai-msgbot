@@ -25,6 +25,7 @@ from pathlib import Path
 
 from .parse_applemsgs import clean_msg
 
+
 def get_omission_criteria(**args):
     """
     get_omission_criteria - get the list of strings that indicate a message should be omitted
@@ -46,13 +47,16 @@ def get_omission_criteria(**args):
     return omission_criteria
 
 
-def parse_whatsapp(text_path: str, lang: str = "en", lower:bool = False, verbose: bool = False):
+def parse_whatsapp(
+    text_path: str, lang: str = "en", lower: bool = False, verbose: bool = False
+):
     """
     parse_whatsapp - main function to parse a single conversation exported with whatsapp
 
     Args:
         text_path (str): [path to a text file]
         lang (str, optional): [the language of the message]. Defaults to "en". set to 'de' for German special handling
+        lower (bool, optional): [whether to lowercase the text]. Defaults to False.
         verbose (bool, optional): [print additional outputs for debugging]. Defaults to False.
 
     Returns:
@@ -64,13 +68,14 @@ def parse_whatsapp(text_path: str, lang: str = "en", lower:bool = False, verbose
         textlines = f.readlines()
 
     re_string = "\[([0-9]+(\.[0-9]+)+), ([0-9]+(:[0-9]+)+)\] "
-    no_time_textlines = [re.sub(re_string, "", line) for line in textlines]
+    _no_time_textlines = [re.sub(re_string, "", line) for line in textlines]
     sub_textlines = [
-        clean_msg(line, lower=lower, lang=lang, no_phone_numbers=True) for line in no_time_textlines
+        clean_msg(line, lower=lower, lang=lang, no_phone_numbers=True)
+        for line in _no_time_textlines
     ]
     if verbose:
         print(f"The first 2 processed lines are:\n{sub_textlines[:2]}")
-    fin_text = []
+    parsed_text = []
 
     for line in sub_textlines:
         line = line.strip() if isinstance(line, str) else line[0].strip()
@@ -86,18 +91,18 @@ def parse_whatsapp(text_path: str, lang: str = "en", lower:bool = False, verbose
                 part2 = message_parts[1].strip()
                 if len(part2) < 2:
                     continue  # this line is just a timestamp
-                fin_text.append(part1 + ":\n")
-                fin_text.append(part2 + "\n")
-                fin_text.append("\n")
+                parsed_text.append(part1 + ":\n")
+                parsed_text.append(part2 + "\n")
+                parsed_text.append("\n")
             elif isinstance(message_parts, str) and len(message_parts) > 4:
-                fin_text.append(message_parts + "\n")
-                fin_text.append("\n")
+                parsed_text.append(message_parts + "\n")
+                parsed_text.append("\n")
             else:
                 continue
 
     if verbose:
-        print("exiting the function have {} lines".format(len(fin_text)))
-    return fin_text
+        print("exiting the function have {} lines".format(len(parsed_text)))
+    return parsed_text
 
 
 # Set up the parsing of command-line arguments
@@ -154,26 +159,31 @@ if __name__ == "__main__":
 
     txt_files = load_dir_files(input_path, verbose=True)
 
-    if len(txt_files) < 1:
-        print("Did not find any text files in: \n {}".format(input_path))
-        sys.exit(1)
+    if len(txt_files) == 0:
+        sys.exit(f"Did not find any text files in: \n {input_path}")
     if verbose:
-        print("Found {} text files in: \n {}".format(len(txt_files), input_path))
+        print(f"Found {len(txt_files)} text files in: \n {input_path}")
+
     random.shuffle(txt_files)
-    train_data = []
+    msg_data = []
 
     for txtf in tqdm(txt_files, total=len(txt_files), desc="parsing whatsapp files.."):
-        parsed_lines = parse_whatsapp(txtf, lower=lower,  lang=lang, verbose=verbose,)
-        train_data.extend(parsed_lines)
+        _parsed_lines = parse_whatsapp(
+            txtf,
+            lower=lower,
+            lang=lang,
+            verbose=verbose,
+        )
+        msg_data.extend(_parsed_lines)
 
-    print("parsed {} lines of text data".format(len(train_data)))
+    print(f"parsed {len(msg_data)} lines of text data")
 
-    today_string = date.today().strftime("%b-%d-%Y")
-    comp_data_name = "compiled_whatsapp_data_{}.txt".format(today_string)
+    comp_data_name = "compiled_whatsapp_data_{}.txt".format(
+        date.today().strftime("%b-%d-%Y")
+    )
     f_out_path = join(output_path, comp_data_name)
-
     with open(f_out_path, "w", encoding="utf-8", errors="ignore") as fo:
-        fo.writelines(train_data)
+        fo.writelines(msg_data)
 
-    print("finished - ", datetime.now())
-    print("the output file can be found at: \n {}".format(f_out_path))
+    print(f"finished - {datetime.now()}")
+    print(f"the output file can be found at:\n\t{f_out_path}")

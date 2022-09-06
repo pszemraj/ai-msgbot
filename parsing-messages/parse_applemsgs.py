@@ -84,6 +84,9 @@ def parse_apple_msg(
 
     Args:
         csv_path (str): [path to a CSV file containing messages and other relevant info]
+        lang (str, optional): [the language of the messages]. Defaults to "en".
+        sender_name (str, optional): [the name of the sender]. Defaults to "peter szemraj".
+        lower (bool, optional): [whether to lowercase the text]. Defaults to False.
         verbose (bool, optional): [debug printouts]. Defaults to False.
 
     Returns:
