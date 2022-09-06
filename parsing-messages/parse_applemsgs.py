@@ -15,9 +15,18 @@ from os.path import basename, dirname, join
 sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 
 import argparse
+import logging
 import pprint as pp
 from datetime import date, datetime
 from os.path import basename, join
+from pathlib import Path
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+    filename="LOG_parse_applemsgs.log",
+    filemode="w",
+)
 
 import pandas as pd
 from cleantext import clean
@@ -76,7 +85,8 @@ def parse_apple_msg(
     Returns:
         [list]: [returns a list of strings, each representing a line in the dialogue "script"]
     """
-
+    csv_path = Path(csv_path)
+    logging.info(f"Processing {csv_path.name}")
     df = pd.read_csv(csv_path).convert_dtypes()
 
     clean_df = df[df.Text.notnull()].convert_dtypes()
@@ -132,6 +142,10 @@ def parse_apple_msg(
 
     if verbose:
         print("exiting the function, have {} lines of text".format(len(conv_words)))
+
+    logging.info(
+        f"Finished processing {csv_path.name} successfully, returning {len(conv_words)} lines of text"
+    )
     return conv_words
 
 
@@ -173,7 +187,9 @@ def get_parser():
 
 
 if __name__ == "__main__":
+    logging.info("Starting new parsing run")
     args = get_parser().parse_args()
+    logging.info(f"Arguments: {args}")
     input_path = args.input_dir
     output_path = args.output_dir
     lang = args.lang
@@ -196,6 +212,7 @@ if __name__ == "__main__":
             train_data.extend(reformed)
 
     print("parsed {} lines of text data".format(len(train_data)))
+    logging.info(f"parsed {len(train_data)} lines of text data")
 
     today_string = date.today().strftime("%b-%d-%Y")
     comp_data_name = "compiled_apple_msg_data_{}.txt".format(today_string)
@@ -204,5 +221,5 @@ if __name__ == "__main__":
     with open(f_out_path, "w", encoding="utf-8", errors="ignore") as fo:
         fo.writelines(train_data)
 
-    print("finished - ", datetime.now())
     print("the output file can be found at: \n {}".format(f_out_path))
+    logging.info(f"Finished processing {input_path} successfully, output file: {f_out_path}")
