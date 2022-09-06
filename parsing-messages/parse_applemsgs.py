@@ -79,7 +79,9 @@ def parse_apple_msg(
 
     df = pd.read_csv(csv_path).convert_dtypes()
 
-    clean_df = df[df.Text.notnull()]
+    clean_df = df[df.Text.notnull()].convert_dtypes()
+    if len(clean_df) == 0:
+        return []
     clean_df = clean_df[~clean_df["Text"].str.contains('\n"*."', na=False, regex=False)]
     clean_df = clean_df[
         ~clean_df["Text"].str.contains("an image", na=False, regex=False)
@@ -190,7 +192,8 @@ if __name__ == "__main__":
 
     for txtf in tqdm(csv_files, total=len(csv_files), desc="parsing msg .CSV files.."):
         reformed = parse_apple_msg(txtf, lang=lang, verbose=verbose)
-        train_data.extend(reformed)
+        if len(reformed) > 0:
+            train_data.extend(reformed)
 
     print("parsed {} lines of text data".format(len(train_data)))
 
