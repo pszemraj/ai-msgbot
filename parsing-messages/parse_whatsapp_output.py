@@ -8,7 +8,17 @@ import os
 import sys
 from os.path import dirname, join, basename
 import warnings
-import random
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+    filename="LOG_parse_whatsapp.log",
+    filemode="w",
+)
+
+
+from parse_applemsgs import clean_msg
 
 sys.path.append(dirname(dirname(os.path.abspath(__file__))))
 
@@ -16,6 +26,7 @@ import argparse
 import pprint as pp
 import re
 from datetime import date, datetime
+import random
 
 from cleantext import clean
 from tqdm import tqdm
@@ -23,7 +34,6 @@ from utils import load_dir_files
 from pathlib import Path
 
 
-from .parse_applemsgs import clean_msg
 
 
 def get_omission_criteria(**args):
@@ -62,6 +72,8 @@ def parse_whatsapp(
     Returns:
         [list]: [a list of strings, each corresponding to a line in the overall script]
     """
+    text_path = Path(text_path)
+    logging.info(f"Processing {text_path.name}")
     omission_criteria = get_omission_criteria()
 
     with open(text_path, "r", encoding="utf-8", errors="ignore") as f:
@@ -102,6 +114,7 @@ def parse_whatsapp(
 
     if verbose:
         print("exiting the function have {} lines".format(len(parsed_text)))
+    logging.info(f"finished processing {text_path.name}, have {len(parsed_text)} lines")
     return parsed_text
 
 
@@ -147,7 +160,9 @@ def get_parser():
 
 
 if __name__ == "__main__":
+    logging.info("Starting the script")
     args = get_parser().parse_args()
+    logging.info(f"args: {args}")
     input_path = args.datadir
     output_path = args.outdir
     verbose = args.verbose
@@ -185,5 +200,5 @@ if __name__ == "__main__":
     with open(f_out_path, "w", encoding="utf-8", errors="ignore") as fo:
         fo.writelines(msg_data)
 
-    print(f"finished - {datetime.now()}")
     print(f"the output file can be found at:\n\t{f_out_path}")
+    logging.info(f"the output file can be found at:\n\t{f_out_path}")
