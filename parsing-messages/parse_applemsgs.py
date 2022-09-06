@@ -35,7 +35,7 @@ from tqdm import tqdm
 from utils import load_dir_files
 
 
-def clean_message_apple(text: str, lang: str = "en"):
+def clean_message_apple(text: str, lang: str = "en", lower=True):
     """
     clean_message_apple - clean the message text of any non-ascii characters
 
@@ -51,7 +51,7 @@ def clean_message_apple(text: str, lang: str = "en"):
         text,
         fix_unicode=True,  # fix various unicode errors
         to_ascii=True,  # transliterate to closest ASCII representation
-        lower=True,  # lowercase text
+        lower=lower,  # lowercase text
         no_line_breaks=True,  # fully strip line breaks as opposed to only normalizing them
         no_urls=True,  # replace all URLs with a special token
         no_emails=True,  # replace all email addresses with a special token
@@ -73,7 +73,8 @@ def clean_message_apple(text: str, lang: str = "en"):
 
 
 def parse_apple_msg(
-    csv_path: str, lang: str = "en", sender_name: str = "peter szemraj", verbose=False
+    csv_path: str, lang: str = "en", sender_name: str = "peter szemraj", lower: bool = False,
+    verbose=False
 ):
     """
     parse_apple_msg - parses a csv of messages exported from a device, in Apple format (i.e. has specific apple columns and/or artifacts in messages)
@@ -125,17 +126,17 @@ def parse_apple_msg(
 
     for index, row in srt_df.iterrows():
 
-        row_text = clean_message_apple(str(row["Text"]), lang=lang).strip()
+        row_text = clean_message_apple(str(row["Text"]), lower=lower, lang=lang).strip()
 
         if len(row_text) < 2:
             continue
         else:
             if row["Type"] == "Outgoing":
-                conv_words.append(f"{sender_name}:" + "\n")
+                conv_words.append(f"{clean_message_apple(sender_name, lower=lower,)}:" + "\n")
             elif pd.notna(row["Sender Name"]):
-                conv_words.append(str(row["Sender Name"]) + ":\n")
+                conv_words.append(clean_message_apple(row["Sender Name"], lower=lower) + ":\n")
             else:
-                conv_words.append(str(row["Sender ID"]) + ":\n")
+                conv_words.append(clean_message_apple(row["Sender ID"], lower=lower) + ":\n")
 
             conv_words.append(row_text + "\n")
             conv_words.append("\n")
@@ -178,6 +179,20 @@ def get_parser():
         help="The language of the messages. Defaults to 'en'",
     )
     parser.add_argument(
+        "--lower",
+        required=False,
+        action="store_true",
+        help="Whether to lowercase the text. By default not lowered.",
+    )
+    parser.add_argument(
+        "-s",
+        "--sender-name",
+        required=False,
+        default="peter szemraj",
+        help="The name of the sender. Defaults to 'steve jobs'",
+    )
+
+    parser.add_argument(
         "-v",
         "--verbose",
         action="store_true",
@@ -193,6 +208,8 @@ if __name__ == "__main__":
     input_path = args.input_dir
     output_path = args.output_dir
     lang = args.lang
+    lower = args.lower
+    sender_name = args.sender_name
     verbose = args.verbose
     if not os.path.isdir(input_path):
         print("The path specified does not exist")
@@ -202,12 +219,12 @@ if __name__ == "__main__":
 
     if len(csv_files) < 1:
         print("Did not find any CSV files in: \n {}".format(input_path))
-        sys.exit()
+        sys.exit(1)
     random.shuffle(csv_files)
     train_data = []
 
     for txtf in tqdm(csv_files, total=len(csv_files), desc="parsing msg .CSV files.."):
-        reformed = parse_apple_msg(txtf, lang=lang, verbose=verbose)
+        reformed = parse_apple_msg(txtf, lang=lang, sender_name=sender_name, lower=lower, verbose=verbose)
         if len(reformed) > 0:
             train_data.extend(reformed)
 
